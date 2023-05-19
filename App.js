@@ -4,7 +4,14 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 
-SplashScreen.preventAutoHideAsync();
+// components
+import AppText from "./components/AppText";
+import colors from "./config/colors";
+
+// screens
+import LoginScreen from "./screens/LoginScreen";
+
+// SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -15,28 +22,29 @@ export default function App() {
     "Riveruta-Thin": require("./assets/fonts/Riveruta-Thin.ttf"),
   });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
 
   if (!fontsLoaded) {
     return null;
   }
 
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    // <View style={styles.container} onLayout={onLayoutRootView}>
+    //   <AppText>Hello World from sajjan!</AppText>
+    //   <StatusBar style="auto" />
+    // </View>
+    <LoginScreen />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.dark.primary,
     alignItems: "center",
     justifyContent: "center",
   },
