@@ -10,6 +10,7 @@ import colors from "./config/colors";
 
 // screens
 import LoginScreen from "./screens/LoginScreen";
+import HomeScreen from "./screens/HomeScreen";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -37,7 +38,7 @@ export default function App() {
     //   <AppText>Hello World from sajjan!</AppText>
     //   <StatusBar style="auto" />
     // </View>
-    <LoginScreen />
+    <HomeScreen />
   );
 }
 
