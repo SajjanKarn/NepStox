@@ -9,6 +9,9 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
+    "apisauce": "^3.0.0",
+    "axios": "^1.4.0",
     "expo": "~48.0.15",
     "expo-font": "~11.1.1",
     "expo-splash-screen": "~0.18.2",
@@ -18,7 +21,8 @@
     "react-native-chart-kit": "^6.12.0",
     "react-native-dimension": "^1.0.6",
     "react-native-svg": "13.4.0",
-    "react-native-table-component": "^1.2.2"
+    "react-native-table-component": "^1.2.2",
+    "simple-react-native-tables": "^0.1.9"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

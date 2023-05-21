@@ -5,5 +5,8 @@ export default colors = {
     secondary: "#242424",
     placeholderText: "#6D6D6D",
     button: "#DFFB70",
+    advanced: "#006400",
+    declined: "#FF0000",
+    unchanged: "#FFA500",
   },
 };
