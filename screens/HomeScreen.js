@@ -80,6 +80,55 @@ export default function HomeScreen() {
     <ScrollView style={styles.container}>
       <StatusBar />
 
+      <View style={styles.nepseIndexContainer}>
+        <View style={styles.data}>
+          <AppText style={styles.dataTitle}>Nepse</AppText>
+          <AppText style={styles.dataValue}>678.51</AppText>
+          <AppText style={styles.dataChange}>+3.00 (1.00%)</AppText>
+        </View>
+        <View style={styles.data}>
+          <AppText style={styles.dataTitle}>Sensitive</AppText>
+          <AppText style={styles.dataValue}>253.66</AppText>
+          <AppText style={styles.dataChange}>+1.00 (2.20%)</AppText>
+        </View>
+        <View style={styles.data}>
+          <AppText style={styles.dataTitle}>Float</AppText>
+          <AppText style={styles.dataValue}>789.90</AppText>
+          <AppText style={styles.dataChange}>+5.00 (5.56%)</AppText>
+        </View>
+      </View>
+
+      <View style={styles.marketSummaryContainer}>
+        <View style={styles.marketSummary}>
+          <AppText style={styles.marketSummaryTitle}>Market Summary</AppText>
+
+          <View style={styles.marketSummaryCard}>
+            <View style={styles.dataRow}>
+              <AppText style={styles.dataRowTitle}>Total Turnover</AppText>
+              <AppText style={styles.dataRowValue}>Rs. 1,000,000</AppText>
+            </View>
+            <View style={styles.dataRow}>
+              <AppText style={styles.dataRowTitle}>Total Traded Shares</AppText>
+              <AppText style={styles.dataRowValue}>1,000,000</AppText>
+            </View>
+            <View style={styles.dataRow}>
+              <AppText style={styles.dataRowTitle}>Total Transaction</AppText>
+              <AppText style={styles.dataRowValue}>1,000,000</AppText>
+            </View>
+            <View style={styles.dataRow}>
+              <AppText style={styles.dataRowTitle}>Total Scrips Traded</AppText>
+              <AppText style={styles.dataRowValue}>1,000,000</AppText>
+            </View>
+            <View style={styles.dataRow}>
+              <AppText style={styles.dataRowTitle}>
+                Market Capitalization
+              </AppText>
+              <AppText style={styles.dataRowValue}>1,000,000</AppText>
+            </View>
+          </View>
+        </View>
+      </View>
+
       <View style={styles.indicators}>
         <View style={[styles.indicatorTile, styles.advanced]}>
           <AntDesign
@@ -191,7 +240,7 @@ export default function HomeScreen() {
             >
               <Row
                 data={topLoser.tableHead}
-                style={styles.head}
+                style={[styles.head, styles.loserHead]}
                 textStyle={styles.headText}
               />
               <Rows data={topLoser.tableData} textStyle={styles.text} />
@@ -210,6 +259,74 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dark.primary,
     // marginTop: StatusBar.currentHeight,
   },
+  nepseIndexContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: height(2),
+    backgroundColor: colors.dark.secondary,
+    padding: width(5),
+    borderRadius: width(2),
+    elevation: 5,
+  },
+  nepseIndexChange: {
+    fontSize: totalSize(1.5),
+    color: colors.dark.nepseIndexChange,
+  },
+  dataContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: height(2),
+  },
+  data: {
+    alignItems: "center",
+  },
+  dataTitle: {
+    fontSize: totalSize(2),
+    color: colors.dark.button,
+    textTransform: "uppercase",
+    marginVertical: height(0.5),
+    letterSpacing: 1,
+  },
+  dataValue: {
+    fontSize: totalSize(1.5),
+    color: colors.dark.textColor,
+    marginVertical: height(0.5),
+  },
+  dataChange: {
+    fontSize: totalSize(1.5),
+    color: colors.dark.topGainerText,
+  },
+  marketSummaryContainer: {
+    marginBottom: height(2),
+    backgroundColor: colors.dark.secondary,
+    padding: width(5),
+    borderRadius: width(2),
+  },
+  marketSummaryTitle: {
+    fontSize: totalSize(2.3),
+    color: colors.dark.button,
+    textTransform: "uppercase",
+    marginVertical: height(0.7),
+    letterSpacing: 1,
+  },
+  dataRow: {
+    marginVertical: height(0.5),
+  },
+  dataRowTitle: {
+    fontSize: totalSize(2),
+    textTransform: "uppercase",
+    marginVertical: height(0.5),
+    color: colors.dark.placeholderText,
+    letterSpacing: 1,
+  },
+  dataRowValue: {
+    fontSize: totalSize(1.7),
+    color: colors.dark.textColor,
+    marginVertical: height(0.5),
+  },
+
+  // indicators section
   indicators: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -221,26 +338,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: height(1),
-    marginRight: width(1),
+    marginHorizontal: width(1),
     borderRadius: totalSize(1),
   },
   tileIcon: {
     marginTop: height(0.5),
   },
   indicatorTitle: {
-    fontSize: totalSize(1.7),
-    fontWeight: "bold",
+    fontSize: totalSize(1.5),
     textAlign: "center",
   },
   advanced: {
-    backgroundColor: colors.dark.advanced,
+    backgroundColor: colors.dark.topGainerText,
   },
   declined: {
-    backgroundColor: colors.dark.declined,
+    backgroundColor: colors.dark.topLoserText,
   },
   unchanged: {
     backgroundColor: colors.dark.unchanged,
   },
+
+  // chart section
   chartContainer: {
     flex: 1,
     alignItems: "center",
@@ -266,12 +384,16 @@ const styles = StyleSheet.create({
   head: {
     height: height(7),
     textAlign: "center",
-    backgroundColor: colors.dark.button,
+    backgroundColor: colors.dark.topGainerText,
+  },
+  loserHead: {
+    backgroundColor: colors.dark.topLoserText,
   },
   headText: {
     textAlign: "center",
     fontWeight: "bold",
     fontFamily: "Riveruta-Bold",
+    color: colors.dark.textColor,
   },
   text: {
     padding: totalSize(1.5),

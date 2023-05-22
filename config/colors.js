@@ -7,6 +7,8 @@ export default colors = {
     button: "#DFFB70",
     advanced: "#006400",
     declined: "#FF0000",
-    unchanged: "#FFA500",
+    unchanged: "#E8AA42",
+    topGainerText: "#008000",
+    topLoserText: "#fe5316",
   },
 };
