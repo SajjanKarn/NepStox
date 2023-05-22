@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   ScrollView,
@@ -10,13 +10,13 @@ import {
 import { width, height, totalSize } from "react-native-dimension";
 import { LineChart } from "react-native-chart-kit";
 import { Table, Row, Rows } from "react-native-table-component";
+import { AntDesign } from "@expo/vector-icons";
 
 // components
 import AppText from "../components/AppText";
 import colors from "../config/colors";
 
 import useFetch from "../hooks/useFetch";
-import { AntDesign } from "@expo/vector-icons";
 
 export default function HomeScreen() {
   const [topGainer, setTopGainer] = useState({
@@ -28,8 +28,53 @@ export default function HomeScreen() {
       ["NICA", "10.00", "10.00", "10.00"],
     ],
   });
+  const [topLoser, setTopLoser] = useState({
+    tableHead: ["Symbol", "Change", "CH %", "LTP"],
+    tableData: [
+      ["NABIL", "10.00", "10.00", "10.00"],
+      ["RBB", "10.00", "10.00", "10.00"],
+      ["NIC ASIA", "10.00", "10.00", "10.00"],
+      ["NICA", "10.00", "10.00", "10.00"],
+    ],
+  });
   const { data, loading, error } = useFetch("/nepse/top-gainer");
-  console.log(data, loading, error);
+  const {
+    data: topLoserData,
+    loading: topLoserLoading,
+    error: topLoserError,
+  } = useFetch("/nepse/top-loser");
+
+  // useeffect for top gainer
+  useEffect(() => {
+    if (data?.data?.data?.length > 0) {
+      // get only 5 data
+      const tableData = data.data.data
+        .slice(0, 5)
+        .map((item) => [
+          item.symbol,
+          item.change_pts,
+          `${item.diff_per}%`,
+          item.close,
+        ]);
+      setTopGainer((prev) => ({ ...prev, tableData }));
+    }
+  }, [data, loading, error]);
+
+  // useeffect for top loser
+  useEffect(() => {
+    if (topLoserData?.data?.data?.length > 0) {
+      // get only 5 data
+      const tableData = topLoserData.data.data
+        .slice(0, 5)
+        .map((item) => [
+          item.symbol,
+          item.change_pts,
+          `${item.diff_per}%`,
+          item.close,
+        ]);
+      setTopLoser((prev) => ({ ...prev, tableData }));
+    }
+  }, [topLoserData, topLoserLoading, topLoserError]);
 
   return (
     <ScrollView style={styles.container}>
@@ -111,43 +156,47 @@ export default function HomeScreen() {
         />
       </View>
 
-      <View style={styles.topGainerContainer}>
+      <View style={styles.gainerContainer}>
         <AppText style={styles.topGainerTitle}>Top Gainers</AppText>
 
         {loading ? (
           <ActivityIndicator size="large" color={colors.dark.button} />
         ) : (
-          <Table
-            borderStyle={styles.topGainerBorderStyle}
-            style={styles.topGainerTable}
-          >
-            <Row
-              data={topGainer.tableHead}
-              style={styles.head}
-              textStyle={styles.headText}
-            />
-            <Rows data={topGainer.tableData} textStyle={styles.text} />
-          </Table>
+          topGainer.tableData.length > 0 && (
+            <Table
+              borderStyle={styles.gainerTableBorder}
+              style={styles.gainerTable}
+            >
+              <Row
+                data={topGainer.tableHead}
+                style={styles.head}
+                textStyle={styles.headText}
+              />
+              <Rows data={topGainer.tableData} textStyle={styles.text} />
+            </Table>
+          )
         )}
       </View>
 
-      <View style={styles.topGainerContainer}>
+      <View style={styles.gainerContainer}>
         <AppText style={styles.topGainerTitle}>Top Loser</AppText>
 
-        {loading ? (
+        {topLoserLoading ? (
           <ActivityIndicator size="large" color={colors.dark.button} />
         ) : (
-          <Table
-            borderStyle={styles.topGainerBorderStyle}
-            style={styles.topGainerTable}
-          >
-            <Row
-              data={topGainer.tableHead}
-              style={styles.head}
-              textStyle={styles.headText}
-            />
-            <Rows data={topGainer.tableData} textStyle={styles.text} />
-          </Table>
+          topLoser.tableData.length > 0 && (
+            <Table
+              borderStyle={styles.gainerTableBorder}
+              style={styles.gainerTable}
+            >
+              <Row
+                data={topLoser.tableHead}
+                style={styles.head}
+                textStyle={styles.headText}
+              />
+              <Rows data={topLoser.tableData} textStyle={styles.text} />
+            </Table>
+          )
         )}
       </View>
     </ScrollView>
@@ -198,7 +247,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     // backgroundColor: colors.dark.primary,
   },
-  topGainerContainer: {
+  gainerContainer: {
     flex: 1,
     marginTop: height(2),
   },
@@ -207,11 +256,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: height(2),
   },
-  topGainerBorderStyle: {
+  gainerTableBorder: {
     borderWidth: 1,
     borderColor: colors.dark.placeholderText,
   },
-  topGainerTable: {
+  gainerTable: {
     marginBottom: height(2),
   },
   head: {
