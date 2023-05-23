@@ -11,6 +11,7 @@ import colors from "./config/colors";
 // screens
 import LoginScreen from "./screens/LoginScreen";
 import HomeScreen from "./screens/HomeScreen";
+import ListedStockScreen from "./screens/ListedStockScreen";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -39,7 +40,8 @@ export default function App() {
     //   <StatusBar style="auto" />
     // </View>
     // <LoginScreen />
-    <HomeScreen />
+    // <HomeScreen />
+    <ListedStockScreen />
   );
 }
 

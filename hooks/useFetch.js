@@ -9,7 +9,6 @@ export default function useFetch(url) {
   async function request() {
     try {
       const response = await client.get(url);
-      console.log(response.data);
       setData(response.data);
     } catch (error) {
       setError(error);
