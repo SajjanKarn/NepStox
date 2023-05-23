@@ -7,36 +7,48 @@ import AppText from "./AppText";
 
 export default function StockList({ stock }) {
   return (
-    <View
-      style={[
-        styles.stock,
-        {
-          backgroundColor:
-            Math.ceil(parseInt(stock.change_pts)) === 0
-              ? colors.dark.secondary
-              : stock.change_pts[0] === "-"
-              ? colors.dark.declined
-              : colors.dark.advanced,
-        },
-      ]}
-    >
+    <View style={styles.stock}>
       <View style={styles.stockInfo}>
         <AppText style={styles.companySymbol}>{stock.symbol}</AppText>
-        <AppText style={styles.ltp}>{stock.ltp}</AppText>
+        <AppText style={styles.ltp}>Rs. {stock.ltp}</AppText>
       </View>
       <View style={styles.stockInfo}>
         <AppText style={styles.companyName}>{stock.companyName}</AppText>
-        <AppText style={styles.change}>{stock.change_pts}</AppText>
+        <AppText
+          style={{
+            fontSize: totalSize(1.8),
+            color:
+              parseInt(stock.change_pts) > 0
+                ? colors.dark.topGainerText
+                : parseInt(stock.change_pts) < 0
+                ? colors.dark.topLoserText
+                : colors.dark.textColor,
+          }}
+        >
+          {stock.change_pts}
+        </AppText>
       </View>
-      <AppText style={styles.change}>{stock.change_per}%</AppText>
+      <AppText
+        style={{
+          fontSize: totalSize(1.3),
+          alignSelf: "flex-end",
+          color:
+            parseInt(stock.change_pts) > 0
+              ? colors.dark.topGainerText
+              : parseInt(stock.change_pts) < 0
+              ? colors.dark.topLoserText
+              : colors.dark.textColor,
+        }}
+      >
+        {stock.change_per}%
+      </AppText>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   stock: {
-    marginVertical: height(1),
-    backgroundColor: colors.dark.secondary,
+    marginVertical: height(0.2),
     padding: width(5),
     borderRadius: width(2),
   },
@@ -52,17 +64,15 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   ltp: {
-    fontSize: totalSize(2),
+    fontSize: totalSize(1.7),
     color: colors.dark.textColor,
     textTransform: "uppercase",
     letterSpacing: 1,
   },
   companyName: {
     fontSize: totalSize(1.2),
-    color: colors.dark.textColor,
+    color: colors.dark.placeholderText,
     textTransform: "uppercase",
   },
-  change: {
-    fontSize: totalSize(1.5),
-  },
+  change_per: {},
 });

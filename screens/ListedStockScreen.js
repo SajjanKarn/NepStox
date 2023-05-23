@@ -1,4 +1,4 @@
-import { View, ScrollView, ActivityIndicator, StatusBar } from "react-native";
+import { View, ActivityIndicator, StatusBar, FlatList } from "react-native";
 import AppText from "../components/AppText";
 
 import styles from "../styles/ListedStockScreen.styles";
@@ -9,35 +9,35 @@ import useFetch from "../hooks/useFetch";
 export default function ListedStockScreen() {
   const { data, loading, error } = useFetch(`/nepse/live-trading`);
 
-  console.log(data.data);
   return (
     <View style={styles.container}>
       <StatusBar barStyle="default" />
       <View style={styles.searchContainer}>
         <AppText style={styles.searchTitle}>Search</AppText>
-        <AppInput placeholder="Symbol or Name..." />
+        <AppInput placeholder="Symbol or Name..." squared />
       </View>
 
       {loading ? (
         <ActivityIndicator size="large" color={colors.dark.button} />
       ) : (
-        <ScrollView
-          style={styles.stocksContainer}
-          showsVerticalScrollIndicator={false}
-        >
-          {data?.data?.map((stock) => (
-            <StockList
-              key={stock.Symbol}
-              stock={{
-                symbol: stock.Symbol,
-                ltp: stock.LTP,
-                companyName: "Apple Inc.",
-                change_pts: stock["Point Change"],
-                change_per: stock["% Change"],
-              }}
-            />
-          ))}
-        </ScrollView>
+        <View style={styles.stocksContainer}>
+          <FlatList
+            data={data?.data}
+            keyExtractor={(item) => item.Symbol}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <StockList
+                stock={{
+                  symbol: item.Symbol,
+                  ltp: item.LTP,
+                  companyName: "Apple Inc.",
+                  change_pts: item["Point Change"],
+                  change_per: item["% Change"],
+                }}
+              />
+            )}
+          />
+        </View>
       )}
     </View>
   );

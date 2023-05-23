@@ -6,7 +6,7 @@ export default function AppInput({ placeholder = "Placeholder", ...props }) {
   return (
     <TextInput
       placeholder={placeholder}
-      style={styles.input}
+      style={[styles.input, props.squared && styles.squared]}
       {...props}
       placeholderTextColor={colors.dark.placeholderText}
     />
@@ -23,5 +23,8 @@ const styles = StyleSheet.create({
     borderRadius: totalSize(5),
     marginVertical: height(1),
     fontFamily: "Riveruta-Medium",
+  },
+  squared: {
+    borderRadius: totalSize(1),
   },
 });
