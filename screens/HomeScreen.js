@@ -98,34 +98,19 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      <View style={styles.marketSummaryContainer}>
-        <View style={styles.marketSummary}>
-          <AppText style={styles.marketSummaryTitle}>Market Summary</AppText>
-
-          <View style={styles.marketSummaryCard}>
-            <View style={styles.dataRow}>
-              <AppText style={styles.dataRowTitle}>Total Turnover</AppText>
-              <AppText style={styles.dataRowValue}>Rs. 1,000,000</AppText>
-            </View>
-            <View style={styles.dataRow}>
-              <AppText style={styles.dataRowTitle}>Total Traded Shares</AppText>
-              <AppText style={styles.dataRowValue}>1,000,000</AppText>
-            </View>
-            <View style={styles.dataRow}>
-              <AppText style={styles.dataRowTitle}>Total Transaction</AppText>
-              <AppText style={styles.dataRowValue}>1,000,000</AppText>
-            </View>
-            <View style={styles.dataRow}>
-              <AppText style={styles.dataRowTitle}>Total Scrips Traded</AppText>
-              <AppText style={styles.dataRowValue}>1,000,000</AppText>
-            </View>
-            <View style={styles.dataRow}>
-              <AppText style={styles.dataRowTitle}>
-                Market Capitalization
-              </AppText>
-              <AppText style={styles.dataRowValue}>1,000,000</AppText>
-            </View>
+      <View style={styles.marketStatusContainer}>
+        <View style={styles.marketStatus}>
+          <AppText style={styles.marketStatusTitle}>Market Status</AppText>
+          <View style={styles.statusContainer}>
+            <View style={[styles.dot, styles.red]} />
+            <AppText style={styles.marketStatusValue}>Closed</AppText>
           </View>
+        </View>
+        <View style={styles.marketStatusDate}>
+          <AppText style={styles.marketStatusDateTitle}>May 22, 2023</AppText>
+        </View>
+        <View style={styles.marketStatusTime}>
+          <AppText style={styles.marketStatusTimeTitle}>3:00PM</AppText>
         </View>
       </View>
 
@@ -248,6 +233,37 @@ export default function HomeScreen() {
           )
         )}
       </View>
+
+      <View style={styles.marketSummaryContainer}>
+        <View style={styles.marketSummary}>
+          <AppText style={styles.marketSummaryTitle}>Market Summary</AppText>
+
+          <View style={styles.marketSummaryCard}>
+            <View style={styles.dataRow}>
+              <AppText style={styles.dataRowTitle}>Total Turnover</AppText>
+              <AppText style={styles.dataRowValue}>Rs. 1,000,000</AppText>
+            </View>
+            <View style={styles.dataRow}>
+              <AppText style={styles.dataRowTitle}>Total Traded Shares</AppText>
+              <AppText style={styles.dataRowValue}>1,000,000</AppText>
+            </View>
+            <View style={styles.dataRow}>
+              <AppText style={styles.dataRowTitle}>Total Transaction</AppText>
+              <AppText style={styles.dataRowValue}>1,000,000</AppText>
+            </View>
+            <View style={styles.dataRow}>
+              <AppText style={styles.dataRowTitle}>Total Scrips Traded</AppText>
+              <AppText style={styles.dataRowValue}>1,000,000</AppText>
+            </View>
+            <View style={styles.dataRow}>
+              <AppText style={styles.dataRowTitle}>
+                Market Capitalization
+              </AppText>
+              <AppText style={styles.dataRowValue}>1,000,000</AppText>
+            </View>
+          </View>
+        </View>
+      </View>
     </ScrollView>
   );
 }
@@ -296,6 +312,45 @@ const styles = StyleSheet.create({
   dataChange: {
     fontSize: totalSize(1.5),
     color: colors.dark.topGainerText,
+  },
+  marketStatusContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: height(1),
+    backgroundColor: colors.dark.secondary,
+    padding: width(5),
+    borderRadius: width(2),
+  },
+  marketStatus: {
+    fontSize: totalSize(2),
+    color: colors.dark.button,
+    textTransform: "uppercase",
+    marginVertical: height(0.5),
+    letterSpacing: 1,
+  },
+  marketStatusTitle: {
+    fontSize: totalSize(1.8),
+    color: colors.dark.button,
+    marginVertical: height(0.5),
+    textTransform: "uppercase",
+  },
+  statusContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: height(0.7),
+  },
+  dot: {
+    height: totalSize(1.5),
+    width: totalSize(1.5),
+    borderRadius: totalSize(1.5),
+    marginHorizontal: width(1),
+  },
+  green: {
+    backgroundColor: colors.dark.topGainerText,
+  },
+  red: {
+    backgroundColor: colors.dark.topLoserText,
   },
   marketSummaryContainer: {
     marginBottom: height(2),
