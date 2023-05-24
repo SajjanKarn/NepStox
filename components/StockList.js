@@ -13,13 +13,13 @@ export default function StockList({ stock }) {
         <AppText style={styles.ltp}>Rs. {stock.ltp}</AppText>
       </View>
       <View style={styles.stockInfo}>
-        <AppText style={styles.companyName}>{stock.companyName}</AppText>
+        <AppText style={styles.companyName}>Rs. {stock.prev_close}</AppText>
         <AppText
           style={{
             fontSize: totalSize(1.8),
             color:
               parseInt(stock.change_pts) > 0
-                ? colors.dark.topGainerText
+                ? colors.dark.increasedGreeen
                 : parseInt(stock.change_pts) < 0
                 ? colors.dark.topLoserText
                 : colors.dark.textColor,
@@ -34,7 +34,7 @@ export default function StockList({ stock }) {
           alignSelf: "flex-end",
           color:
             parseInt(stock.change_pts) > 0
-              ? colors.dark.topGainerText
+              ? colors.dark.increasedGreeen
               : parseInt(stock.change_pts) < 0
               ? colors.dark.topLoserText
               : colors.dark.textColor,
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   companyName: {
-    fontSize: totalSize(1.2),
+    fontSize: totalSize(1.5),
     color: colors.dark.placeholderText,
     textTransform: "uppercase",
   },

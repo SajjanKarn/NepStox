@@ -8,6 +8,7 @@ export default colors = {
     advanced: "#006400",
     declined: "#FF0000",
     unchanged: "#E8AA42",
+    increasedGreeen: "#16FF00",
     topGainerText: "#008000",
     topLoserText: "#fe5316",
   },
