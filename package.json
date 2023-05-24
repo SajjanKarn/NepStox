@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
+    "@shopify/flash-list": "1.4.0",
     "apisauce": "^3.0.0",
     "axios": "^1.4.0",
     "expo": "~48.0.15",

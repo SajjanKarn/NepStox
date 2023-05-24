@@ -3,17 +3,18 @@ import {
   View,
   ActivityIndicator,
   StatusBar,
-  FlatList,
   TouchableWithoutFeedback,
   Keyboard,
-  ToastAndroid,
 } from "react-native";
-import AppText from "../components/AppText";
+import { FlashList } from "@shopify/flash-list";
 
-import styles from "../styles/ListedStockScreen.styles";
+import AppText from "../components/AppText";
 import AppInput from "../components/AppInput";
 import StockList from "../components/StockList";
+
 import useFetch from "../hooks/useFetch";
+import colors from "../config/colors";
+import styles from "../styles/ListedStockScreen.styles";
 
 export default function ListedStockScreen() {
   const { data, loading, error } = useFetch(`/nepse/live-trading`);
@@ -51,10 +52,11 @@ export default function ListedStockScreen() {
           <ActivityIndicator size="large" color={colors.dark.button} />
         ) : (
           <View style={styles.stocksContainer}>
-            <FlatList
+            <FlashList
               data={searchResult.length > 0 ? searchResult : data?.data}
               keyExtractor={(item) => item.Symbol}
               showsVerticalScrollIndicator={false}
+              estimatedItemSize={150}
               renderItem={({ item }) => (
                 <StockList
                   stock={{
