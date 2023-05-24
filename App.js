@@ -12,6 +12,7 @@ import colors from "./config/colors";
 import LoginScreen from "./screens/LoginScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ListedStockScreen from "./screens/ListedStockScreen";
+import TopScreen from "./screens/TopScreen";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -41,7 +42,8 @@ export default function App() {
     // </View>
     // <LoginScreen />
     // <HomeScreen />
-    <ListedStockScreen />
+    // <ListedStockScreen />
+    <TopScreen />
   );
 }
 
