@@ -25,6 +25,7 @@
     "react-native-svg": "13.4.0",
     "react-native-tab-view": "^3.5.1",
     "react-native-table-component": "^1.2.2",
+    "react-native-webview": "11.26.0",
     "simple-react-native-tables": "^0.1.9"
   },
   "devDependencies": {
