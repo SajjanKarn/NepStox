@@ -13,6 +13,7 @@ import LoginScreen from "./screens/LoginScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ListedStockScreen from "./screens/ListedStockScreen";
 import TopScreen from "./screens/TopScreen";
+import MarketScreen from "./screens/MarketScreen";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -43,7 +44,8 @@ export default function App() {
     // <LoginScreen />
     // <HomeScreen />
     // <ListedStockScreen />
-    <TopScreen />
+    // <TopScreen />
+    <MarketScreen />
   );
 }
 

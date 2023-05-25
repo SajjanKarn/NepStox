@@ -10,45 +10,28 @@ export default styles = StyleSheet.create({
     backgroundColor: colors.dark.primary,
     // marginTop: StatusBar.currentHeight,
   },
-  nepseIndexContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginVertical: height(2),
-    backgroundColor: colors.dark.secondary,
-    padding: width(5),
-    borderRadius: width(2),
-    elevation: 5,
+  container_fluid: {
+    flex: 1,
+    backgroundColor: colors.dark.primary,
+    // marginTop: StatusBar.currentHeight,
   },
-  nepseIndexChange: {
-    fontSize: totalSize(1.5),
-    color: colors.dark.nepseIndexChange,
+  searchContainer: {
+    marginVertical: height(1.2),
   },
-  dataContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: height(2),
-  },
-  data: {
-    alignItems: "center",
-  },
-  dataTitle: {
+  searchTitle: {
     fontSize: totalSize(2),
     color: colors.dark.button,
     textTransform: "uppercase",
     marginVertical: height(0.5),
     letterSpacing: 1,
   },
-  dataValue: {
-    fontSize: totalSize(1.5),
-    color: colors.dark.textColor,
-    marginVertical: height(0.5),
-  },
-  dataChange: {
-    fontSize: totalSize(1.5),
-    color: colors.dark.topGainerText,
+
+  // stock styles
+  stocksContainer: {
+    flex: 1,
   },
 
+  // market status section
   marketStatusContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -88,34 +71,6 @@ export default styles = StyleSheet.create({
   red: {
     backgroundColor: colors.dark.topLoserText,
   },
-  marketSummaryContainer: {
-    marginBottom: height(2),
-    backgroundColor: colors.dark.secondary,
-    padding: width(5),
-    borderRadius: width(2),
-  },
-  marketSummaryTitle: {
-    fontSize: totalSize(2.3),
-    color: colors.dark.button,
-    textTransform: "uppercase",
-    marginVertical: height(0.7),
-    letterSpacing: 1,
-  },
-  dataRow: {
-    marginVertical: height(0.5),
-  },
-  dataRowTitle: {
-    fontSize: totalSize(2),
-    textTransform: "uppercase",
-    marginVertical: height(0.5),
-    color: colors.dark.placeholderText,
-    letterSpacing: 1,
-  },
-  dataRowValue: {
-    fontSize: totalSize(1.7),
-    color: colors.dark.textColor,
-    marginVertical: height(0.5),
-  },
 
   // indicators section
   indicators: {
@@ -149,22 +104,7 @@ export default styles = StyleSheet.create({
     backgroundColor: colors.dark.unchanged,
   },
 
-  // chart section
-  chartContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    // backgroundColor: colors.dark.primary,
-  },
-  gainerContainer: {
-    flex: 1,
-    marginTop: height(2),
-  },
-  topGainerTitle: {
-    fontSize: totalSize(2),
-    fontWeight: "bold",
-    marginBottom: height(2),
-  },
+  // table styles
   gainerTableBorder: {
     borderWidth: 1,
     borderColor: colors.dark.placeholderText,
@@ -175,21 +115,24 @@ export default styles = StyleSheet.create({
   head: {
     height: height(7),
     textAlign: "center",
-    backgroundColor: colors.dark.topGainerText,
+    backgroundColor: colors.dark.secondary,
   },
   loserHead: {
     backgroundColor: colors.dark.topLoserText,
   },
   headText: {
+    fontSize: totalSize(1.2),
     textAlign: "center",
     fontWeight: "bold",
+    textTransform: "uppercase",
     fontFamily: "Riveruta-Bold",
     color: colors.dark.textColor,
   },
   text: {
-    padding: totalSize(1.5),
-    textAlign: "center",
+    padding: totalSize(1.1),
+    fontSize: totalSize(1.4),
+    fontFamily: "Riveruta-Medium",
     color: colors.dark.textColor,
-    fontFamily: "Riveruta-Regular",
+    textAlign: "center",
   },
 });
