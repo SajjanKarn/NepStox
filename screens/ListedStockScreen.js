@@ -34,45 +34,43 @@ export default function ListedStockScreen() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <StatusBar barStyle="default" />
-        <View style={styles.searchContainer}>
-          <AppText style={styles.searchTitle}>Search</AppText>
-          <AppInput
-            placeholder="Symbol or Name..."
-            squared
-            value={searchInput}
-            onChangeText={handleInputChange}
-            autoCapitalize="none"
+    <View style={styles.container}>
+      <StatusBar barStyle="default" />
+      <View style={styles.searchContainer}>
+        <AppText style={styles.searchTitle}>Search</AppText>
+        <AppInput
+          placeholder="Symbol or Name..."
+          squared
+          value={searchInput}
+          onChangeText={handleInputChange}
+          autoCapitalize="none"
+        />
+      </View>
+
+      {loading ? (
+        <ActivityIndicator size="large" color={colors.dark.button} />
+      ) : (
+        <View style={styles.stocksContainer}>
+          <FlashList
+            data={searchResult.length > 0 ? searchResult : data?.data}
+            keyExtractor={(item) => item.Symbol}
+            showsVerticalScrollIndicator={false}
+            estimatedItemSize={150}
+            renderItem={({ item }) => (
+              <StockList
+                stock={{
+                  symbol: item.Symbol,
+                  ltp: item.LTP,
+                  companyName: "Apple Inc.",
+                  change_pts: item["Point Change"],
+                  change_per: item["% Change"],
+                  prev_close: item["Prev. Close"],
+                }}
+              />
+            )}
           />
         </View>
-
-        {loading ? (
-          <ActivityIndicator size="large" color={colors.dark.button} />
-        ) : (
-          <View style={styles.stocksContainer}>
-            <FlashList
-              data={searchResult.length > 0 ? searchResult : data?.data}
-              keyExtractor={(item) => item.Symbol}
-              showsVerticalScrollIndicator={false}
-              estimatedItemSize={150}
-              renderItem={({ item }) => (
-                <StockList
-                  stock={{
-                    symbol: item.Symbol,
-                    ltp: item.LTP,
-                    companyName: "Apple Inc.",
-                    change_pts: item["Point Change"],
-                    change_per: item["% Change"],
-                    prev_close: item["Prev. Close"],
-                  }}
-                />
-              )}
-            />
-          </View>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
+      )}
+    </View>
   );
 }

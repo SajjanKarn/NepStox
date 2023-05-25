@@ -75,99 +75,93 @@ export default function MarketScreen() {
   }, [data, loading, error]);
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container_fluid}>
-        <View style={{ paddingHorizontal: width(5) }}>
-          <StatusBar barStyle="default" />
-          <View style={styles.searchContainer}>
-            <AppText style={styles.searchTitle}>Search</AppText>
-            <AppInput
-              placeholder="Symbol or Name..."
-              squared
-              value={searchInput}
-              onChangeText={handleInputChange}
-              autoCapitalize="none"
-            />
-          </View>
+    <View style={styles.container_fluid}>
+      <View style={{ paddingHorizontal: width(5) }}>
+        <StatusBar barStyle="default" />
+        <View style={styles.searchContainer}>
+          <AppText style={styles.searchTitle}>Search</AppText>
+          <AppInput
+            placeholder="Symbol or Name..."
+            squared
+            value={searchInput}
+            onChangeText={handleInputChange}
+            autoCapitalize="none"
+          />
+        </View>
 
-          <View style={styles.marketStatusContainer}>
-            <View style={styles.marketStatus}>
-              <AppText style={styles.marketStatusTitle}>Market Status</AppText>
-              <View style={styles.statusContainer}>
-                <View style={[styles.dot, styles.red]} />
-                <AppText style={styles.marketStatusValue}>Closed</AppText>
-              </View>
-            </View>
-            <View style={styles.marketStatusDate}>
-              <AppText style={styles.marketStatusDateTitle}>
-                May 22, 2023
-              </AppText>
-            </View>
-            <View style={styles.marketStatusTime}>
-              <AppText style={styles.marketStatusTimeTitle}>3:00PM</AppText>
+        <View style={styles.marketStatusContainer}>
+          <View style={styles.marketStatus}>
+            <AppText style={styles.marketStatusTitle}>Market Status</AppText>
+            <View style={styles.statusContainer}>
+              <View style={[styles.dot, styles.red]} />
+              <AppText style={styles.marketStatusValue}>Closed</AppText>
             </View>
           </View>
-
-          <View style={styles.indicators}>
-            <View style={[styles.indicatorTile, styles.advanced]}>
-              <AntDesign
-                name="arrowup"
-                size={20}
-                color="white"
-                style={styles.tileIcon}
-              />
-              <AppText style={styles.indicatorTitle}>Advanced</AppText>
-            </View>
-            <View style={[styles.indicatorTile, styles.declined]}>
-              <AntDesign
-                name="arrowdown"
-                size={20}
-                color="white"
-                style={styles.tileIcon}
-              />
-              <AppText style={styles.indicatorTitle}>Declined</AppText>
-            </View>
-            <View style={[styles.indicatorTile, styles.unchanged]}>
-              <AntDesign
-                name="minus"
-                size={20}
-                color="white"
-                style={styles.tileIcon}
-              />
-              <AppText style={styles.indicatorTitle}>Unchanged</AppText>
-            </View>
+          <View style={styles.marketStatusDate}>
+            <AppText style={styles.marketStatusDateTitle}>May 22, 2023</AppText>
+          </View>
+          <View style={styles.marketStatusTime}>
+            <AppText style={styles.marketStatusTimeTitle}>3:00PM</AppText>
           </View>
         </View>
 
-        {loading ? (
-          <ActivityIndicator size="large" color={colors.dark.button} />
-        ) : (
-          <View style={styles.stocksContainer}>
-            {marketData.tableData.length > 0 && (
-              <ScrollView>
-                <Table
-                  borderStyle={styles.gainerTableBorder}
-                  style={styles.gainerTable}
-                >
-                  <Row
-                    data={marketData.tableHead}
-                    style={styles.head}
-                    textStyle={styles.headText}
-                  />
-                  <Rows
-                    data={
-                      searchInput.length > 0
-                        ? searchResult
-                        : marketData.tableData
-                    }
-                    textStyle={styles.text}
-                  />
-                </Table>
-              </ScrollView>
-            )}
+        <View style={styles.indicators}>
+          <View style={[styles.indicatorTile, styles.advanced]}>
+            <AntDesign
+              name="arrowup"
+              size={20}
+              color="white"
+              style={styles.tileIcon}
+            />
+            <AppText style={styles.indicatorTitle}>Advanced</AppText>
           </View>
-        )}
+          <View style={[styles.indicatorTile, styles.declined]}>
+            <AntDesign
+              name="arrowdown"
+              size={20}
+              color="white"
+              style={styles.tileIcon}
+            />
+            <AppText style={styles.indicatorTitle}>Declined</AppText>
+          </View>
+          <View style={[styles.indicatorTile, styles.unchanged]}>
+            <AntDesign
+              name="minus"
+              size={20}
+              color="white"
+              style={styles.tileIcon}
+            />
+            <AppText style={styles.indicatorTitle}>Unchanged</AppText>
+          </View>
+        </View>
       </View>
-    </TouchableWithoutFeedback>
+
+      {loading ? (
+        <ActivityIndicator size="large" color={colors.dark.button} />
+      ) : (
+        <View style={styles.stocksContainer}>
+          {marketData.tableData.length > 0 && (
+            <ScrollView>
+              <Table
+                borderStyle={styles.gainerTableBorder}
+                style={styles.gainerTable}
+              >
+                <Row
+                  data={marketData.tableHead}
+                  style={styles.head}
+                  textStyle={styles.headText}
+                />
+                <Rows
+                  data={
+                    searchInput.length > 0 ? searchResult : marketData.tableData
+                  }
+                  textStyle={styles.text}
+                />
+              </Table>
+            </ScrollView>
+          )}
+        </View>
+      )}
+    </View>
   );
 }

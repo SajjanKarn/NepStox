@@ -35,7 +35,7 @@ export default function BrokersScreen() {
       <View style={styles.searchContainer}>
         <AppText style={styles.searchTitle}>Search Brokers</AppText>
         <AppInput
-          placeholder="Symbol or Name..."
+          placeholder="Name..."
           squared
           value={searchInput}
           onChangeText={handleInputChange}
