@@ -15,6 +15,7 @@ import ListedStockScreen from "./screens/ListedStockScreen";
 import TopScreen from "./screens/TopScreen";
 import MarketScreen from "./screens/MarketScreen";
 import MeroShareScreen from "./screens/MeroShareScreen";
+import BrokersScreen from "./screens/BrokersScreen";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -47,7 +48,8 @@ export default function App() {
     // <ListedStockScreen />
     // <TopScreen />
     // <MarketScreen />
-    <MeroShareScreen />
+    // <MeroShareScreen />
+    <BrokersScreen />
   );
 }
 

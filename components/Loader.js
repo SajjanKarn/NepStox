@@ -4,7 +4,7 @@ export default function Loader() {
   return (
     <View style={styles.container}>
       <ActivityIndicator
-        color={colors.dark.primary}
+        color={colors.dark.button}
         size="large"
         style={styles.loader}
       />
@@ -15,7 +15,6 @@ export default function Loader() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.dark.primary,
     alignItems: "center",
     justifyContent: "center",
   },
