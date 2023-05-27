@@ -192,4 +192,27 @@ export default styles = StyleSheet.create({
     color: colors.dark.textColor,
     fontFamily: "Riveruta-Regular",
   },
+
+  // react native paper custom style
+  dataTable: {
+    marginBottom: height(2),
+  },
+  tableHeader: {
+    backgroundColor: colors.dark.topLoserText,
+    borderTopStartRadius: width(2),
+    borderTopEndRadius: width(2),
+    borderBottomColor: colors.dark.placeholderText,
+    borderBottomWidth: 0.5,
+  },
+  tableHeaderGainer: {
+    backgroundColor: colors.dark.topGainerText,
+  },
+  tableRow: {
+    backgroundColor: colors.dark.secondary,
+    borderBottomColor: colors.dark.placeholderText,
+    borderBottomWidth: 1,
+  },
+  tableHeadText: {
+    fontSize: totalSize(1.5),
+  },
 });

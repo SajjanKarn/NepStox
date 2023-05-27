@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
-import {
-  View,
-  ScrollView,
-  Dimensions,
-  StatusBar,
-  ActivityIndicator,
-} from "react-native";
+import { View, ScrollView, Dimensions, StatusBar } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { Table, Row, Rows } from "react-native-table-component";
 import { AntDesign } from "@expo/vector-icons";
 
 // components
 import AppText from "../components/AppText";
+import GainerTable from "../components/GainerTable";
+
 import colors from "../config/colors";
 
 import useFetch from "../hooks/useFetch";
@@ -197,49 +192,21 @@ export default function HomeScreen() {
         />
       </View>
 
-      <View style={styles.gainerContainer}>
-        <AppText style={styles.topGainerTitle}>Top Gainers</AppText>
+      {loading ? (
+        <Loader />
+      ) : (
+        <GainerTable
+          title="Top Gainers"
+          data={topGainer}
+          headColor={colors.dark.topGainerText}
+        />
+      )}
 
-        {loading ? (
-          <ActivityIndicator size="large" color={colors.dark.button} />
-        ) : (
-          topGainer.tableData.length > 0 && (
-            <Table
-              borderStyle={styles.gainerTableBorder}
-              style={styles.gainerTable}
-            >
-              <Row
-                data={topGainer.tableHead}
-                style={styles.head}
-                textStyle={styles.headText}
-              />
-              <Rows data={topGainer.tableData} textStyle={styles.text} />
-            </Table>
-          )
-        )}
-      </View>
-
-      <View style={styles.gainerContainer}>
-        <AppText style={styles.topGainerTitle}>Top Loser</AppText>
-
-        {topLoserLoading ? (
-          <ActivityIndicator size="large" color={colors.dark.button} />
-        ) : (
-          topLoser.tableData.length > 0 && (
-            <Table
-              borderStyle={styles.gainerTableBorder}
-              style={styles.gainerTable}
-            >
-              <Row
-                data={topLoser.tableHead}
-                style={[styles.head, styles.loserHead]}
-                textStyle={styles.headText}
-              />
-              <Rows data={topLoser.tableData} textStyle={styles.text} />
-            </Table>
-          )
-        )}
-      </View>
+      {topLoserLoading ? (
+        <Loader />
+      ) : (
+        <GainerTable title="Top Losers" data={topLoser} />
+      )}
 
       <View style={styles.marketSummaryContainer}>
         {marketSummaryLoading ? (
