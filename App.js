@@ -44,12 +44,12 @@ export default function App() {
     //   <StatusBar style="auto" />
     // </View>
     // <LoginScreen />
-    // <HomeScreen />
+    <HomeScreen />
     // <ListedStockScreen />
     // <TopScreen />
     // <MarketScreen />
     // <MeroShareScreen />
-    <BrokersScreen />
+    // <BrokersScreen />
   );
 }
 

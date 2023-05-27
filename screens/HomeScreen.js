@@ -18,6 +18,7 @@ import useFetch from "../hooks/useFetch";
 
 // styles
 import styles from "../styles/HomeScreen.styles";
+import Loader from "../components/Loader";
 
 export default function HomeScreen() {
   const [topGainer, setTopGainer] = useState({
@@ -44,6 +45,11 @@ export default function HomeScreen() {
     loading: topLoserLoading,
     error: topLoserError,
   } = useFetch("/nepse/top-loser");
+  const {
+    data: marketSummary,
+    loading: marketSummaryLoading,
+    error: marketSummaryError,
+  } = useFetch("/nepse/market-summary");
 
   // useeffect for top gainer
   useEffect(() => {
@@ -236,34 +242,54 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.marketSummaryContainer}>
-        <View style={styles.marketSummary}>
-          <AppText style={styles.marketSummaryTitle}>Market Summary</AppText>
+        {marketSummaryLoading ? (
+          <Loader />
+        ) : marketSummaryError ? (
+          <AppText>Error Loading Data</AppText>
+        ) : (
+          <View style={styles.marketSummary}>
+            <AppText style={styles.marketSummaryTitle}>Market Summary</AppText>
 
-          <View style={styles.marketSummaryCard}>
-            <View style={styles.dataRow}>
-              <AppText style={styles.dataRowTitle}>Total Turnover</AppText>
-              <AppText style={styles.dataRowValue}>Rs. 1,000,000</AppText>
-            </View>
-            <View style={styles.dataRow}>
-              <AppText style={styles.dataRowTitle}>Total Traded Shares</AppText>
-              <AppText style={styles.dataRowValue}>1,000,000</AppText>
-            </View>
-            <View style={styles.dataRow}>
-              <AppText style={styles.dataRowTitle}>Total Transaction</AppText>
-              <AppText style={styles.dataRowValue}>1,000,000</AppText>
-            </View>
-            <View style={styles.dataRow}>
-              <AppText style={styles.dataRowTitle}>Total Scrips Traded</AppText>
-              <AppText style={styles.dataRowValue}>1,000,000</AppText>
-            </View>
-            <View style={styles.dataRow}>
-              <AppText style={styles.dataRowTitle}>
-                Market Capitalization
-              </AppText>
-              <AppText style={styles.dataRowValue}>1,000,000</AppText>
+            <View style={styles.marketSummaryCard}>
+              <View style={styles.dataRow}>
+                <AppText style={styles.dataRowTitle}>Total Turnover</AppText>
+                <AppText style={styles.dataRowValue}>
+                  Rs. {marketSummary?.data["Total Turnovers (Rs.)"]}
+                </AppText>
+              </View>
+              <View style={styles.dataRow}>
+                <AppText style={styles.dataRowTitle}>
+                  Total Traded Shares
+                </AppText>
+                <AppText style={styles.dataRowValue}>
+                  {marketSummary?.data["Total Traded Shares "]}
+                </AppText>
+              </View>
+              <View style={styles.dataRow}>
+                <AppText style={styles.dataRowTitle}>Total Transaction</AppText>
+                <AppText style={styles.dataRowValue}>
+                  {marketSummary?.data["Total Transaction "]}
+                </AppText>
+              </View>
+              <View style={styles.dataRow}>
+                <AppText style={styles.dataRowTitle}>
+                  Total Scrips Traded
+                </AppText>
+                <AppText style={styles.dataRowValue}>
+                  {marketSummary?.data["Total Scrips Traded "]}
+                </AppText>
+              </View>
+              <View style={styles.dataRow}>
+                <AppText style={styles.dataRowTitle}>
+                  Market Capitalization
+                </AppText>
+                <AppText style={styles.dataRowValue}>
+                  {marketSummary?.data["Total Market Cap (Rs.)"]}
+                </AppText>
+              </View>
             </View>
           </View>
-        </View>
+        )}
       </View>
     </ScrollView>
   );
