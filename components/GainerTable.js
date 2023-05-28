@@ -5,10 +5,10 @@ import { height, totalSize, width } from "react-native-dimension";
 import AppText from "./AppText";
 import colors from "../config/colors";
 
-export default function GainerTable({ title = "Top", data, headColor }) {
+export default function GainerTable({ title, data, headColor }) {
   return (
     <View style={styles.dataTable}>
-      <AppText style={styles.topGainerTitle}>{title}</AppText>
+      {title && <AppText style={styles.topGainerTitle}>{title}</AppText>}
       <DataTable>
         <DataTable.Header
           style={[

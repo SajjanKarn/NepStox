@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, View } from "react-native";
-import { Table, Row, Rows } from "react-native-table-component";
+import { ScrollView, View } from "react-native";
 
+import GainerTable from "../../components/GainerTable";
+import Loader from "../../components/Loader";
 import useFetch from "../../hooks/useFetch";
 import colors from "../../config/colors";
+
 import styles from "./styles/common";
 
 const TopGainers = () => {
@@ -21,7 +23,6 @@ const TopGainers = () => {
   // useeffect for top gainer
   useEffect(() => {
     if (data?.data?.data?.length > 0) {
-      // get only 5 data
       const tableData = data.data.data.map((item, index) => [
         index + 1,
         item.symbol,
@@ -36,25 +37,11 @@ const TopGainers = () => {
   return (
     <View style={styles.container}>
       {loading ? (
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color={colors.dark.button} />
-        </View>
+        <Loader />
       ) : (
-        topGainer.tableData.length > 0 && (
-          <ScrollView>
-            <Table
-              borderStyle={styles.gainerTableBorder}
-              style={styles.gainerTable}
-            >
-              <Row
-                data={topGainer.tableHead}
-                style={styles.head}
-                textStyle={styles.headText}
-              />
-              <Rows data={topGainer.tableData} textStyle={styles.text} />
-            </Table>
-          </ScrollView>
-        )
+        <ScrollView>
+          <GainerTable data={topGainer} headColor={colors.dark.topGainerText} />
+        </ScrollView>
       )}
     </View>
   );

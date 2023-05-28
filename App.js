@@ -44,9 +44,9 @@ export default function App() {
     //   <StatusBar style="auto" />
     // </View>
     // <LoginScreen />
-    <HomeScreen />
+    // <HomeScreen />
     // <ListedStockScreen />
-    // <TopScreen />
+    <TopScreen />
     // <MarketScreen />
     // <MeroShareScreen />
     // <BrokersScreen />

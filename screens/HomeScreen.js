@@ -6,6 +6,7 @@ import { AntDesign } from "@expo/vector-icons";
 // components
 import AppText from "../components/AppText";
 import GainerTable from "../components/GainerTable";
+import Loader from "../components/Loader";
 
 import colors from "../config/colors";
 
@@ -13,7 +14,6 @@ import useFetch from "../hooks/useFetch";
 
 // styles
 import styles from "../styles/HomeScreen.styles";
-import Loader from "../components/Loader";
 
 export default function HomeScreen() {
   const [topGainer, setTopGainer] = useState({
