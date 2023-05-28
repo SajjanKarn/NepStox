@@ -38,9 +38,11 @@ const TopTradedShares = () => {
       {loading ? (
         <Loader />
       ) : (
-        <ScrollView>
-          <GainerTable data={topShares} headColor={colors.dark.secondary} />
-        </ScrollView>
+        <GainerTable
+          data={topShares}
+          headColor={colors.dark.secondary}
+          headScroll
+        />
       )}
     </View>
   );

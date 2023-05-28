@@ -37,9 +37,11 @@ const TopTurnovers = () => {
       {loading ? (
         <Loader />
       ) : (
-        <ScrollView>
-          <GainerTable data={topTurnovers} headColor={colors.dark.secondary} />
-        </ScrollView>
+        <GainerTable
+          data={topTurnovers}
+          headColor={colors.dark.secondary}
+          headScroll
+        />
       )}
     </View>
   );

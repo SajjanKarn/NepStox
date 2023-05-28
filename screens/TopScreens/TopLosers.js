@@ -39,9 +39,11 @@ const TopLosers = () => {
       {loading ? (
         <Loader />
       ) : (
-        <ScrollView>
-          <GainerTable data={topLoser} headColor={colors.dark.topLoserText} />
-        </ScrollView>
+        <GainerTable
+          data={topLoser}
+          headColor={colors.dark.topLoserText}
+          headScroll
+        />
       )}
     </View>
   );

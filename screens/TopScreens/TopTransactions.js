@@ -38,13 +38,12 @@ const TopTransactions = () => {
       {loading ? (
         <Loader />
       ) : (
-        <ScrollView>
-          <GainerTable
-            data={topTransactions}
-            headColor={colors.dark.secondary}
-            numeric={false}
-          />
-        </ScrollView>
+        <GainerTable
+          data={topTransactions}
+          headColor={colors.dark.secondary}
+          numeric={false}
+          headScroll
+        />
       )}
     </View>
   );
