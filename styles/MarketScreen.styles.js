@@ -103,36 +103,4 @@ export default styles = StyleSheet.create({
   unchanged: {
     backgroundColor: colors.dark.unchanged,
   },
-
-  // table styles
-  gainerTableBorder: {
-    borderWidth: 1,
-    borderColor: colors.dark.placeholderText,
-  },
-  gainerTable: {
-    marginBottom: height(2),
-  },
-  head: {
-    height: height(7),
-    textAlign: "center",
-    backgroundColor: colors.dark.secondary,
-  },
-  loserHead: {
-    backgroundColor: colors.dark.topLoserText,
-  },
-  headText: {
-    fontSize: totalSize(1.2),
-    textAlign: "center",
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    fontFamily: "Riveruta-Bold",
-    color: colors.dark.textColor,
-  },
-  text: {
-    padding: totalSize(1.1),
-    fontSize: totalSize(1.4),
-    fontFamily: "Riveruta-Medium",
-    color: colors.dark.textColor,
-    textAlign: "center",
-  },
 });

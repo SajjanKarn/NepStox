@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
-import {
-  View,
-  ActivityIndicator,
-  StatusBar,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
-} from "react-native";
-import { FlashList } from "@shopify/flash-list";
+import { View, StatusBar } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { Table, Row, Rows } from "react-native-table-component";
 import { width } from "react-native-dimension";
 
 import AppText from "../components/AppText";
 import AppInput from "../components/AppInput";
-import StockList from "../components/StockList";
+import Loader from "../components/Loader";
+import GainerTable from "../components/GainerTable";
 
 import useFetch from "../hooks/useFetch";
 import colors from "../config/colors";
@@ -31,12 +23,17 @@ export default function MarketScreen() {
       ["NICA", "10.00", "10.00", "10.00", "10.00", "10.00", "10.00"],
     ],
   });
+  const [searchLoading, setSearchLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
+  const [searchResult, setSearchResult] = useState({
+    tableHead: [],
+    tableData: [],
+  });
 
   const handleInputChange = (text) => {
     setSearchInput(text);
     if (text.length > 0) {
+      setSearchLoading(true);
       // filter and format the result data according to the table
       const result = data.data
         .filter((item) => {
@@ -52,9 +49,19 @@ export default function MarketScreen() {
           parseInt(item["Prev. Close"]).toFixed(1),
         ]);
 
-      setSearchResult(result);
+      setSearchResult({
+        tableHead: ["Symbol", "LTP", "High", "Low", "CH", "CH %", "P Close"],
+        tableData: result,
+      });
+
+      setSearchLoading(false);
     } else {
-      setSearchResult([]);
+      setSearchResult({
+        tableHead: [],
+        tableData: [],
+      });
+
+      setSearchLoading(false);
     }
   };
 
@@ -137,29 +144,23 @@ export default function MarketScreen() {
       </View>
 
       {loading ? (
-        <ActivityIndicator size="large" color={colors.dark.button} />
+        <Loader />
       ) : (
         <View style={styles.stocksContainer}>
-          {marketData.tableData.length > 0 && (
-            <ScrollView>
-              <Table
-                borderStyle={styles.gainerTableBorder}
-                style={styles.gainerTable}
-              >
-                <Row
-                  data={marketData.tableHead}
-                  style={styles.head}
-                  textStyle={styles.headText}
-                />
-                <Rows
-                  data={
-                    searchInput.length > 0 ? searchResult : marketData.tableData
-                  }
-                  textStyle={styles.text}
-                />
-              </Table>
-            </ScrollView>
-          )}
+          {marketData.tableData.length > 0 &&
+            (searchLoading ? (
+              <Loader />
+            ) : (
+              <GainerTable
+                data={
+                  searchResult?.tableData?.length > 0
+                    ? searchResult
+                    : marketData
+                }
+                headColor={colors.dark.secondary}
+                headScroll
+              />
+            ))}
         </View>
       )}
     </View>

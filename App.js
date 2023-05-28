@@ -46,8 +46,8 @@ export default function App() {
     // <LoginScreen />
     // <HomeScreen />
     // <ListedStockScreen />
-    <TopScreen />
-    // <MarketScreen />
+    // <TopScreen />
+    <MarketScreen />
     // <MeroShareScreen />
     // <BrokersScreen />
   );

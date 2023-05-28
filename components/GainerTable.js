@@ -1,11 +1,17 @@
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { DataTable } from "react-native-paper";
 import { height, totalSize, width } from "react-native-dimension";
 
 import AppText from "./AppText";
 import colors from "../config/colors";
 
-export default function GainerTable({ title, data, headColor }) {
+export default function GainerTable({
+  title,
+  data,
+  headColor,
+  headScroll = false,
+  loading = false,
+}) {
   return (
     <View style={styles.dataTable}>
       {title && <AppText style={styles.topGainerTitle}>{title}</AppText>}
@@ -29,17 +35,33 @@ export default function GainerTable({ title, data, headColor }) {
           ))}
         </DataTable.Header>
 
-        {data?.tableData?.map((item, index) => (
-          <DataTable.Row key={index} style={styles.tableRow}>
-            {item.map((item, index) => (
-              <DataTable.Cell key={index} numeric={index !== 0}>
-                <AppText style={styles.tableRowText} variant="Medium">
-                  {item}
-                </AppText>
-              </DataTable.Cell>
+        {headScroll ? (
+          <ScrollView>
+            {data?.tableData?.map((item, index) => (
+              <DataTable.Row key={index} style={styles.tableRow}>
+                {item.map((item, index) => (
+                  <DataTable.Cell key={index} numeric={index !== 0}>
+                    <AppText style={styles.tableRowText} variant="Medium">
+                      {item}
+                    </AppText>
+                  </DataTable.Cell>
+                ))}
+              </DataTable.Row>
             ))}
-          </DataTable.Row>
-        ))}
+          </ScrollView>
+        ) : (
+          data?.tableData?.map((item, index) => (
+            <DataTable.Row key={index} style={styles.tableRow}>
+              {item.map((item, index) => (
+                <DataTable.Cell key={index} numeric={index !== 0}>
+                  <AppText style={styles.tableRowText} variant="Medium">
+                    {item}
+                  </AppText>
+                </DataTable.Cell>
+              ))}
+            </DataTable.Row>
+          ))
+        )}
       </DataTable>
     </View>
   );
