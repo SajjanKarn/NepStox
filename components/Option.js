@@ -7,7 +7,7 @@ import colors from "../config/colors";
 
 export default function Option({ item }) {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={item.onPress}>
       <View style={styles.option} key={item.name}>
         <AntDesign name={item.icon} size={25} color={colors.dark.textColor} />
         <AppText style={styles.optionName} variant="Medium">

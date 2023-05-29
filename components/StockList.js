@@ -7,13 +7,27 @@ import AppText from "./AppText";
 
 export default function StockList({ stock }) {
   return (
-    <View style={styles.stock}>
+    <View
+      style={[
+        styles.stock,
+        {
+          backgroundColor:
+            Number(stock.change_pts) > 0
+              ? colors.dark.stockIncrease + "20"
+              : Number(stock.change_pts) < 0
+              ? colors.dark.stockDecrease + "10"
+              : colors.dark.secondary + "10",
+        },
+      ]}
+    >
       <View style={styles.stockInfo}>
         <AppText style={styles.companySymbol}>{stock.symbol}</AppText>
         <AppText style={styles.ltp}>Rs. {stock.ltp}</AppText>
       </View>
       <View style={styles.stockInfo}>
-        <AppText style={styles.companyName}>Rs. {stock.prev_close}</AppText>
+        <AppText style={styles.companyName}>
+          Prev. Closing: {stock.prev_close}
+        </AppText>
         <AppText
           style={{
             fontSize: totalSize(1.8),
@@ -48,8 +62,9 @@ export default function StockList({ stock }) {
 
 const styles = StyleSheet.create({
   stock: {
-    marginVertical: height(0.2),
-    padding: width(5),
+    marginVertical: height(0.5),
+    paddingHorizontal: width(3),
+    paddingVertical: width(2),
     borderRadius: width(2),
   },
   stockInfo: {

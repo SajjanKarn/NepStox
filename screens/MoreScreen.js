@@ -5,55 +5,68 @@ import AppText from "../components/AppText";
 import Option from "../components/Option";
 
 import styles from "../styles/MoreScreen.styles";
+import { useNavigation } from "@react-navigation/native";
 
 export default function MoreScreen() {
+  const navigation = useNavigation();
   const [options, setOptions] = useState({
     myInformation: [
       {
         name: "Profile",
         icon: "wallet",
+        onPress: () => {},
       },
       {
         name: "My WatchList",
         icon: "eye",
+        onPress: () => {},
       },
       {
         name: "Odd Lot",
         icon: "home",
+        onPress: () => {},
       },
       {
         name: "My Notes",
         icon: "book",
+        onPress: () => {},
       },
     ],
     marketInformation: [
       {
         name: "Stock Prices",
         icon: "linechart",
+        onPress: () => {},
       },
       {
         name: "Indices",
         icon: "dotchart",
+        onPress: () => {},
       },
       {
         name: "Top Trades",
         icon: "arrowup",
+        onPress: () => navigation.navigate("TopScreen"),
       },
       {
         name: "FloorSheet",
         icon: "filetext1",
+        onPress: () => {},
       },
       {
         name: "Listed Stocks",
         icon: "bars",
+        onPress: () => navigation.navigate("ListedStockScreen"),
       },
       {
         name: "Brokers",
         icon: "team",
+        onPress: () => navigation.navigate("BrokersScreen"),
       },
       {
         name: "Compare Stocks",
         icon: "swap",
+        onPress: () => {},
       },
     ],
     utilities: [
@@ -74,6 +87,7 @@ export default function MoreScreen() {
       {
         name: "MeroShare",
         icon: "sharealt",
+        onPress: () => navigation.navigate("MeroShareScreen"),
       },
       {
         name: "Discussions",

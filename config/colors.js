@@ -12,5 +12,7 @@ export default colors = {
     topGainerText: "#008000",
     topLoserText: "#fe5316",
     bottomTab: "#181818",
+    stockIncrease: "#0b8000",
+    stockDecrease: "#4c0000",
   },
 };
