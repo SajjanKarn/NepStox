@@ -9,6 +9,7 @@ import HomeScreen from "../screens/HomeScreen";
 import MarketScreen from "../screens/MarketScreen";
 
 import colors from "../config/colors";
+import MoreScreen from "../screens/MoreScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -54,7 +55,7 @@ export default function AuthNavigator() {
         />
         <Tab.Screen
           name="More"
-          component={MarketScreen}
+          component={MoreScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="bars" color={color} size={size} />
