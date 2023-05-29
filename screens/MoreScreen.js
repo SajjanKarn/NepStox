@@ -36,12 +36,12 @@ export default function MoreScreen() {
       {
         name: "Stock Prices",
         icon: "linechart",
-        onPress: () => {},
+        onPress: () => navigation.navigate("StockPricesScreen"),
       },
       {
         name: "Indices",
         icon: "dotchart",
-        onPress: () => {},
+        onPress: () => navigation.navigate("IndicesScreen"),
       },
       {
         name: "Top Trades",

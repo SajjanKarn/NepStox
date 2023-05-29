@@ -17,6 +17,7 @@ import TopScreen from "../screens/TopScreen";
 import ListedStockScreen from "../screens/ListedStockScreen";
 import BrokersScreen from "../screens/BrokersScreen";
 import MeroShareScreen from "../screens/MeroShareScreen";
+import IndicesScreen from "../screens/IndicesScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -59,6 +60,16 @@ export const MoreStack = () => (
       name="MeroShareScreen"
       component={MeroShareScreen}
       options={stackHeaderStyle("Mero Share")}
+    />
+    <MoreStackNavigator.Screen
+      name="StockPricesScreen"
+      component={MarketScreen}
+      options={stackHeaderStyle("Stock Prices")}
+    />
+    <MoreStackNavigator.Screen
+      name="IndicesScreen"
+      component={IndicesScreen}
+      options={stackHeaderStyle("Market Indices")}
     />
   </MoreStackNavigator.Navigator>
 );
