@@ -1,10 +1,10 @@
-import { View, ScrollView, StyleSheet, StatusBar } from "react-native";
-import { width, height, totalSize } from "react-native-dimension";
+import { View, ScrollView, StatusBar } from "react-native";
 import { useState } from "react";
 
 import AppText from "../components/AppText";
 import Option from "../components/Option";
-import colors from "../config/colors";
+
+import styles from "../styles/MoreScreen.styles";
 
 export default function MoreScreen() {
   const [options, setOptions] = useState({
@@ -138,27 +138,3 @@ export default function MoreScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.dark.primary,
-    paddingTop: height(1),
-    paddingHorizontal: width(5),
-  },
-  optionContainer: {
-    paddingBottom: height(5),
-  },
-  optionTitle: {
-    color: colors.dark.textColor,
-    fontSize: totalSize(2.5),
-    marginBottom: height(2),
-  },
-  options: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexWrap: "wrap",
-    gap: totalSize(1),
-  },
-});
