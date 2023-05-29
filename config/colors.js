@@ -11,5 +11,6 @@ export default colors = {
     increasedGreeen: "#16FF00",
     topGainerText: "#008000",
     topLoserText: "#fe5316",
+    bottomTab: "#181818",
   },
 };

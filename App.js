@@ -16,6 +16,7 @@ import TopScreen from "./screens/TopScreen";
 import MarketScreen from "./screens/MarketScreen";
 import MeroShareScreen from "./screens/MeroShareScreen";
 import BrokersScreen from "./screens/BrokersScreen";
+import AuthNavigator from "./navigation/AuthNavigator";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -46,10 +47,11 @@ export default function App() {
     // <LoginScreen />
     // <HomeScreen />
     // <ListedStockScreen />
-    <TopScreen />
+    // <TopScreen />
     // <MarketScreen />
     // <MeroShareScreen />
     // <BrokersScreen />
+    <AuthNavigator />
   );
 }
 
