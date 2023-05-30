@@ -59,8 +59,8 @@ export default function IndicesScreen() {
               style={{
                 backgroundColor:
                   index["% Change"] > 0
-                    ? colors.dark.topGainerText
-                    : colors.dark.stockDecrease,
+                    ? colors.dark.stockIncrease + "30"
+                    : colors.dark.stockDecrease + "50",
               }}
             >
               <DataTable.Cell
@@ -77,7 +77,7 @@ export default function IndicesScreen() {
                 <AppText>{index["Point Change"]}</AppText>
               </DataTable.Cell>
               <DataTable.Cell numeric>
-                <AppText>{index["% Change"]}</AppText>
+                <AppText>{index["% Change"]}%</AppText>
               </DataTable.Cell>
             </DataTable.Row>
           ))
@@ -120,8 +120,8 @@ export default function IndicesScreen() {
               style={{
                 backgroundColor:
                   index["% Change"] > 0
-                    ? colors.dark.topGainerText
-                    : colors.dark.stockDecrease,
+                    ? colors.dark.stockIncrease + "30"
+                    : colors.dark.stockDecrease + "50",
               }}
             >
               <DataTable.Cell
@@ -138,7 +138,7 @@ export default function IndicesScreen() {
                 <AppText>{index["Point"]}</AppText>
               </DataTable.Cell>
               <DataTable.Cell numeric>
-                <AppText>{index["% Change"]}</AppText>
+                <AppText>{index["% Change"]}%</AppText>
               </DataTable.Cell>
             </DataTable.Row>
           ))
@@ -161,5 +161,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginVertical: 5,
   },
 });
