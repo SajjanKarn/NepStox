@@ -66,7 +66,7 @@ export default function MoreScreen() {
       {
         name: "Compare Stocks",
         icon: "swap",
-        onPress: () => {},
+        onPress: () => navigation.navigate("StockComparisonScreen"),
       },
     ],
     utilities: [

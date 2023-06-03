@@ -18,6 +18,7 @@ import ListedStockScreen from "../screens/ListedStockScreen";
 import BrokersScreen from "../screens/BrokersScreen";
 import MeroShareScreen from "../screens/MeroShareScreen";
 import IndicesScreen from "../screens/IndicesScreen";
+import StockComparisonScreen from "../screens/StockComparisonScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -70,6 +71,11 @@ export const MoreStack = () => (
       name="IndicesScreen"
       component={IndicesScreen}
       options={stackHeaderStyle("Market Indices")}
+    />
+    <MoreStackNavigator.Screen
+      name="StockComparisonScreen"
+      component={StockComparisonScreen}
+      options={stackHeaderStyle("Compare Stocks")}
     />
   </MoreStackNavigator.Navigator>
 );
@@ -133,6 +139,7 @@ const styles = StyleSheet.create({
     headerShown: false,
     tabBarActiveTintColor: colors.dark.button,
     tabBarInactiveTintColor: colors.dark.placeholderText,
+    tabBarHideOnKeyboard: true,
     tabBarStyle: {
       backgroundColor: colors.dark.bottomTab,
       borderTopWidth: 0,
