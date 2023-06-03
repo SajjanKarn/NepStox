@@ -130,6 +130,7 @@ export default function HomeScreen() {
               color="white"
               style={styles.tileIcon}
             />
+            <AppText style={styles.indicatorValue}>0</AppText>
             <AppText style={styles.indicatorTitle}>Advanced</AppText>
           </View>
           <View style={[styles.indicatorTile, styles.declined]}>
@@ -139,6 +140,7 @@ export default function HomeScreen() {
               color="white"
               style={styles.tileIcon}
             />
+            <AppText style={styles.indicatorValue}>0</AppText>
             <AppText style={styles.indicatorTitle}>Declined</AppText>
           </View>
           <View style={[styles.indicatorTile, styles.unchanged]}>
@@ -148,6 +150,7 @@ export default function HomeScreen() {
               color="white"
               style={styles.tileIcon}
             />
+            <AppText style={styles.indicatorValue}>0</AppText>
             <AppText style={styles.indicatorTitle}>Unchanged</AppText>
           </View>
         </View>
@@ -261,7 +264,11 @@ export default function HomeScreen() {
                     Market Capitalization
                   </AppText>
                   <AppText style={styles.dataRowValue}>
-                    {marketSummary?.data["Total Market Cap (Rs.)"]}
+                    {
+                      marketSummary?.data["Total Market Cap (Rs.)"].split(
+                        "Millions"
+                      )[0]
+                    }
                   </AppText>
                 </View>
               </View>

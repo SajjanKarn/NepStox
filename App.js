@@ -18,6 +18,7 @@ import MeroShareScreen from "./screens/MeroShareScreen";
 import BrokersScreen from "./screens/BrokersScreen";
 import AuthNavigator from "./navigation/AuthNavigator";
 import CompanyDetailsScreen from "./screens/CompanyDetailsScreen";
+import StockComparisonScreen from "./screens/StockComparisonScreen";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -52,7 +53,8 @@ export default function App() {
     // <MarketScreen />
     // <MeroShareScreen />
     // <BrokersScreen />
-    <CompanyDetailsScreen />
+    // <CompanyDetailsScreen />
+    <StockComparisonScreen />
     // <AuthNavigator />
   );
 }
