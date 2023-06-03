@@ -10,7 +10,6 @@ export default function GainerTable({
   data,
   headColor,
   headScroll = false,
-  loading = false,
 }) {
   return (
     <View style={styles.dataTable}>

@@ -9,12 +9,12 @@ import Loader from "../../components/Loader";
 
 const TopTurnovers = () => {
   const [topTurnovers, setTopTurnovers] = useState({
-    tableHead: ["SN", "Symbol", "Turnover", "LTP"],
+    tableHead: ["Symbol", "Turnover", "LTP"],
     tableData: [
-      ["1", "NABIL", "10.00", "10.00"],
-      ["2", "RBB", "10.00", "10.00"],
-      ["3", "NIC ASIA", "10.00", "10.00"],
-      ["4", "NICA", "10.00", "10.00"],
+      ["NABIL", "10.00", "10.00"],
+      ["RBB", "10.00", "10.00"],
+      ["NIC ASIA", "10.00", "10.00"],
+      ["NICA", "10.00", "10.00"],
     ],
   });
   const { data, loading, error } = useFetch("/nepse/top-turnover");
@@ -23,9 +23,8 @@ const TopTurnovers = () => {
   useEffect(() => {
     if (data?.data?.data?.length > 0) {
       const tableData = data.data.data.map((item, index) => [
-        index + 1,
         item.symbol,
-        "Random",
+        item.traded_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
         item.close,
       ]);
       setTopTurnovers((prev) => ({ ...prev, tableData }));

@@ -54,8 +54,8 @@ export default function App() {
     // <MeroShareScreen />
     // <BrokersScreen />
     // <CompanyDetailsScreen />
-    <StockComparisonScreen />
-    // <AuthNavigator />
+    // <StockComparisonScreen />
+    <AuthNavigator />
   );
 }
 
