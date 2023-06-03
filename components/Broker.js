@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
 import { height, totalSize } from "react-native-dimension";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -14,7 +14,10 @@ export default function Broker({ broker }) {
           Broker No: {broker.number}
         </AppText>
       </View>
-      <TouchableOpacity style={styles.callBroker}>
+      <TouchableOpacity
+        style={styles.callBroker}
+        onPress={() => Linking.openURL(`tel:${broker.contact_number}`)}
+      >
         <AntDesign
           name="phone"
           size={25}
