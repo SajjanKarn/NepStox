@@ -3,19 +3,18 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
-  StyleSheet,
   View,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
-import { width, height, totalSize } from "react-native-dimension";
 import { useRoute } from "@react-navigation/native";
 
 import AppText from "../components/AppText";
 import Loader from "../components/Loader";
 import RowCard from "../components/RowCard";
 
-import colors from "../config/colors";
 import useFetch from "../hooks/useFetch";
+
+import styles from "../styles/CompanyDetailsScreen.styles";
 
 export default function CompanyDetailsScreen() {
   const { symbol } = useRoute().params;
@@ -26,10 +25,12 @@ export default function CompanyDetailsScreen() {
       <SafeAreaView>
         <StatusBar barStyle="default" />
         {loading ? (
-          <View style={styles.loaderContainer}>
-            <Loader />
-          </View>
-        ) : (
+          <Loader />
+        ) : error ? (
+          <AppText style={styles.errorText}>
+            Sorry, something went wrong.
+          </AppText>
+        ) : data?.data ? (
           <>
             {/* company info card  */}
             <View style={styles.companyInfoCard}>
@@ -167,48 +168,12 @@ export default function CompanyDetailsScreen() {
               />
             </View>
           </>
+        ) : (
+          <AppText style={styles.errorText}>
+            Sorry, no data available for this company.
+          </AppText>
         )}
       </SafeAreaView>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.dark.primary,
-    paddingHorizontal: width(5),
-  },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  companyInfoCard: {
-    backgroundColor: colors.dark.secondary,
-    borderRadius: totalSize(1),
-    padding: totalSize(1),
-    marginVertical: totalSize(1),
-  },
-  companyInfoCardHeader: {
-    marginVertical: totalSize(1.5),
-  },
-  companyInfoCardHeaderText: {
-    fontSize: totalSize(2),
-    color: colors.dark.button,
-    textTransform: "uppercase",
-  },
-  cardBodyText: {
-    fontSize: totalSize(1.7),
-    color: colors.dark.placeholderText,
-  },
-  todayDataContainer: {
-    marginVertical: totalSize(1),
-  },
-  headerTitle: {
-    fontSize: totalSize(2),
-    color: colors.dark.button,
-    textTransform: "uppercase",
-    marginVertical: totalSize(1),
-  },
-});
