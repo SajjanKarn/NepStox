@@ -19,6 +19,7 @@ import BrokersScreen from "../screens/BrokersScreen";
 import MeroShareScreen from "../screens/MeroShareScreen";
 import IndicesScreen from "../screens/IndicesScreen";
 import StockComparisonScreen from "../screens/StockComparisonScreen";
+import CompanyDetailsScreen from "../screens/CompanyDetailsScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -80,13 +81,30 @@ export const MoreStack = () => (
   </MoreStackNavigator.Navigator>
 );
 
+export const HomeStack = () => (
+  <MoreStackNavigator.Navigator initialRouteName="HomeScreen">
+    <MoreStackNavigator.Screen
+      name="HomeScreen"
+      component={HomeScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <MoreStackNavigator.Screen
+      name="CompanyDetailsScreen"
+      component={CompanyDetailsScreen}
+      options={stackHeaderStyle("Company Details")}
+    />
+  </MoreStackNavigator.Navigator>
+);
+
 export default function AuthNavigator() {
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={styles.tabNavigator}>
         <Tab.Screen
           name="Home"
-          component={HomeScreen}
+          component={HomeStack}
           options={{
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="home" color={color} size={size} />

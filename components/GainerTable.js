@@ -1,6 +1,7 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 import { DataTable } from "react-native-paper";
 import { height, totalSize, width } from "react-native-dimension";
+import { useNavigation } from "@react-navigation/native";
 
 import AppText from "./AppText";
 import colors from "../config/colors";
@@ -11,6 +12,8 @@ export default function GainerTable({
   headColor,
   headScroll = false,
 }) {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.dataTable}>
       {title && <AppText style={styles.topGainerTitle}>{title}</AppText>}
@@ -50,7 +53,13 @@ export default function GainerTable({
           </ScrollView>
         ) : (
           data?.tableData?.map((item, index) => (
-            <DataTable.Row key={index} style={styles.tableRow}>
+            <DataTable.Row
+              key={index}
+              style={styles.tableRow}
+              onPress={() =>
+                navigation.navigate("CompanyDetailsScreen", { symbol: item[0] })
+              }
+            >
               {item.map((item, index) => (
                 <DataTable.Cell key={index} numeric={index !== 0}>
                   <AppText style={styles.tableRowText} variant="Medium">

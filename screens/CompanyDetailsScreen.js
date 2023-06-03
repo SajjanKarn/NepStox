@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { width, height, totalSize } from "react-native-dimension";
+import { useRoute } from "@react-navigation/native";
 
 import AppText from "../components/AppText";
 import Loader from "../components/Loader";
@@ -17,14 +18,17 @@ import colors from "../config/colors";
 import useFetch from "../hooks/useFetch";
 
 export default function CompanyDetailsScreen() {
-  const { data, loading, error } = useFetch(`/nepse/company-details/nlbbl`);
-  console.log(data);
+  const { symbol } = useRoute().params;
+  const { data, loading, error } = useFetch(`/nepse/company-details/${symbol}`);
+
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView>
         <StatusBar barStyle="default" />
         {loading ? (
-          <Loader />
+          <View style={styles.loaderContainer}>
+            <Loader />
+          </View>
         ) : (
           <>
             {/* company info card  */}
@@ -174,6 +178,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.dark.primary,
     paddingHorizontal: width(5),
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   companyInfoCard: {
     backgroundColor: colors.dark.secondary,
