@@ -14,17 +14,19 @@ export default function Broker({ broker }) {
           Broker No: {broker.number}
         </AppText>
       </View>
-      <TouchableOpacity
-        style={styles.callBroker}
-        onPress={() => Linking.openURL(`tel:${broker.contact_number}`)}
-      >
-        <AntDesign
-          name="phone"
-          size={25}
-          color={colors.dark.button}
-          style={styles.phone}
-        />
-      </TouchableOpacity>
+      {broker.contact_number && (
+        <TouchableOpacity
+          style={styles.callBroker}
+          onPress={() => Linking.openURL(`tel:${broker.contact_number}`)}
+        >
+          <AntDesign
+            name="phone"
+            size={25}
+            color={colors.dark.button}
+            style={styles.phone}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
