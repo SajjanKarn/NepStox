@@ -78,6 +78,7 @@ export default function MoreScreen() {
       {
         name: "Exchange Rates",
         icon: "retweet",
+        onPress: () => navigation.navigate("ForeignExchangeScreen"),
       },
       {
         name: "Reminders",
