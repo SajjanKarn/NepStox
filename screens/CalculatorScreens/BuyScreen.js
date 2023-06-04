@@ -7,7 +7,13 @@ import AppText from "../../components/AppText";
 import AppInput from "../../components/AppInput";
 import AppButton from "../../components/AppButton";
 
-import { broker_commission } from "../../utils/formula";
+import {
+  broker_commission,
+  cost_per_share,
+  sebon_commission,
+  share_amount,
+  total_paying_amount,
+} from "../../utils/formula";
 
 import colors from "../../config/colors";
 
@@ -48,25 +54,24 @@ export default function BuyScreen() {
       <AppButton
         squared
         onPress={() => {
-          const shareAmount = Number(units) * Number(buyingPrice);
-          const sebonCommission = ((0.015 / 100) * shareAmount).toFixed(2);
-          const brokerCommission = broker_commission(
-            Number(shareAmount)
-          ).toFixed(2);
+          const shareAmount = share_amount(Number(units), Number(buyingPrice));
+          const sebonCommission = sebon_commission(Number(shareAmount));
+          const brokerCommission = broker_commission(Number(shareAmount));
           const dpFee = 25;
-          const costPerShare = (
-            (Number(shareAmount) +
-              Number(sebonCommission) +
-              Number(brokerCommission) +
-              Number(dpFee)) /
+          const costPerShare = cost_per_share(
+            Number(shareAmount),
+            Number(sebonCommission),
+            Number(brokerCommission),
+            Number(dpFee),
             Number(units)
-          ).toFixed(2);
-          const totalPayingAmount = (
-            Number(shareAmount) +
-            Number(sebonCommission) +
-            Number(brokerCommission) +
+          );
+
+          const totalPayingAmount = total_paying_amount(
+            Number(shareAmount),
+            Number(sebonCommission),
+            Number(brokerCommission),
             Number(dpFee)
-          ).toFixed(2);
+          );
 
           setShareAmount(
             shareAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")

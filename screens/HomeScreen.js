@@ -40,6 +40,11 @@ export default function HomeScreen() {
       ["NICA", "10.00", "10.00", "10.00"],
     ],
   });
+  const {
+    data: indices,
+    loading: indicesLoading,
+    error: indicesError,
+  } = useFetch("/nepse/indices");
   const { data, loading, error } = useFetch("/nepse/top-gainer");
   const {
     data: topLoserData,
@@ -87,24 +92,43 @@ export default function HomeScreen() {
     <ScrollView style={styles.container}>
       <SafeAreaView>
         <StatusBar />
-
-        <View style={styles.nepseIndexContainer}>
-          <View style={styles.data}>
-            <AppText style={styles.dataTitle}>Nepse</AppText>
-            <AppText style={styles.dataValue}>678.51</AppText>
-            <AppText style={styles.dataChange}>+3.00 (1.00%)</AppText>
+        {indicesLoading ? (
+          <Loader />
+        ) : (
+          <View style={styles.nepseIndexContainer}>
+            <View style={styles.data}>
+              <AppText style={styles.dataTitle}>Nepse</AppText>
+              <AppText style={styles.dataValue}>
+                {indices?.data?.data[0]?.Close}
+              </AppText>
+              <AppText style={styles.dataChange}>
+                +{indices?.data?.data[0]["Point Change"]} (
+                {indices?.data?.data[0]["% Change"]}%)
+              </AppText>
+            </View>
+            <View style={styles.data}>
+              <AppText style={styles.dataTitle}>Sensitive</AppText>
+              <AppText style={styles.dataValue}>
+                {indices?.data?.data[1]?.Close}
+              </AppText>
+              <AppText style={styles.dataChange}>
+                +{indices?.data?.data[1]["Point Change"]} (
+                {indices?.data?.data[1]["% Change"]}%)
+              </AppText>
+            </View>
+            <View style={styles.data}>
+              <AppText style={styles.dataTitle}>Float</AppText>
+              <AppText style={styles.dataValue}>
+                {indices?.data?.data[2]?.Close}
+              </AppText>
+              <AppText style={styles.dataChange}>
+                {" "}
+                +{indices?.data?.data[2]["Point Change"]} (
+                {indices?.data?.data[2]["% Change"]}%)
+              </AppText>
+            </View>
           </View>
-          <View style={styles.data}>
-            <AppText style={styles.dataTitle}>Sensitive</AppText>
-            <AppText style={styles.dataValue}>253.66</AppText>
-            <AppText style={styles.dataChange}>+1.00 (2.20%)</AppText>
-          </View>
-          <View style={styles.data}>
-            <AppText style={styles.dataTitle}>Float</AppText>
-            <AppText style={styles.dataValue}>789.90</AppText>
-            <AppText style={styles.dataChange}>+5.00 (5.56%)</AppText>
-          </View>
-        </View>
+        )}
 
         <View style={styles.marketStatusContainer}>
           <View style={styles.marketStatus}>
