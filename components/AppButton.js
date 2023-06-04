@@ -21,6 +21,7 @@ export default function AppButton({
           backgroundColor: backgroundColor
             ? backgroundColor
             : colors.dark.button,
+          opacity: props.disabled ? 0.5 : 1,
           borderRadius: squared ? totalSize(1) : totalSize(5),
         },
       ]}
