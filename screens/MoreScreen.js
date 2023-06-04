@@ -73,6 +73,7 @@ export default function MoreScreen() {
       {
         name: "Calculator",
         icon: "calculator",
+        onPress: () => navigation.navigate("CalculatorScreen"),
       },
       {
         name: "Exchange Rates",
@@ -90,8 +91,9 @@ export default function MoreScreen() {
         onPress: () => navigation.navigate("MeroShareScreen"),
       },
       {
-        name: "Discussions",
-        icon: "message1",
+        name: "IPO Result",
+        icon: "search1",
+        onPress: () => navigation.navigate("IPOResultScreen"),
       },
     ],
   });

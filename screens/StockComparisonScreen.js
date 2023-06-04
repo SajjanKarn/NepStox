@@ -25,8 +25,6 @@ export default function StockComparisonScreen() {
     loading: companyLoading2,
     error: companyError2,
   } = useFetch(`/nepse/company-details/${pickerInput2}`);
-  console.log(companyData1);
-  console.log(companyData2);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>

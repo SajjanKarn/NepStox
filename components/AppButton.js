@@ -9,6 +9,7 @@ export default function AppButton({
   font,
   backgroundColor,
   textColor,
+  squared = false,
   ...props
 }) {
   return (
@@ -20,6 +21,7 @@ export default function AppButton({
           backgroundColor: backgroundColor
             ? backgroundColor
             : colors.dark.button,
+          borderRadius: squared ? totalSize(1) : totalSize(5),
         },
       ]}
       {...props}
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dark.button,
     width: "100%",
     height: height(7),
-    borderRadius: 25,
+    borderRadius: totalSize(5),
     justifyContent: "center",
     alignItems: "center",
     marginVertical: height(1),
