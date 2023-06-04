@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     color: colors.dark.textColor,
-    fontSize: totalSize(2),
+    fontSize: totalSize(1.6),
     textTransform: "uppercase",
   },
   radioContainer: {

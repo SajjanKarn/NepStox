@@ -92,43 +92,46 @@ export default function HomeScreen() {
     <ScrollView style={styles.container}>
       <SafeAreaView>
         <StatusBar />
-        {indicesLoading ? (
-          <Loader />
-        ) : (
-          <View style={styles.nepseIndexContainer}>
-            <View style={styles.data}>
-              <AppText style={styles.dataTitle}>Nepse</AppText>
-              <AppText style={styles.dataValue}>
-                {indices?.data?.data[0]?.Close}
-              </AppText>
-              <AppText style={styles.dataChange}>
-                +{indices?.data?.data[0]["Point Change"]} (
-                {indices?.data?.data[0]["% Change"]}%)
-              </AppText>
-            </View>
-            <View style={styles.data}>
-              <AppText style={styles.dataTitle}>Sensitive</AppText>
-              <AppText style={styles.dataValue}>
-                {indices?.data?.data[1]?.Close}
-              </AppText>
-              <AppText style={styles.dataChange}>
-                +{indices?.data?.data[1]["Point Change"]} (
-                {indices?.data?.data[1]["% Change"]}%)
-              </AppText>
-            </View>
-            <View style={styles.data}>
-              <AppText style={styles.dataTitle}>Float</AppText>
-              <AppText style={styles.dataValue}>
-                {indices?.data?.data[2]?.Close}
-              </AppText>
-              <AppText style={styles.dataChange}>
-                {" "}
-                +{indices?.data?.data[2]["Point Change"]} (
-                {indices?.data?.data[2]["% Change"]}%)
-              </AppText>
-            </View>
-          </View>
-        )}
+
+        <View style={styles.nepseIndexContainer}>
+          {indicesLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <View style={styles.data}>
+                <AppText style={styles.dataTitle}>Nepse</AppText>
+                <AppText style={styles.dataValue}>
+                  {indices?.data?.data[0]?.Close}
+                </AppText>
+                <AppText style={styles.dataChange}>
+                  {indices?.data?.data[0]["Point Change"]} (
+                  {indices?.data?.data[0]["% Change"]}%)
+                </AppText>
+              </View>
+              <View style={styles.data}>
+                <AppText style={styles.dataTitle}>Sensitive</AppText>
+                <AppText style={styles.dataValue}>
+                  {indices?.data?.data[1]?.Close}
+                </AppText>
+                <AppText style={styles.dataChange}>
+                  {indices?.data?.data[1]["Point Change"]} (
+                  {indices?.data?.data[1]["% Change"]}%)
+                </AppText>
+              </View>
+              <View style={styles.data}>
+                <AppText style={styles.dataTitle}>Float</AppText>
+                <AppText style={styles.dataValue}>
+                  {indices?.data?.data[2]?.Close}
+                </AppText>
+                <AppText style={styles.dataChange}>
+                  {" "}
+                  {indices?.data?.data[2]["Point Change"]} (
+                  {indices?.data?.data[2]["% Change"]}%)
+                </AppText>
+              </View>
+            </>
+          )}
+        </View>
 
         <View style={styles.marketStatusContainer}>
           <View style={styles.marketStatus}>
@@ -139,7 +142,14 @@ export default function HomeScreen() {
             </View>
           </View>
           <View style={styles.marketStatusDate}>
-            <AppText style={styles.marketStatusDateTitle}>May 22, 2023</AppText>
+            <AppText style={styles.marketStatusDateTitle}>
+              {new Date().toLocaleDateString("en-US", {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
+            </AppText>
           </View>
           <View style={styles.marketStatusTime}>
             <AppText style={styles.marketStatusTimeTitle}>3:00PM</AppText>
