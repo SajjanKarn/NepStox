@@ -21,6 +21,8 @@ import useFetch from "../hooks/useFetch";
 
 // styles
 import styles from "../styles/HomeScreen.styles";
+import { DataTable } from "react-native-paper";
+import Gainer from "../components/Gainer";
 
 export default function HomeScreen() {
   const [topGainer, setTopGainer] = useState({
@@ -260,21 +262,18 @@ export default function HomeScreen() {
           />
         </View>
 
-        {loading ? (
-          <Loader />
-        ) : (
-          <GainerTable
-            title="Top Gainers"
-            data={topGainer}
-            headColor={colors.dark.topGainerText}
-          />
-        )}
+        <Gainer
+          title="Top Gainers"
+          data={data?.data?.data?.slice(0, 5)}
+          loading={loading}
+        />
 
-        {topLoserLoading ? (
-          <Loader />
-        ) : (
-          <GainerTable title="Top Losers" data={topLoser} />
-        )}
+        <Gainer
+          title="Top Losers"
+          data={topLoserData?.data?.data?.slice(0, 5)}
+          loading={topLoserLoading}
+          headerColor={colors.dark.topLoserText}
+        />
 
         <View style={styles.marketSummaryContainer}>
           {marketSummaryLoading ? (
