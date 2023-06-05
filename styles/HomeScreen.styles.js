@@ -44,10 +44,6 @@ export default styles = StyleSheet.create({
     color: colors.dark.textColor,
     marginVertical: height(0.5),
   },
-  dataChange: {
-    fontSize: totalSize(1.5),
-    color: colors.dark.topGainerText,
-  },
 
   marketStatusContainer: {
     flexDirection: "row",

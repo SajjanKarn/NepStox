@@ -7,4 +7,14 @@ export default styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.dark.primary,
   },
+
+  tableHeader: {
+    color: colors.dark.textColor,
+    fontSize: totalSize(1.5),
+    textTransform: "uppercase",
+  },
+  tableData: {
+    color: colors.dark.textColor,
+    fontSize: totalSize(1.5),
+  },
 });

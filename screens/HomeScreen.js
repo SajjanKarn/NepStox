@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import { AntDesign } from "@expo/vector-icons";
+import { totalSize } from "react-native-dimension";
 
 // components
 import AppText from "../components/AppText";
@@ -103,7 +104,15 @@ export default function HomeScreen() {
                 <AppText style={styles.dataValue}>
                   {indices?.data?.data[0]?.Close}
                 </AppText>
-                <AppText style={styles.dataChange}>
+                <AppText
+                  style={{
+                    fontSize: totalSize(1.5),
+                    color:
+                      indices?.data?.data[0]["Point Change"] > 0
+                        ? colors.dark.topGainerText
+                        : colors.dark.topLoserText,
+                  }}
+                >
                   {indices?.data?.data[0]["Point Change"]} (
                   {indices?.data?.data[0]["% Change"]}%)
                 </AppText>
@@ -113,7 +122,15 @@ export default function HomeScreen() {
                 <AppText style={styles.dataValue}>
                   {indices?.data?.data[1]?.Close}
                 </AppText>
-                <AppText style={styles.dataChange}>
+                <AppText
+                  style={{
+                    fontSize: totalSize(1.5),
+                    color:
+                      indices?.data?.data[1]["Point Change"] > 0
+                        ? colors.dark.topGainerText
+                        : colors.dark.topLoserText,
+                  }}
+                >
                   {indices?.data?.data[1]["Point Change"]} (
                   {indices?.data?.data[1]["% Change"]}%)
                 </AppText>
@@ -123,7 +140,15 @@ export default function HomeScreen() {
                 <AppText style={styles.dataValue}>
                   {indices?.data?.data[2]?.Close}
                 </AppText>
-                <AppText style={styles.dataChange}>
+                <AppText
+                  style={{
+                    fontSize: totalSize(1.5),
+                    color:
+                      indices?.data?.data[2]["Point Change"] > 0
+                        ? colors.dark.topGainerText
+                        : colors.dark.topLoserText,
+                  }}
+                >
                   {" "}
                   {indices?.data?.data[2]["Point Change"]} (
                   {indices?.data?.data[2]["% Change"]}%)

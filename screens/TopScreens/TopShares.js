@@ -1,48 +1,63 @@
-import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
+import { DataTable } from "react-native-paper";
 
 import Loader from "../../components/Loader";
-import GainerTable from "../../components/GainerTable";
 import useFetch from "../../hooks/useFetch";
 import colors from "../../config/colors";
 
 import styles from "./styles/common";
+import AppText from "../../components/AppText";
 
 const TopTradedShares = () => {
-  const [topShares, setTopShares] = useState({
-    tableHead: ["SN", "Symbol", "Shares", "LTP"],
-    tableData: [
-      ["1", "NABIL", "10.00", "10.00"],
-      ["2", "RBB", "10.00", "10.00"],
-      ["3", "NIC ASIA", "10.00", "10.00"],
-      ["4", "NICA", "10.00", "10.00"],
-    ],
-  });
   const { data, loading, error } = useFetch("/nepse/top-share");
-
-  // useeffect for top gainer
-  useEffect(() => {
-    if (data?.data?.length > 0) {
-      const tableData = data?.data?.map((item, index) => [
-        index + 1,
-        item.symbol,
-        item.traded_quantity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
-        item.close,
-      ]);
-      setTopShares((prev) => ({ ...prev, tableData }));
-    }
-  }, [data, loading, error]);
 
   return (
     <View style={styles.container}>
+      <DataTable>
+        <DataTable.Header
+          style={{
+            backgroundColor: colors.dark.secondary,
+            borderBottomWidth: 1,
+            borderBottomColor: colors.dark.secondary,
+          }}
+        >
+          <DataTable.Title>
+            <AppText style={styles.tableHeader}>SN</AppText>
+          </DataTable.Title>
+          <DataTable.Title>
+            <AppText style={styles.tableHeader}>Symbol</AppText>
+          </DataTable.Title>
+          <DataTable.Title numeric>
+            <AppText style={styles.tableHeader}>Shares</AppText>
+          </DataTable.Title>
+          <DataTable.Title numeric>
+            <AppText style={styles.tableHeader}>LTP</AppText>
+          </DataTable.Title>
+        </DataTable.Header>
+      </DataTable>
       {loading ? (
         <Loader />
       ) : (
-        <GainerTable
-          data={topShares}
-          headColor={colors.dark.secondary}
-          headScroll
-        />
+        <ScrollView>
+          {data?.data?.map((item) => (
+            <DataTable.Row key={item.symbol}>
+              <DataTable.Cell>
+                <AppText style={styles.tableData}>{item.DT_Row_Index}</AppText>
+              </DataTable.Cell>
+              <DataTable.Cell>
+                <AppText style={styles.tableData}>{item.symbol}</AppText>
+              </DataTable.Cell>
+              <DataTable.Cell numeric>
+                <AppText style={styles.tableData}>
+                  {Number(item.traded_quantity).toLocaleString()}
+                </AppText>
+              </DataTable.Cell>
+              <DataTable.Cell numeric>
+                <AppText style={styles.tableData}>{item.close}</AppText>
+              </DataTable.Cell>
+            </DataTable.Row>
+          ))}
+        </ScrollView>
       )}
     </View>
   );
