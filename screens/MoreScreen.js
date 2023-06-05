@@ -51,7 +51,7 @@ export default function MoreScreen() {
       {
         name: "FloorSheet",
         icon: "filetext1",
-        onPress: () => {},
+        onPress: () => navigation.navigate("FloorSheetScreen"),
       },
       {
         name: "Listed Stocks",

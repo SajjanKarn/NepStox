@@ -50,10 +50,25 @@ function total_paying_amount(
   return (shareAmount + sebonCommission + brokerCommission + dpFee).toFixed(2);
 }
 
+// adjustment screen
+function right_share(marketPrice, rightSharePercentage, paidUpValue) {
+  return (
+    (marketPrice + (paidUpValue * rightSharePercentage) / 100) /
+    (1 + rightSharePercentage / 100)
+  ).toFixed(2);
+}
+
+function bonus_share(marketPrice, bonusSharePercentage) {
+  return (marketPrice / (1 + bonusSharePercentage / 100)).toFixed(2);
+}
+
 export {
   share_amount,
   sebon_commission,
   cost_per_share,
   total_paying_amount,
   broker_commission,
+  // adjustment screen
+  right_share,
+  bonus_share,
 };

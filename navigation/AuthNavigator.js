@@ -23,6 +23,7 @@ import CompanyDetailsScreen from "../screens/CompanyDetailsScreen";
 import IPOResultScreen from "../screens/IPOResultScreen";
 import CaculatorScreen from "../screens/CalculatorScreen";
 import ForeignExchangeScreen from "../screens/ForeignExchangeScreen";
+import FloorSheetScreen from "../screens/FloorSheetScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -95,6 +96,11 @@ export const MoreStack = () => (
       name="ForeignExchangeScreen"
       component={ForeignExchangeScreen}
       options={stackHeaderStyle("Foreign Exchange")}
+    />
+    <MoreStackNavigator.Screen
+      name="FloorSheetScreen"
+      component={FloorSheetScreen}
+      options={stackHeaderStyle("Floor Sheet")}
     />
   </MoreStackNavigator.Navigator>
 );
