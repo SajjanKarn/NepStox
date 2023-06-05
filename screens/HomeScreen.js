@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   View,
   ScrollView,
@@ -12,8 +11,8 @@ import { totalSize } from "react-native-dimension";
 
 // components
 import AppText from "../components/AppText";
-import GainerTable from "../components/GainerTable";
 import Loader from "../components/Loader";
+import Gainer from "../components/Gainer";
 
 import colors from "../config/colors";
 
@@ -21,28 +20,8 @@ import useFetch from "../hooks/useFetch";
 
 // styles
 import styles from "../styles/HomeScreen.styles";
-import { DataTable } from "react-native-paper";
-import Gainer from "../components/Gainer";
 
 export default function HomeScreen() {
-  const [topGainer, setTopGainer] = useState({
-    tableHead: ["Symbol", "Change", "CH %", "LTP"],
-    tableData: [
-      ["NABIL", "10.00", "10.00", "10.00"],
-      ["RBB", "10.00", "10.00", "10.00"],
-      ["NIC ASIA", "10.00", "10.00", "10.00"],
-      ["NICA", "10.00", "10.00", "10.00"],
-    ],
-  });
-  const [topLoser, setTopLoser] = useState({
-    tableHead: ["Symbol", "Change", "CH %", "LTP"],
-    tableData: [
-      ["NABIL", "10.00", "10.00", "10.00"],
-      ["RBB", "10.00", "10.00", "10.00"],
-      ["NIC ASIA", "10.00", "10.00", "10.00"],
-      ["NICA", "10.00", "10.00", "10.00"],
-    ],
-  });
   const {
     data: indices,
     loading: indicesLoading,
@@ -59,37 +38,6 @@ export default function HomeScreen() {
     loading: marketSummaryLoading,
     error: marketSummaryError,
   } = useFetch("/nepse/market-summary");
-  // useeffect for top gainer
-  useEffect(() => {
-    if (data?.data?.data?.length > 0) {
-      // get only 5 data
-      const tableData = data.data.data
-        .slice(0, 5)
-        .map((item) => [
-          item.symbol,
-          item.change_pts,
-          `${item.diff_per}%`,
-          item.close,
-        ]);
-      setTopGainer((prev) => ({ ...prev, tableData }));
-    }
-  }, [data, loading, error]);
-
-  // useeffect for top loser
-  useEffect(() => {
-    if (topLoserData?.data?.data?.length > 0) {
-      // get only 5 data
-      const tableData = topLoserData.data.data
-        .slice(0, 5)
-        .map((item) => [
-          item.symbol,
-          item.change_pts,
-          `${item.diff_per}%`,
-          item.close,
-        ]);
-      setTopLoser((prev) => ({ ...prev, tableData }));
-    }
-  }, [topLoserData, topLoserLoading, topLoserError]);
 
   return (
     <ScrollView style={styles.container}>

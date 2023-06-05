@@ -103,4 +103,12 @@ export default styles = StyleSheet.create({
   unchanged: {
     backgroundColor: colors.dark.unchanged,
   },
+
+  // table
+  tableHeader: {
+    backgroundColor: colors.dark.secondary,
+  },
+  tableCell: {
+    fontSize: totalSize(1.3),
+  },
 });

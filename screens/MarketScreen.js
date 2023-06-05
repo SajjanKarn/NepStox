@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import { View, StatusBar } from "react-native";
+import { useState } from "react";
+import { View, StatusBar, ScrollView } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { width } from "react-native-dimension";
+import { DataTable } from "react-native-paper";
 
 import AppText from "../components/AppText";
 import AppInput from "../components/AppInput";
 import Loader from "../components/Loader";
-import GainerTable from "../components/GainerTable";
 
 import useFetch from "../hooks/useFetch";
 import colors from "../config/colors";
@@ -14,72 +14,23 @@ import styles from "../styles/MarketScreen.styles";
 
 export default function MarketScreen() {
   const { data, loading, error } = useFetch(`/nepse/live-trading`);
-  const [marketData, setMarketData] = useState({
-    tableHead: ["Symbol", "LTP", "High", "Low", "CH", "CH %", "P Close"],
-    tableData: [
-      ["NABIL", "10.00", "10.00", "10.00", "10.00", "10.00", "10.00"],
-      ["RBB", "10.00", "10.00", "10.00", "10.00", "10.00", "10.00"],
-      ["NIC ASIA", "10.00", "10.00", "10.00", "10.00", "10.00", "10.00"],
-      ["NICA", "10.00", "10.00", "10.00", "10.00", "10.00", "10.00"],
-    ],
-  });
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-  const [searchResult, setSearchResult] = useState({
-    tableHead: [],
-    tableData: [],
-  });
+  const [searchResults, setSearchResults] = useState([]);
 
-  const handleInputChange = (text) => {
+  const handleSearch = (text) => {
+    setSearchLoading(true);
     setSearchInput(text);
     if (text.length > 0) {
-      setSearchLoading(true);
-      // filter and format the result data according to the table
-      const result = data.data
-        .filter((item) => {
-          return item.Symbol.toLowerCase().includes(text.toLowerCase());
-        })
-        .map((item, index) => [
-          item.Symbol,
-          parseInt(item.LTP).toFixed(1),
-          parseInt(item.High).toFixed(1),
-          parseInt(item.Low).toFixed(1),
-          parseInt(item["Point Change"]).toFixed(1),
-          parseInt(item["% Change"]).toFixed(1),
-          parseInt(item["Prev. Close"]).toFixed(1),
-        ]);
-
-      setSearchResult({
-        tableHead: ["Symbol", "LTP", "High", "Low", "CH", "CH %", "P Close"],
-        tableData: result,
+      const results = data?.data?.filter((stock) => {
+        return stock?.Symbol?.toLowerCase().includes(text.toLowerCase());
       });
-
-      setSearchLoading(false);
+      setSearchResults(results);
     } else {
-      setSearchResult({
-        tableHead: [],
-        tableData: [],
-      });
-
-      setSearchLoading(false);
+      setSearchResults([]);
     }
+    setSearchLoading(false);
   };
-
-  useEffect(() => {
-    if (data?.data?.length > 0) {
-      // get only 5 data
-      const tableData = data.data.map((item, index) => [
-        item.Symbol,
-        parseInt(item.LTP).toFixed(1),
-        parseInt(item.High).toFixed(1),
-        parseInt(item.Low).toFixed(1),
-        parseInt(item["Point Change"]).toFixed(1),
-        parseInt(item["% Change"]).toFixed(1),
-        parseInt(item["Prev. Close"]).toFixed(1),
-      ]);
-      setMarketData((prev) => ({ ...prev, tableData }));
-    }
-  }, [data, loading, error]);
 
   return (
     <View style={styles.container_fluid}>
@@ -91,7 +42,7 @@ export default function MarketScreen() {
             placeholder="Symbol or Name..."
             squared
             value={searchInput}
-            onChangeText={handleInputChange}
+            onChangeText={handleSearch}
             autoCapitalize="none"
           />
         </View>
@@ -147,20 +98,117 @@ export default function MarketScreen() {
         <Loader />
       ) : (
         <View style={styles.stocksContainer}>
-          {marketData.tableData.length > 0 &&
-            (searchLoading ? (
-              <Loader />
-            ) : (
-              <GainerTable
-                data={
-                  searchResult?.tableData?.length > 0
-                    ? searchResult
-                    : marketData
-                }
-                headColor={colors.dark.secondary}
-                headScroll
-              />
-            ))}
+          <ScrollView>
+            <DataTable>
+              <DataTable.Header style={styles.tableHeader}>
+                <DataTable.Title style={{ flex: 1.5 }}>
+                  <AppText style={styles.tableHead}>Symbol</AppText>
+                </DataTable.Title>
+                <DataTable.Title>
+                  <AppText style={styles.tableHead}>LTP</AppText>
+                </DataTable.Title>
+                <DataTable.Title>
+                  <AppText style={styles.tableHead}>High</AppText>
+                </DataTable.Title>
+                <DataTable.Title>
+                  <AppText style={styles.tableHead}>Low</AppText>
+                </DataTable.Title>
+                <DataTable.Title>
+                  <AppText style={styles.tableHead}>CH</AppText>
+                </DataTable.Title>
+                <DataTable.Title>
+                  <AppText style={styles.tableHead}>CH %</AppText>
+                </DataTable.Title>
+                <DataTable.Title>
+                  <AppText style={styles.tableHead}>P Close</AppText>
+                </DataTable.Title>
+              </DataTable.Header>
+
+              {loading ? (
+                <Loader />
+              ) : searchResults.length > 0 ? (
+                searchResults?.map((item) => (
+                  <DataTable.Row key={item.Symbol}>
+                    <DataTable.Cell style={{ flex: 1.5 }}>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item.Symbol}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item.LTP}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item.High}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item.Low}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item["Point Change"]}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item["% Change"]}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item["Prev. Close"]}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                ))
+              ) : (
+                data?.data?.map((item) => (
+                  <DataTable.Row key={item.Symbol}>
+                    <DataTable.Cell style={{ flex: 1.5 }}>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item.Symbol}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item.LTP}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item.High}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item.Low}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item["Point Change"]}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item["% Change"]}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell>
+                      <AppText style={styles.tableCell} variant="Medium">
+                        {item["Prev. Close"]}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                ))
+              )}
+            </DataTable>
+          </ScrollView>
         </View>
       )}
     </View>

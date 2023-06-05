@@ -5,6 +5,7 @@ import { height, totalSize } from "react-native-dimension";
 import AppText from "./AppText";
 import colors from "../config/colors";
 import Loader from "./Loader";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Gainer({
   title = "Gainer",
@@ -12,39 +13,49 @@ export default function Gainer({
   loading,
   headerColor = false,
 }) {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.tableContainer}>
       <AppText style={styles.tableHeaderTitle}>{title}</AppText>
-      <DataTable style={styles.table}>
-        <DataTable.Header
-          style={[
-            styles.tableHeader,
-            {
-              backgroundColor: headerColor
-                ? headerColor
-                : colors.dark.topGainerText,
-            },
-          ]}
-        >
-          <DataTable.Title>
-            <AppText style={styles.tableTitle}>Symbol</AppText>
-          </DataTable.Title>
-          <DataTable.Title numeric>
-            <AppText style={styles.tableTitle}>Change</AppText>
-          </DataTable.Title>
-          <DataTable.Title numeric>
-            <AppText style={styles.tableTitle}>CH %</AppText>
-          </DataTable.Title>
-          <DataTable.Title numeric>
-            <AppText style={styles.tableTitle}>LTP</AppText>
-          </DataTable.Title>
-        </DataTable.Header>
+      {loading ? (
+        <Loader />
+      ) : (
+        <DataTable style={styles.table}>
+          <DataTable.Header
+            style={[
+              styles.tableHeader,
+              {
+                backgroundColor: headerColor
+                  ? headerColor
+                  : colors.dark.topGainerText,
+              },
+            ]}
+          >
+            <DataTable.Title>
+              <AppText style={styles.tableTitle}>Symbol</AppText>
+            </DataTable.Title>
+            <DataTable.Title numeric>
+              <AppText style={styles.tableTitle}>Change</AppText>
+            </DataTable.Title>
+            <DataTable.Title numeric>
+              <AppText style={styles.tableTitle}>CH %</AppText>
+            </DataTable.Title>
+            <DataTable.Title numeric>
+              <AppText style={styles.tableTitle}>LTP</AppText>
+            </DataTable.Title>
+          </DataTable.Header>
 
-        {loading ? (
-          <Loader />
-        ) : (
-          data?.map((item) => (
-            <DataTable.Row key={item.symbol} style={styles.tableRow}>
+          {data?.map((item) => (
+            <DataTable.Row
+              key={item.symbol}
+              style={styles.tableRow}
+              onPress={() =>
+                navigation.navigate("CompanyDetailsScreen", {
+                  symbol: item.symbol,
+                })
+              }
+            >
               <DataTable.Cell>
                 <AppText style={styles.tableData}>{item.symbol}</AppText>
               </DataTable.Cell>
@@ -58,9 +69,9 @@ export default function Gainer({
                 <AppText style={styles.tableData}>{item.close}</AppText>
               </DataTable.Cell>
             </DataTable.Row>
-          ))
-        )}
-      </DataTable>
+          ))}
+        </DataTable>
+      )}
     </View>
   );
 }
