@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StatusBar, View, useWindowDimensions } from "react-native";
+import { StatusBar, useWindowDimensions } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import AppText from "../components/AppText";
 
