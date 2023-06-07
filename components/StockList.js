@@ -32,9 +32,9 @@ export default function StockList({ stock }) {
           style={{
             fontSize: totalSize(1.8),
             color:
-              parseInt(stock.change_pts) > 0
+              Number(stock.change_pts) > 0
                 ? colors.dark.increasedGreeen
-                : parseInt(stock.change_pts) < 0
+                : Number(stock.change_pts) < 0
                 ? colors.dark.topLoserText
                 : colors.dark.textColor,
           }}
@@ -47,9 +47,9 @@ export default function StockList({ stock }) {
           fontSize: totalSize(1.3),
           alignSelf: "flex-end",
           color:
-            parseInt(stock.change_pts) > 0
+            Number(stock.change_pts) > 0
               ? colors.dark.increasedGreeen
-              : parseInt(stock.change_pts) < 0
+              : Number(stock.change_pts) < 0
               ? colors.dark.topLoserText
               : colors.dark.textColor,
         }}

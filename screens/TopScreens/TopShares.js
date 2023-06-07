@@ -39,7 +39,7 @@ const TopTradedShares = () => {
         <Loader />
       ) : (
         <ScrollView>
-          {data?.data?.map((item) => (
+          {data?.data?.data?.map((item) => (
             <DataTable.Row key={item.symbol}>
               <DataTable.Cell>
                 <AppText style={styles.tableData}>{item.DT_Row_Index}</AppText>

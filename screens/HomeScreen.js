@@ -270,11 +270,7 @@ export default function HomeScreen() {
                     Market Capitalization
                   </AppText>
                   <AppText style={styles.dataRowValue}>
-                    {
-                      marketSummary?.data["Total Market Cap (Rs.)"].split(
-                        "Millions"
-                      )[0]
-                    }
+                    {marketSummary?.data["Total Market Cap (Rs.)"]}
                   </AppText>
                 </View>
               </View>
