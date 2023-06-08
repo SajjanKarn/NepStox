@@ -119,6 +119,57 @@ function bonus_share(marketPrice, bonusSharePercentage) {
   return (marketPrice / (1 + bonusSharePercentage / 100)).toFixed(2);
 }
 
+// sip screen logic
+function calculateSipResult(period, invsAmt, expAnualRet, year) {
+  var ttlAmtExp = "-";
+  var ttlAmtInvs = "-";
+  var ttlGain = "-";
+  var ttlGainPer = "-";
+
+  if (period && invsAmt > 0 && expAnualRet > 0 && year > 0) {
+    var dur = 12;
+    var noOfPayment = 12;
+
+    if (period === "ANNUALLY") {
+      dur = 1;
+      noOfPayment = 1 * year;
+    } else if (period === "SEMI_ANNUALLY") {
+      dur = 2;
+      noOfPayment = 2 * year;
+    } else if (period === "QUARTERLY") {
+      dur = 4;
+      noOfPayment = 4 * year;
+    } else if (period === "MONTHLY") {
+      dur = 12;
+      noOfPayment = 12 * year;
+    } else {
+      dur = 12;
+      noOfPayment = 12 * year;
+    }
+
+    var perInsRt = expAnualRet / 100 / dur;
+    var tae =
+      invsAmt *
+      ((Math.pow(1 + perInsRt, noOfPayment) - 1) / perInsRt) *
+      (1 + perInsRt);
+    var tai = invsAmt * noOfPayment;
+    var tg = tae - tai;
+    var tgp = tai > 0 ? (tg / tai) * 100 : 0.0;
+
+    ttlAmtExp = tae.toFixed(2);
+    ttlAmtInvs = tai.toFixed(2);
+    ttlGain = tg.toFixed(2);
+    ttlGainPer = tgp.toFixed(2);
+  }
+
+  return {
+    totalAmountExpected: ttlAmtExp,
+    totalAmountIvested: ttlAmtInvs,
+    totalGain: ttlGain,
+    totalGainPercentage: ttlGainPer,
+  };
+}
+
 export {
   // buy screen
   share_amount,
@@ -131,4 +182,6 @@ export {
   // adjustment screen
   right_share,
   bonus_share,
+  // sip screen
+  calculateSipResult,
 };

@@ -7,6 +7,7 @@ import { DataTable, RadioButton } from "react-native-paper";
 import AppText from "../../components/AppText";
 import AppInput from "../../components/AppInput";
 import AppButton from "../../components/AppButton";
+
 import colors from "../../config/colors";
 import { sell_result } from "../../utils/formula";
 
@@ -28,7 +29,7 @@ export default function SellScreen() {
         Number(sellingPrice),
         10
       );
-      console.log(data_result);
+
       setResult({ ...data_result });
     } else {
       const data_result = sell_result(
@@ -37,7 +38,7 @@ export default function SellScreen() {
         Number(sellingPrice),
         Number(cgt)
       );
-      console.log(data_result);
+
       setResult({ ...data_result });
     }
   };
