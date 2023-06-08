@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StatusBar, View, useWindowDimensions } from "react-native";
+import { StatusBar, useWindowDimensions } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import AppText from "../components/AppText";
 
@@ -36,7 +36,13 @@ export default function CaculatorScreen() {
       indicatorStyle={styles.indicator}
       style={styles.tabBar}
       renderLabel={({ route, focused, color }) => (
-        <AppText variant="Medium" style={styles.tabTitle}>
+        <AppText
+          variant="Medium"
+          style={{
+            ...styles.tabTitle,
+            color: focused ? colors.dark.button : colors.dark.placeholderText,
+          }}
+        >
           {route.title}
         </AppText>
       )}

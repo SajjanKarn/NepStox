@@ -13,6 +13,5 @@ export default styles = StyleSheet.create({
     color: colors.dark.button,
     fontSize: totalSize(1.7),
     textAlign: "center",
-    textTransform: "capitalize",
   },
 });
