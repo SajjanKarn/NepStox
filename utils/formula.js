@@ -120,7 +120,7 @@ function bonus_share(marketPrice, bonusSharePercentage) {
 }
 
 // sip screen logic
-function calculateSipResult(period, invsAmt, expAnualRet, year) {
+function calculate_sip_result(period, invsAmt, expAnualRet, year) {
   var ttlAmtExp = "-";
   var ttlAmtInvs = "-";
   var ttlGain = "-";
@@ -164,7 +164,7 @@ function calculateSipResult(period, invsAmt, expAnualRet, year) {
 
   return {
     totalAmountExpected: ttlAmtExp,
-    totalAmountIvested: ttlAmtInvs,
+    totalAmountInvested: ttlAmtInvs,
     totalGain: ttlGain,
     totalGainPercentage: ttlGainPer,
   };
@@ -183,5 +183,5 @@ export {
   right_share,
   bonus_share,
   // sip screen
-  calculateSipResult,
+  calculate_sip_result,
 };

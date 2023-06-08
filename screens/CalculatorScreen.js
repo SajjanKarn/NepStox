@@ -5,12 +5,18 @@ import AppText from "../components/AppText";
 
 import styles from "../styles/TopScreen.styles";
 
-import { BuyScreen, SellScreen, AdjustmentScreen } from "./CalculatorScreens";
+import {
+  BuyScreen,
+  SellScreen,
+  AdjustmentScreen,
+  SIPScreen,
+} from "./CalculatorScreens";
 
 const renderScene = SceneMap({
   first: BuyScreen,
   second: SellScreen,
   third: AdjustmentScreen,
+  fourth: SIPScreen,
 });
 
 export default function CaculatorScreen() {
@@ -21,6 +27,7 @@ export default function CaculatorScreen() {
     { key: "first", title: "Buy" },
     { key: "second", title: "Sell" },
     { key: "third", title: "Adjustment" },
+    { key: "fourth", title: "SIP" },
   ]);
 
   const renderTabBar = (props) => (
