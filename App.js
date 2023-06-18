@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
+import { ToastProvider } from "react-native-toast-notifications";
 
 // components
 import AppText from "./components/AppText";
@@ -19,6 +20,8 @@ import BrokersScreen from "./screens/BrokersScreen";
 import AuthNavigator from "./navigation/AuthNavigator";
 import CompanyDetailsScreen from "./screens/CompanyDetailsScreen";
 import StockComparisonScreen from "./screens/StockComparisonScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import UnAuthNavigator from "./navigation/UnAuthNavigator";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -42,20 +45,26 @@ export default function App() {
   }
 
   return (
-    // <View style={styles.container} onLayout={onLayoutRootView}>
-    //   <AppText>Hello World from sajjan!</AppText>
-    //   <StatusBar style="auto" />
-    // </View>
-    // <LoginScreen />
-    // <HomeScreen />
-    // <ListedStockScreen />
-    // <TopScreen />
-    // <MarketScreen />
-    // <MeroShareScreen />
-    // <BrokersScreen />
-    // <CompanyDetailsScreen />
-    // <StockComparisonScreen />
-    <AuthNavigator />
+    <ToastProvider>
+      {/* //{" "}
+      <View style={styles.container} onLayout={onLayoutRootView}>
+        // <AppText>Hello World from sajjan!</AppText>
+        // <StatusBar style="auto" />
+        //{" "}
+      </View> */}
+      {/* <LoginScreen /> */}
+      {/* <RegisterScreen /> */}
+      {/* // <HomeScreen />
+      // <ListedStockScreen />
+      // <TopScreen />
+      // <MarketScreen />
+      // <MeroShareScreen />
+      // <BrokersScreen />
+      // <CompanyDetailsScreen />
+      // <StockComparisonScreen />
+      // <AuthNavigator /> */}
+      <UnAuthNavigator />
+    </ToastProvider>
   );
 }
 

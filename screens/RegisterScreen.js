@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { width, height, totalSize } from "react-native-dimension";
-import { useNavigation } from "@react-navigation/native";
 import { useToast } from "react-native-toast-notifications";
 import { ActivityIndicator } from "react-native-paper";
 import { StatusBar } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 // components
 import AppText from "../components/AppText";
@@ -15,17 +15,22 @@ import colors from "../config/colors";
 
 import { supabase } from "../config/supabase";
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
   const navigation = useNavigation();
   const toast = useToast();
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
 
   const handlePress = async () => {
-    if (!credentials.email || !credentials.password) {
+    if (
+      !credentials.email ||
+      !credentials.password ||
+      !credentials.confirmPassword
+    ) {
       toast.show("Please fill all the fields", {
         type: "danger",
         duration: 1000,
@@ -44,26 +49,53 @@ export default function LoginScreen() {
       return;
     }
 
+    if (credentials.password.length < 6) {
+      toast.show("Password must be at least 6 characters", {
+        type: "danger",
+        duration: 1000,
+        placement: "top",
+      });
+      return;
+    }
+
+    if (credentials.password !== credentials.confirmPassword) {
+      toast.show("Passwords do not match", {
+        type: "danger",
+        duration: 1000,
+        placement: "top",
+      });
+      return;
+    }
+
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email: credentials.email,
       password: credentials.password,
     });
 
-    if (error)
+    if (error) {
       toast.show(error.message, {
         type: "danger",
         duration: 1000,
         placement: "top",
       });
+      setLoading(false);
+      return;
+    }
     setLoading(false);
+
+    toast.show("Account created, check your email for verification", {
+      type: "success",
+      duration: 2000,
+      placement: "top",
+    });
   };
 
   return (
     <ScrollView style={styles.container}>
       <StatusBar barStyle="default" />
       <AppText style={styles.screenTitle} variant="Bold">
-        Login
+        Sign Up An Account
       </AppText>
 
       <View style={styles.formContainer}>
@@ -82,24 +114,27 @@ export default function LoginScreen() {
           }
           secureTextEntry={true}
         />
+        <AppInput
+          placeholder="Confirm Password"
+          onChangeText={(text) =>
+            setCredentials({ ...credentials, confirmPassword: text })
+          }
+          secureTextEntry={true}
+        />
 
         <View style={{ height: height(1) }} />
         {loading ? (
           <ActivityIndicator color={colors.dark.button} size="small" />
         ) : (
-          <AppButton onPress={handlePress}>Login</AppButton>
+          <AppButton onPress={handlePress}>Sign Up</AppButton>
         )}
 
-        <View style={styles.forgotPasswordContainer}>
-          <AppText style={styles.forgotText}>Forgot Password?</AppText>
-        </View>
-
-        <View style={styles.forgotPasswordContainer}>
+        <View style={styles.loginTextContainer}>
           <AppText
-            style={styles.forgotText}
-            onPress={() => navigation.navigate("RegisterScreen")}
+            style={styles.loginText}
+            onPress={() => navigation.navigate("LoginScreen")}
           >
-            Don't have an account? Register
+            Already Have an Account? Login
           </AppText>
         </View>
       </View>
@@ -112,7 +147,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.dark.primary,
     paddingHorizontal: width(5),
-    paddingVertical: height(10),
+    paddingVertical: height(5),
   },
   screenTitle: {
     fontSize: totalSize(3),
@@ -131,11 +166,11 @@ const styles = StyleSheet.create({
     marginVertical: height(1),
     fontFamily: "Riveruta-Medium",
   },
-  forgotPasswordContainer: {
+  loginTextContainer: {
     alignItems: "center",
     marginTop: height(1),
   },
-  forgotText: {
+  loginText: {
     color: colors.dark.placeholderText,
     fontFamily: "Riveruta-Medium",
     fontSize: totalSize(1.8),
