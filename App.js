@@ -2,12 +2,15 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ToastProvider } from "react-native-toast-notifications";
 
 // components
 import AppText from "./components/AppText";
 import colors from "./config/colors";
+
+// supabase
+import { supabase } from "./config/supabase";
 
 // screens
 import LoginScreen from "./screens/LoginScreen";
@@ -26,6 +29,7 @@ import UnAuthNavigator from "./navigation/UnAuthNavigator";
 // SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  const [session, setSession] = useState(null);
   const [fontsLoaded] = useFonts({
     "Riveruta-Bold": require("./assets/fonts/Riveruta-Bold.ttf"),
     "Riveruta-Regular": require("./assets/fonts/Riveruta-Regular.ttf"),
@@ -34,11 +38,21 @@ export default function App() {
     "Riveruta-Thin": require("./assets/fonts/Riveruta-Thin.ttf"),
   });
 
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (fontsLoaded) {
-  //     await SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded]);
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
 
   if (!fontsLoaded) {
     return null;
@@ -63,7 +77,7 @@ export default function App() {
       // <CompanyDetailsScreen />
       // <StockComparisonScreen />
       // <AuthNavigator /> */}
-      <UnAuthNavigator />
+      {session && session.user ? <AuthNavigator /> : <UnAuthNavigator />}
     </ToastProvider>
   );
 }

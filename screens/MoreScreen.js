@@ -7,6 +7,9 @@ import Option from "../components/Option";
 import styles from "../styles/MoreScreen.styles";
 import { useNavigation } from "@react-navigation/native";
 
+// supabase
+import { supabase } from "../config/supabase";
+
 export default function MoreScreen() {
   const navigation = useNavigation();
   const [options, setOptions] = useState({
@@ -30,6 +33,16 @@ export default function MoreScreen() {
         name: "My Notes",
         icon: "book",
         onPress: () => {},
+      },
+      {
+        name: "My Portfolio",
+        icon: "piechart",
+        onPress: () => {},
+      },
+      {
+        name: "Logout",
+        icon: "logout",
+        onPress: () => supabase.auth.signOut(),
       },
     ],
     marketInformation: [
