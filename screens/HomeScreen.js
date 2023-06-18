@@ -5,9 +5,17 @@ import {
   StatusBar,
   SafeAreaView,
 } from "react-native";
-import { LineChart } from "react-native-chart-kit";
+// import { LineChart } from "react-native-chart-kit";
 import { AntDesign } from "@expo/vector-icons";
-import { totalSize } from "react-native-dimension";
+import { height, totalSize } from "react-native-dimension";
+import {
+  Chart,
+  Line,
+  Area,
+  HorizontalAxis,
+  VerticalAxis,
+  Tooltip,
+} from "react-native-responsive-linechart";
 
 // components
 import AppText from "../components/AppText";
@@ -20,8 +28,18 @@ import useFetch from "../hooks/useFetch";
 
 // styles
 import styles from "../styles/HomeScreen.styles";
+import { useEffect, useState } from "react";
+import {
+  convertTimestampToTime,
+  getTimeStamp,
+  getTimeStampOfDate,
+} from "../utils/time";
+import { Picker } from "@react-native-picker/picker";
 
 export default function HomeScreen() {
+  const [displayData, setDisplayData] = useState([]);
+  const [xLabels, setXLabels] = useState([]);
+  const [graphSelected, setGraphSelected] = useState("nepse");
   const {
     data: indices,
     loading: indicesLoading,
@@ -38,6 +56,30 @@ export default function HomeScreen() {
     loading: marketSummaryLoading,
     error: marketSummaryError,
   } = useFetch("/nepse/market-summary");
+  const {
+    data: chartData,
+    loading: chartLoading,
+    error: chartError,
+  } = useFetch(
+    `/nepse/graph/${graphSelected}/${getTimeStampOfDate(
+      "2023-06-15",
+      10
+    )}/1686936249`
+  );
+
+  useEffect(() => {
+    if (chartData?.data?.t) {
+      const data = chartData?.data?.t?.map((item, index) => ({
+        x: Number(item),
+        y: Number(chartData?.data?.c[index]),
+      }));
+
+      setDisplayData(data);
+      setXLabels(
+        chartData?.data?.t?.map((item) => convertTimestampToTime(item))
+      );
+    }
+  }, [chartData]);
 
   return (
     <ScrollView style={styles.container}>
@@ -164,51 +206,116 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        <View style={styles.chartContainer}>
-          <LineChart
-            data={{
-              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-              datasets: [
-                {
-                  data: [
-                    Math.random() * 100,
-                    Math.random() * 100,
-                    Math.random() * 100,
-                    Math.random() * 100,
-                    Math.random() * 100,
-                    Math.random() * 100,
-                  ],
-                },
-              ],
-            }}
-            width={(90 / 100) * Dimensions.get("window").width} // from react-native
-            height={220}
-            //   yAxisLabel="$"
-            //   yAxisSuffix="k"
-            yAxisInterval={1} // optional, defaults to 1
-            chartConfig={{
-              backgroundColor: "#7d7c39",
-              backgroundGradientFrom: "#64632d",
-              backgroundGradientTo: "#e0df66",
-              decimalPlaces: 2, // optional, defaults to 2dp
-              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              style: {
-                borderRadius: 16,
-              },
-              propsForDots: {
-                r: "6",
-                strokeWidth: "2",
-                stroke: "#aeae4f",
-              },
-            }}
-            bezier
-            style={{
-              marginVertical: 8,
-              borderRadius: 16,
-            }}
-          />
-        </View>
+        {!chartLoading && displayData.length > 0 && (
+          <View style={styles.graphOptions}>
+            <Picker
+              selectedValue={graphSelected}
+              onValueChange={(itemValue, itemIndex) =>
+                setGraphSelected(itemValue)
+              }
+              dropdownIconColor={colors.dark.placeholderText}
+              style={{
+                color: colors.dark.textColor,
+                backgroundColor: colors.dark.secondary,
+                marginVertical: height(1),
+              }}
+            >
+              <Picker.Item label="NEPSE" value="NEPSE" />
+              <Picker.Item label="Sensitive" value="SENSITIVE" />
+              <Picker.Item label="Float" value="FLOAT" />
+              <Picker.Item label="Sensitive Float" value="SENFLOAT" />
+            </Picker>
+          </View>
+        )}
+
+        {chartLoading ? (
+          <Loader />
+        ) : (
+          displayData.length > 0 && (
+            <View style={styles.chartContainer}>
+              <Chart
+                style={{
+                  height: (35 / 100) * Dimensions.get("screen").height,
+                  width: "100%",
+                }}
+                data={displayData}
+                padding={{ left: 45, bottom: 20, right: 1, top: 20 }}
+                xDomain={
+                  displayData.length > 0
+                    ? {
+                        min: displayData[0].x,
+                        max: displayData[displayData.length - 1].x,
+                      }
+                    : { min: 0, max: 0 }
+                }
+              >
+                <VerticalAxis
+                  tickCount={7}
+                  theme={{
+                    grid: {
+                      stroke: {
+                        color: colors.dark.placeholderText,
+                        width: 0.5,
+                      },
+                    },
+                    labels: {
+                      formatter: (v) => v.toFixed(2),
+                      label: { color: colors.dark.textColor },
+                    },
+                  }}
+                />
+                <HorizontalAxis
+                  tickCount={5}
+                  theme={{
+                    grid: {
+                      stroke: {
+                        color: colors.dark.placeholderText,
+                        width: 0.5,
+                      },
+                    },
+                    labels: {
+                      visible: false,
+                      label: {
+                        color: colors.dark.textColor,
+                      },
+                    },
+                  }}
+                />
+                <Area
+                  smoothing="cubic-spline"
+                  theme={{
+                    gradient: {
+                      from: { color: colors.dark.topGainerText },
+                      to: { color: colors.dark.stockIncrease, opacity: 0.09 },
+                    },
+                  }}
+                />
+                <Line
+                  smoothing="cubic-spline"
+                  theme={{
+                    stroke: { color: colors.dark.button, width: 2 },
+                    // scatter: {
+                    //   default: {
+                    //     width: 4,
+                    //     height: 4,
+                    //     rx: 2,
+                    //     color: colors.dark.unchanged,
+                    //   },
+                    // },
+                  }}
+                  tension={0.3}
+                  tooltipComponent={
+                    <Tooltip
+                      theme={{
+                        formatter: ({ y }) => y.toFixed(2),
+                      }}
+                    />
+                  }
+                />
+              </Chart>
+            </View>
+          )
+        )}
 
         <Gainer
           title="Top Gainers"

@@ -18,7 +18,6 @@ export default styles = StyleSheet.create({
     backgroundColor: colors.dark.secondary,
     padding: width(5),
     borderRadius: width(2),
-    elevation: 5,
   },
   nepseIndexChange: {
     fontSize: totalSize(1.5),
