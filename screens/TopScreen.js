@@ -12,6 +12,7 @@ import {
   TopTradedShares,
   TopTransactions,
 } from "./TopScreens";
+import colors from "../config/colors";
 
 const renderScene = SceneMap({
   first: TopGainers,
@@ -39,7 +40,13 @@ export default function TopScreen() {
       indicatorStyle={styles.indicator}
       style={styles.tabBar}
       renderLabel={({ route, focused, color }) => (
-        <AppText variant="Medium" style={styles.tabTitle}>
+        <AppText
+          variant="Medium"
+          style={{
+            ...styles.tabTitle,
+            color: focused ? colors.dark.button : colors.dark.placeholderText,
+          }}
+        >
           {route.title}
         </AppText>
       )}
