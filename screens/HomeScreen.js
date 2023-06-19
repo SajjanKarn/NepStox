@@ -29,16 +29,11 @@ import useFetch from "../hooks/useFetch";
 // styles
 import styles from "../styles/HomeScreen.styles";
 import { useEffect, useState } from "react";
-import {
-  convertTimestampToTime,
-  getTimeStamp,
-  getTimeStampOfDate,
-} from "../utils/time";
+import { convertTimestampToTime, getTimeStampOfDate } from "../utils/time";
 import { Picker } from "@react-native-picker/picker";
 
 export default function HomeScreen() {
   const [displayData, setDisplayData] = useState([]);
-  const [xLabels, setXLabels] = useState([]);
   const [graphSelected, setGraphSelected] = useState("nepse");
   const {
     data: indices,
@@ -75,9 +70,6 @@ export default function HomeScreen() {
       }));
 
       setDisplayData(data);
-      setXLabels(
-        chartData?.data?.t?.map((item) => convertTimestampToTime(item))
-      );
     }
   }, [chartData]);
 
@@ -304,6 +296,7 @@ export default function HomeScreen() {
                     // },
                   }}
                   tension={0.3}
+                  hideTooltipAfter={500}
                   tooltipComponent={
                     <Tooltip
                       theme={{

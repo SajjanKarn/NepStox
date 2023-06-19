@@ -1,17 +1,21 @@
 import { View, ScrollView, StatusBar } from "react-native";
 import { useState } from "react";
+import { useToast } from "react-native-toast-notifications";
+import { useNavigation } from "@react-navigation/native";
 
 import AppText from "../components/AppText";
 import Option from "../components/Option";
+import Loader from "../components/Loader";
 
 import styles from "../styles/MoreScreen.styles";
-import { useNavigation } from "@react-navigation/native";
 
 // supabase
 import { supabase } from "../config/supabase";
 
 export default function MoreScreen() {
   const navigation = useNavigation();
+  const toast = useToast();
+  const [loading, setLoading] = useState(false);
   const [options, setOptions] = useState({
     myInformation: [
       {
@@ -42,7 +46,22 @@ export default function MoreScreen() {
       {
         name: "Logout",
         icon: "logout",
-        onPress: () => supabase.auth.signOut(),
+        onPress: () => {
+          setLoading(true);
+          supabase.auth
+            .signOut()
+            .then(() => {
+              setLoading(false);
+            })
+            .catch((error) => {
+              setLoading(false);
+              toast.show("Something went wrong!", {
+                type: "danger",
+                duration: 1000,
+                placement: "top",
+              });
+            });
+        },
       },
     ],
     marketInformation: [
@@ -114,6 +133,7 @@ export default function MoreScreen() {
   return (
     <ScrollView style={styles.container}>
       <StatusBar barStyle="default" />
+      {loading && <Loader />}
       {/* my information  */}
       <View style={styles.optionContainer}>
         <AppText style={styles.optionTitle} variant="Bold">

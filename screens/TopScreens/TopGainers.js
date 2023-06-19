@@ -40,6 +40,8 @@ const TopGainers = () => {
       </DataTable>
       {loading ? (
         <Loader />
+      ) : error ? (
+        <AppText style={styles.error}>Something went wrong!</AppText>
       ) : (
         <ScrollView>
           {data?.data?.data?.map((item) => (

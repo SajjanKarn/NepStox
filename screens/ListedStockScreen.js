@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  View,
-  ActivityIndicator,
-  StatusBar,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
+import { View, ActivityIndicator, StatusBar } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 
 import AppText from "../components/AppText";
@@ -49,6 +43,8 @@ export default function ListedStockScreen() {
 
       {loading ? (
         <ActivityIndicator size="large" color={colors.dark.button} />
+      ) : error ? (
+        <AppText style={styles.errorText}>Something went wrong!</AppText>
       ) : (
         <View style={styles.stocksContainer}>
           <FlashList
