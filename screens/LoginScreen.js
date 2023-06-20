@@ -13,6 +13,7 @@ import AppInput from "../components/AppInput";
 
 import colors from "../config/colors";
 
+// supabase ⚡
 import { supabase } from "../config/supabase";
 
 export default function LoginScreen() {

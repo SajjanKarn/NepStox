@@ -26,6 +26,9 @@ import StockComparisonScreen from "./screens/StockComparisonScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import UnAuthNavigator from "./navigation/UnAuthNavigator";
 
+// context
+import { AuthContext } from "./provider/AuthProvider";
+
 // SplashScreen.preventAutoHideAsync();
 
 export default function App() {
@@ -77,7 +80,13 @@ export default function App() {
       // <CompanyDetailsScreen />
       // <StockComparisonScreen />
       // <AuthNavigator /> */}
-      {session && session.user ? <AuthNavigator /> : <UnAuthNavigator />}
+      {session && session.user ? (
+        <AuthContext>
+          <AuthNavigator />
+        </AuthContext>
+      ) : (
+        <UnAuthNavigator />
+      )}
     </ToastProvider>
   );
 }

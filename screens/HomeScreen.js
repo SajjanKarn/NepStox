@@ -5,7 +5,6 @@ import {
   StatusBar,
   SafeAreaView,
 } from "react-native";
-// import { LineChart } from "react-native-chart-kit";
 import { AntDesign } from "@expo/vector-icons";
 import { height, totalSize } from "react-native-dimension";
 import {
@@ -29,7 +28,7 @@ import useFetch from "../hooks/useFetch";
 // styles
 import styles from "../styles/HomeScreen.styles";
 import { useEffect, useState } from "react";
-import { convertTimestampToTime, getTimeStampOfDate } from "../utils/time";
+import { getTimeStamp, getTimeStampOfDate } from "../utils/time";
 import { Picker } from "@react-native-picker/picker";
 
 export default function HomeScreen() {
@@ -57,9 +56,9 @@ export default function HomeScreen() {
     error: chartError,
   } = useFetch(
     `/nepse/graph/${graphSelected}/${getTimeStampOfDate(
-      "2023-06-15",
+      "2023-06-19",
       10
-    )}/1686936249`
+    )}/${getTimeStamp(new Date().getHours())}/1`
   );
 
   useEffect(() => {

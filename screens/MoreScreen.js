@@ -21,7 +21,7 @@ export default function MoreScreen() {
       {
         name: "Profile",
         icon: "wallet",
-        onPress: () => {},
+        onPress: () => navigation.navigate("MyProfileScreen"),
       },
       {
         name: "My WatchList",
