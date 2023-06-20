@@ -56,7 +56,7 @@ export default function HomeScreen() {
     error: chartError,
   } = useFetch(
     `/nepse/graph/${graphSelected}/${getTimeStampOfDate(
-      "2023-06-19",
+      "2023-06-20",
       10
     )}/${getTimeStamp(new Date().getHours())}/1`
   );
@@ -329,7 +329,7 @@ export default function HomeScreen() {
                               : 3
                           ]["Point Change"]
                         ) > 0
-                          ? colors.dark.topGainerText
+                          ? colors.dark.button
                           : colors.dark.topLoserText,
                       width: 2,
                     },

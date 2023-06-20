@@ -1,13 +1,13 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { width, height, totalSize } from "react-native-dimension";
 
 import colors from "../config/colors";
 
 import AppText from "./AppText";
 
-export default function StockList({ stock }) {
+export default function StockList({ stock, touchable, onPress = () => {} }) {
   return (
-    <View
+    <TouchableOpacity
       style={[
         styles.stock,
         {
@@ -19,6 +19,8 @@ export default function StockList({ stock }) {
               : colors.dark.secondary + "10",
         },
       ]}
+      onPress={onPress}
+      activeOpacity={touchable ? 0.5 : 1}
     >
       <View style={styles.stockInfo}>
         <AppText style={styles.companySymbol}>{stock.symbol}</AppText>
@@ -56,7 +58,7 @@ export default function StockList({ stock }) {
       >
         {stock.change_per}%
       </AppText>
-    </View>
+    </TouchableOpacity>
   );
 }
 

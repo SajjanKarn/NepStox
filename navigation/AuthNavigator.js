@@ -26,6 +26,7 @@ import ForeignExchangeScreen from "../screens/ForeignExchangeScreen";
 import FloorSheetScreen from "../screens/FloorSheetScreen";
 import MyProfileScreen from "../screens/MyProfileScreen";
 import WatchListScreen from "../screens/WatchListScreen";
+import SelectStockScreen from "../screens/SelectStockScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -129,6 +130,25 @@ export const HomeStack = () => (
   </MoreStackNavigator.Navigator>
 );
 
+const WatchListStack = createStackNavigator();
+
+export const WatchListStackScreen = () => (
+  <WatchListStack.Navigator initialRouteName="WatchListScreen">
+    <WatchListStack.Screen
+      name="WatchListScreen"
+      component={WatchListScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <WatchListStack.Screen
+      name="SelectStockScreen"
+      component={SelectStockScreen}
+      options={stackHeaderStyle("Select Stock")}
+    />
+  </WatchListStack.Navigator>
+);
+
 export default function AuthNavigator() {
   return (
     <NavigationContainer>
@@ -162,7 +182,7 @@ export default function AuthNavigator() {
         />
         <Tab.Screen
           name="WatchList"
-          component={WatchListScreen}
+          component={WatchListStackScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="eye" color={color} size={size} />
