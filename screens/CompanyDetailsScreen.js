@@ -15,10 +15,42 @@ import RowCard from "../components/RowCard";
 import useFetch from "../hooks/useFetch";
 
 import styles from "../styles/CompanyDetailsScreen.styles";
+import { useEffect, useState } from "react";
+import {
+  Area,
+  Chart,
+  HorizontalAxis,
+  Line,
+  Tooltip,
+  VerticalAxis,
+} from "react-native-responsive-linechart";
+import { getTimeStamp, getTimeStampOfDate } from "../utils/time";
 
 export default function CompanyDetailsScreen() {
   const { symbol } = useRoute().params;
+  const [displayData, setDisplayData] = useState([]);
   const { data, loading, error } = useFetch(`/nepse/company-details/${symbol}`);
+  const {
+    data: chartData,
+    loading: chartLoading,
+    error: chartError,
+  } = useFetch(
+    `/nepse/graph/${symbol.toUpperCase()}/${getTimeStampOfDate(
+      "2023-06-19",
+      10
+    )}/${getTimeStamp(new Date().getHours())}/1`
+  );
+
+  useEffect(() => {
+    if (chartData?.data?.t) {
+      const data = chartData?.data?.t?.map((item, index) => ({
+        x: Number(item),
+        y: Number(chartData?.data?.c[index]),
+      }));
+
+      setDisplayData(data);
+    }
+  }, [chartData]);
 
   return (
     <ScrollView style={styles.container}>
@@ -49,53 +81,98 @@ export default function CompanyDetailsScreen() {
               </View>
             </View>
 
-            {/* chart  */}
-            <View style={styles.chartContainer}>
-              <LineChart
-                data={{
-                  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-                  datasets: [
-                    {
-                      data: [
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                      ],
-                    },
-                  ],
-                }}
-                width={(90 / 100) * Dimensions.get("window").width} // from react-native
-                height={220}
-                //   yAxisLabel="$"
-                //   yAxisSuffix="k"
-                yAxisInterval={1} // optional, defaults to 1
-                chartConfig={{
-                  backgroundColor: "#7d7c39",
-                  backgroundGradientFrom: "#64632d",
-                  backgroundGradientTo: "#e0df66",
-                  decimalPlaces: 2, // optional, defaults to 2dp
-                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                  labelColor: (opacity = 1) =>
-                    `rgba(255, 255, 255, ${opacity})`,
-                  style: {
-                    borderRadius: 16,
-                  },
-                  propsForDots: {
-                    r: "6",
-                    strokeWidth: "2",
-                    stroke: "#aeae4f",
-                  },
-                }}
-                bezier
-                style={{
-                  marginVertical: 8,
-                  borderRadius: 16,
-                }}
-              />
-            </View>
+            {chartLoading ? (
+              <Loader />
+            ) : (
+              displayData.length > 0 && (
+                <View style={styles.chartContainer}>
+                  <Chart
+                    style={{
+                      height: (35 / 100) * Dimensions.get("screen").height,
+                      width: "100%",
+                    }}
+                    data={displayData}
+                    padding={{ left: 45, bottom: 20, right: 1, top: 20 }}
+                    xDomain={
+                      displayData.length > 0
+                        ? {
+                            min: displayData[0].x,
+                            max: displayData[displayData.length - 1].x,
+                          }
+                        : { min: 0, max: 0 }
+                    }
+                  >
+                    <VerticalAxis
+                      tickCount={7}
+                      theme={{
+                        grid: {
+                          stroke: {
+                            color: colors.dark.placeholderText,
+                            width: 0.5,
+                          },
+                        },
+                        labels: {
+                          formatter: (v) => v.toFixed(2),
+                          label: { color: colors.dark.textColor },
+                        },
+                      }}
+                    />
+                    <HorizontalAxis
+                      tickCount={5}
+                      theme={{
+                        grid: {
+                          stroke: {
+                            color: colors.dark.placeholderText,
+                            width: 0.5,
+                          },
+                        },
+                        labels: {
+                          visible: false,
+                          label: {
+                            color: colors.dark.textColor,
+                          },
+                        },
+                      }}
+                    />
+                    <Area
+                      smoothing="cubic-spline"
+                      theme={{
+                        gradient: {
+                          from: { color: colors.dark.topGainerText },
+                          to: {
+                            color: colors.dark.stockIncrease,
+                            opacity: 0.09,
+                          },
+                        },
+                      }}
+                    />
+                    <Line
+                      smoothing="cubic-spline"
+                      theme={{
+                        stroke: { color: colors.dark.button, width: 2 },
+                        // scatter: {
+                        //   default: {
+                        //     width: 4,
+                        //     height: 4,
+                        //     rx: 2,
+                        //     color: colors.dark.unchanged,
+                        //   },
+                        // },
+                      }}
+                      tension={0.3}
+                      hideTooltipAfter={500}
+                      tooltipComponent={
+                        <Tooltip
+                          theme={{
+                            formatter: ({ y }) => y.toFixed(2),
+                          }}
+                        />
+                      }
+                    />
+                  </Chart>
+                </View>
+              )
+            )}
 
             {/* today's data  */}
             <View style={styles.todayDataContainer}>

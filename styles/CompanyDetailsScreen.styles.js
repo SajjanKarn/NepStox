@@ -42,4 +42,11 @@ export default styles = StyleSheet.create({
     marginVertical: totalSize(5),
     textAlign: "center",
   },
+
+  // chart section
+  chartContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
