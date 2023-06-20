@@ -25,6 +25,7 @@ import CaculatorScreen from "../screens/CalculatorScreen";
 import ForeignExchangeScreen from "../screens/ForeignExchangeScreen";
 import FloorSheetScreen from "../screens/FloorSheetScreen";
 import MyProfileScreen from "../screens/MyProfileScreen";
+import WatchListScreen from "../screens/WatchListScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -161,7 +162,7 @@ export default function AuthNavigator() {
         />
         <Tab.Screen
           name="WatchList"
-          component={HomeScreen}
+          component={WatchListScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="eye" color={color} size={size} />

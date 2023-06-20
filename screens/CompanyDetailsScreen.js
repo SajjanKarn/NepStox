@@ -135,7 +135,7 @@ export default function CompanyDetailsScreen() {
                       }}
                     />
                     <Area
-                      smoothing="cubic-spline"
+                      // smoothing="cubic-spline"
                       theme={{
                         gradient: {
                           from: { color: colors.dark.topGainerText },
@@ -147,9 +147,13 @@ export default function CompanyDetailsScreen() {
                       }}
                     />
                     <Line
-                      smoothing="cubic-spline"
+                      // smoothing="cubic-spline"
                       theme={{
-                        stroke: { color: colors.dark.button, width: 2 },
+                        stroke: {
+                          color: colors.dark.button,
+                          width: 1.3,
+                          opacity: 0.7,
+                        },
                         // scatter: {
                         //   default: {
                         //     width: 4,

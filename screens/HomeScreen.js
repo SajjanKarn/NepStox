@@ -276,15 +276,63 @@ export default function HomeScreen() {
                   smoothing="cubic-spline"
                   theme={{
                     gradient: {
-                      from: { color: colors.dark.topGainerText },
-                      to: { color: colors.dark.stockIncrease, opacity: 0.09 },
+                      from: {
+                        color:
+                          Number(
+                            indices?.data?.data[
+                              graphSelected === "NEPSE"
+                                ? 0
+                                : graphSelected === "SENSITIVE"
+                                ? 1
+                                : graphSelected === "FLOAT"
+                                ? 2
+                                : 3
+                            ]["Point Change"]
+                          ) > 0
+                            ? colors.dark.topGainerText
+                            : colors.dark.topLoserText,
+                        opacity: 0.09,
+                      },
+                      to: {
+                        color:
+                          Number(
+                            indices?.data?.data[
+                              graphSelected === "NEPSE"
+                                ? 0
+                                : graphSelected === "SENSITIVE"
+                                ? 1
+                                : graphSelected === "FLOAT"
+                                ? 2
+                                : 3
+                            ]["Point Change"]
+                          ) > 0
+                            ? colors.dark.stockIncrease
+                            : colors.dark.stockDecrease,
+                        opacity: 0.09,
+                      },
                     },
                   }}
                 />
                 <Line
                   smoothing="cubic-spline"
                   theme={{
-                    stroke: { color: colors.dark.button, width: 2 },
+                    stroke: {
+                      color:
+                        Number(
+                          indices?.data?.data[
+                            graphSelected === "NEPSE"
+                              ? 0
+                              : graphSelected === "SENSITIVE"
+                              ? 1
+                              : graphSelected === "FLOAT"
+                              ? 2
+                              : 3
+                          ]["Point Change"]
+                        ) > 0
+                          ? colors.dark.topGainerText
+                          : colors.dark.topLoserText,
+                      width: 2,
+                    },
                     // scatter: {
                     //   default: {
                     //     width: 4,
