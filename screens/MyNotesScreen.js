@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { Modal, Portal, Button, PaperProvider } from "react-native-paper";
 import { width, height, totalSize } from "react-native-dimension";
 import { AntDesign } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { useToast } from "react-native-toast-notifications";
+
 import AppText from "../components/AppText";
 import AppInput from "../components/AppInput";
 
@@ -34,6 +35,48 @@ export default function MyNotesScreen() {
   const handleDelete = async (note) => {
     const newNotes = await removeSingleNote(note);
     setNotes(newNotes);
+  };
+
+  const handleSubmitEditing = () => {
+    if (!editedNote) return;
+    if (notes.includes(editedNote)) {
+      toast.show("Note already exists", {
+        type: "danger",
+        placement: "top",
+        duration: 1000,
+      });
+      setEditedNote("");
+      return;
+    }
+    const newNotes = notes.map((note) =>
+      note === selectedNote ? editedNote : note
+    );
+    setNotes(newNotes);
+    storeNote(newNotes);
+    setEditedNote("");
+    hideModal();
+  };
+
+  const handleClearAll = () => {
+    Alert.alert(
+      "Clear All",
+      "Are you sure you want to clear all notes?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            removeNote();
+            setNotes([]);
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   useEffect(() => {
@@ -76,6 +119,15 @@ export default function MyNotesScreen() {
         </View>
 
         <View style={styles.notesContainer}>
+          {notes.length > 5 && (
+            <Button
+              mode="contained"
+              onPress={handleClearAll}
+              style={styles.clearButton}
+            >
+              Clear All
+            </Button>
+          )}
           <FlashList
             data={notes}
             renderItem={({ item }) => (
@@ -131,25 +183,7 @@ export default function MyNotesScreen() {
             placeholder="Edit note"
             value={editedNote.length > 0 ? editedNote : selectedNote}
             onChangeText={(text) => setEditedNote(text)}
-            onSubmitEditing={() => {
-              if (!editedNote) return;
-              if (notes.includes(editedNote)) {
-                toast.show("Note already exists", {
-                  type: "danger",
-                  placement: "top",
-                  duration: 1000,
-                });
-                setEditedNote("");
-                return;
-              }
-              const newNotes = notes.map((note) =>
-                note === selectedNote ? editedNote : note
-              );
-              setNotes(newNotes);
-              storeNote(newNotes);
-              setEditedNote("");
-              hideModal();
-            }}
+            onSubmitEditing={handleSubmitEditing}
             squared
           />
         </Modal>
@@ -174,7 +208,7 @@ const styles = StyleSheet.create({
 
   // input
   inputContainer: {
-    marginBottom: height(2),
+    marginBottom: height(0.3),
   },
 
   // notes
@@ -222,5 +256,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: width(2),
+  },
+
+  // clear button
+  clearButton: {
+    backgroundColor: colors.dark.topLoserText,
+    width: width(30),
+    alignSelf: "flex-start",
+    marginBottom: height(1),
   },
 });
