@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";
 import { ToastProvider } from "react-native-toast-notifications";
 import * as NavigationBar from "expo-navigation-bar";
+import "react-native-gesture-handler";
 
 // components
 import AppText from "./components/AppText";

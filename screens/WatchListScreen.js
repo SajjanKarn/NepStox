@@ -137,14 +137,14 @@ export default function WatchListScreen({ route }) {
         </View>
       )}
 
-      {watchListStocks.length > 0 &&
-        (watchListLoading ? (
-          <ActivityIndicator
-            animating={true}
-            color={colors.dark.button}
-            size="small"
-          />
-        ) : (
+      {watchListLoading ? (
+        <ActivityIndicator
+          animating={true}
+          color={colors.dark.button}
+          size="small"
+        />
+      ) : (
+        watchListStocks.length > 0 && (
           <DataTable
             style={{
               flex: 1,
@@ -239,7 +239,8 @@ export default function WatchListScreen({ route }) {
               bounces={false}
             />
           </DataTable>
-        ))}
+        )
+      )}
 
       <FAB
         style={styles.fab}

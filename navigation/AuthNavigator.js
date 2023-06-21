@@ -1,9 +1,11 @@
 import { StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { height } from "react-native-dimension";
+import { height, totalSize } from "react-native-dimension";
+import { Appbar } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import colors from "../config/colors";
 
@@ -28,6 +30,8 @@ import MyProfileScreen from "../screens/MyProfileScreen";
 import WatchListScreen from "../screens/WatchListScreen";
 import SelectStockScreen from "../screens/SelectStockScreen";
 import MyNotesScreen from "../screens/MyNotesScreen";
+
+const Drawer = createDrawerNavigator();
 
 const Tab = createBottomTabNavigator();
 
@@ -123,15 +127,51 @@ export const HomeStack = () => (
   <MoreStackNavigator.Navigator initialRouteName="HomeScreen">
     <MoreStackNavigator.Screen
       name="HomeScreen"
-      component={HomeScreen}
+      component={MyDrawer}
       options={{
         headerShown: false,
       }}
+      // options={{
+      //   header: () => (
+      //     <Appbar.Header
+      //       style={{
+      //         backgroundColor: colors.dark.bottomTab,
+      //       }}
+      //     >
+      //       <Appbar.Action
+      //         icon="menu"
+      //         onPress={() => {}}
+      //         iconColor={colors.dark.textColor}
+      //       />
+      //       <Appbar.Content
+      //         title="NepStoX"
+      //         titleStyle={{
+      //           color: colors.dark.textColor,
+      //           fontFamily: "Riveruta-Bold",
+      //           fontSize: totalSize(2.3),
+      //         }}
+      //         style={{
+      //           alignItems: "center",
+      //         }}
+      //       />
+      //       <Appbar.Action
+      //         icon="magnify"
+      //         onPress={() => navigation.navigate("HomeListedStockScreen")}
+      //         iconColor={colors.dark.textColor}
+      //       />
+      //     </Appbar.Header>
+      //   ),
+      // }}
     />
     <MoreStackNavigator.Screen
       name="CompanyDetailsScreen"
       component={CompanyDetailsScreen}
       options={stackHeaderStyle("Company Details")}
+    />
+    <MoreStackNavigator.Screen
+      name="HomeListedStockScreen"
+      component={ListedStockScreen}
+      options={stackHeaderStyle("")}
     />
   </MoreStackNavigator.Navigator>
 );
@@ -153,6 +193,38 @@ export const WatchListStackScreen = () => (
       options={stackHeaderStyle("Select Stock")}
     />
   </WatchListStack.Navigator>
+);
+
+const MyDrawer = ({ navigation }) => (
+  <Drawer.Navigator
+    initialRouteName="HomeDrawer"
+    screenOptions={{
+      headerRight: () => (
+        <Appbar.Action
+          icon="magnify"
+          onPress={() => navigation.navigate("HomeListedStockScreen")}
+          iconColor={colors.dark.textColor}
+        />
+      ),
+      headerStyle: {
+        backgroundColor: colors.dark.bottomTab,
+        elevation: 0,
+      },
+      headerTintColor: colors.dark.textColor,
+    }}
+  >
+    <Drawer.Screen
+      name="HomeDrawer"
+      component={HomeScreen}
+      options={{
+        headerTitle: "NepStoX",
+        headerTitleStyle: {
+          fontFamily: "Riveruta-Bold",
+          fontSize: totalSize(2.3),
+        },
+      }}
+    />
+  </Drawer.Navigator>
 );
 
 export default function AuthNavigator() {
