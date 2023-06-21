@@ -27,6 +27,7 @@ import FloorSheetScreen from "../screens/FloorSheetScreen";
 import MyProfileScreen from "../screens/MyProfileScreen";
 import WatchListScreen from "../screens/WatchListScreen";
 import SelectStockScreen from "../screens/SelectStockScreen";
+import MyNotesScreen from "../screens/MyNotesScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -109,6 +110,11 @@ export const MoreStack = () => (
       name="MyProfileScreen"
       component={MyProfileScreen}
       options={stackHeaderStyle("My Profile")}
+    />
+    <MoreStackNavigator.Screen
+      name="MyNotesScreen"
+      component={MyNotesScreen}
+      options={stackHeaderStyle("My Notes")}
     />
   </MoreStackNavigator.Navigator>
 );

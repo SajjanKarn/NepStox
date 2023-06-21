@@ -36,7 +36,7 @@ export default function MoreScreen() {
       {
         name: "My Notes",
         icon: "book",
-        onPress: () => {},
+        onPress: () => navigation.navigate("MyNotesScreen"),
       },
       {
         name: "My Portfolio",

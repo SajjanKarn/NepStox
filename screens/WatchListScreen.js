@@ -13,9 +13,10 @@ import { Alert } from "react-native";
 import AppText from "../components/AppText";
 
 import colors from "../config/colors";
-
 import { getStock, removeSingleStock } from "../config/storage";
+
 import useFetch from "../hooks/useFetch";
+import { FlatList } from "react-native";
 
 export default function WatchListScreen({ route }) {
   const navigation = useNavigation();
@@ -144,32 +145,33 @@ export default function WatchListScreen({ route }) {
             size="small"
           />
         ) : (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <DataTable
+          <DataTable
+            style={{
+              flex: 1,
+              marginTop: 10,
+            }}
+          >
+            <DataTable.Header
               style={{
-                marginTop: 10,
+                backgroundColor: colors.dark.bottomTab,
+                borderBottomColor: colors.dark.bottomTab,
               }}
             >
-              <DataTable.Header
-                style={{
-                  backgroundColor: colors.dark.bottomTab,
-                }}
-              >
-                <DataTable.Title>
-                  <AppText style={styles.tableTitle}>Symbol</AppText>
-                </DataTable.Title>
-                <DataTable.Title numeric>
-                  <AppText style={styles.tableTitle}>LTP</AppText>
-                </DataTable.Title>
-                <DataTable.Title numeric>
-                  <AppText style={styles.tableTitle}>CH</AppText>
-                </DataTable.Title>
-                <DataTable.Title numeric>
-                  <AppText style={styles.tableTitle}>% CH</AppText>
-                </DataTable.Title>
-              </DataTable.Header>
+              <DataTable.Title>
+                <AppText style={styles.tableTitle}>Symbol</AppText>
+              </DataTable.Title>
+              <DataTable.Title numeric>
+                <AppText style={styles.tableTitle}>LTP</AppText>
+              </DataTable.Title>
+              <DataTable.Title numeric>
+                <AppText style={styles.tableTitle}>CH</AppText>
+              </DataTable.Title>
+              <DataTable.Title numeric>
+                <AppText style={styles.tableTitle}>% CH</AppText>
+              </DataTable.Title>
+            </DataTable.Header>
 
-              {watchListStocks.map((item) => (
+            {/* {watchListStocks.map((item) => (
                 <DataTable.Row
                   key={item.Symbol}
                   style={{
@@ -198,9 +200,45 @@ export default function WatchListScreen({ route }) {
                     </AppText>
                   </DataTable.Cell>
                 </DataTable.Row>
-              ))}
-            </DataTable>
-          </ScrollView>
+              ))} */}
+
+            <FlatList
+              data={watchListStocks}
+              keyExtractor={(item) => item.Symbol}
+              renderItem={({ item }) => (
+                <DataTable.Row
+                  key={item.Symbol}
+                  style={{
+                    backgroundColor:
+                      Number(item["Point Change"]) > 0
+                        ? colors.dark.stockIncrease
+                        : colors.dark.stockDecrease,
+                  }}
+                  // handle hold press
+                  onLongPress={() => handleHold(item.Symbol)}
+                >
+                  <DataTable.Cell>
+                    <AppText style={styles.tableText}>{item.Symbol}</AppText>
+                  </DataTable.Cell>
+                  <DataTable.Cell numeric>
+                    <AppText style={styles.tableText}>{item.LTP}</AppText>
+                  </DataTable.Cell>
+                  <DataTable.Cell numeric>
+                    <AppText style={styles.tableText}>
+                      {item["Point Change"]}
+                    </AppText>
+                  </DataTable.Cell>
+                  <DataTable.Cell numeric>
+                    <AppText style={styles.tableText}>
+                      {item["% Change"]}%
+                    </AppText>
+                  </DataTable.Cell>
+                </DataTable.Row>
+              )}
+              showsVerticalScrollIndicator={false}
+              bounces={false}
+            />
+          </DataTable>
         ))}
 
       <FAB
