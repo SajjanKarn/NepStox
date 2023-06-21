@@ -4,6 +4,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useEffect, useState } from "react";
 import { ToastProvider } from "react-native-toast-notifications";
+import * as NavigationBar from "expo-navigation-bar";
 
 // components
 import AppText from "./components/AppText";
@@ -40,6 +41,7 @@ export default function App() {
     "Riveruta-Light": require("./assets/fonts/Riveruta-Light.ttf"),
     "Riveruta-Thin": require("./assets/fonts/Riveruta-Thin.ttf"),
   });
+  NavigationBar.setBackgroundColorAsync(colors.dark.bottomTab);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
