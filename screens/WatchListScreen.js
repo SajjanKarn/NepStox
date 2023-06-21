@@ -8,40 +8,63 @@ import {
   FAB,
   TextInput,
 } from "react-native-paper";
+import { Alert } from "react-native";
 
 import AppText from "../components/AppText";
 
 import colors from "../config/colors";
 
-import { getStock, removeSingleStock, removeStock } from "../config/storage";
+import { getStock, removeSingleStock } from "../config/storage";
 import useFetch from "../hooks/useFetch";
-import Loader from "../components/Loader";
 
-export default function WatchListScreen() {
+export default function WatchListScreen({ route }) {
   const navigation = useNavigation();
   const [searchInput, setSearchInput] = useState("");
   const [watchListStocks, setWatchListStocks] = useState([]);
   const [watchListLoading, setWatchListLoading] = useState(false);
+  const [searchResult, setSearchResult] = useState([]);
   const { data, loading, error } = useFetch(`/nepse/live-trading`);
 
+  const getData = async () => {
+    setWatchListLoading(true);
+    const stocks = await getStock();
+
+    if (stocks && !loading) {
+      const result = data?.data?.filter((item) => stocks.includes(item.Symbol));
+      setWatchListStocks(result);
+    }
+
+    setWatchListLoading(false);
+  };
+
   useEffect(() => {
-    const getData = async () => {
-      setWatchListLoading(true);
-      const stocks = await getStock();
-
-      if (stocks && !loading) {
-        const result = data?.data?.filter((item) =>
-          stocks.includes(item.Symbol)
-        );
-        setWatchListStocks(result);
+    if (route.params?.refresh || !loading) {
+      if (route.params?.refresh) {
+        navigation.setParams({ refresh: undefined });
       }
-
-      setWatchListLoading(false);
-    };
-    getData();
-  }, [loading]);
+      getData();
+    }
+  }, [loading, route.params?.refresh]);
 
   const handleHold = async (symbol) => {
+    // ask for confirmation
+    Alert.alert(
+      "Are you sure you want to remove this stock?",
+      "This will remove the stock from your watchlist.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Remove",
+          onPress: () => handleRemove(symbol),
+        },
+      ]
+    );
+  };
+
+  const handleRemove = async (symbol) => {
     const newStocks = await removeSingleStock(symbol);
 
     if (newStocks.length === 0) {
@@ -61,12 +84,23 @@ export default function WatchListScreen() {
         <View style={styles.searchInputContainer}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Search"
+            placeholder="Symbol or Name..."
             placeholderTextColor={colors.dark.textColor}
-            onChangeText={(text) => setSearchInput(text)}
+            onChangeText={(text) => {
+              setSearchInput(text);
+              if (text.length > 0) {
+                const result = watchListStocks.filter((item) =>
+                  item.Symbol.toLowerCase().includes(text.toLowerCase())
+                );
+                setWatchListStocks(result);
+              } else {
+                getData();
+              }
+            }}
             value={searchInput}
             activeUnderlineColor={colors.dark.placeholderText}
             textColor={colors.dark.textColor}
+            autoCapitalize="none"
           />
         </View>
       </View>
@@ -107,7 +141,7 @@ export default function WatchListScreen() {
           <ActivityIndicator
             animating={true}
             color={colors.dark.button}
-            size="large"
+            size="small"
           />
         ) : (
           <ScrollView showsVerticalScrollIndicator={false}>

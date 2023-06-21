@@ -31,9 +31,11 @@ export default function SelectStockScreen() {
     }
   };
 
-  const handlePress = (symbol) => {
-    storeStock(symbol);
-    navgation.navigate("WatchListScreen");
+  const handlePress = async (symbol) => {
+    await storeStock(symbol);
+    navgation.navigate("WatchListScreen", {
+      refresh: true,
+    });
   };
 
   return (

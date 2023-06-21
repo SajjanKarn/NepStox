@@ -97,4 +97,7 @@ const styles = StyleSheet.create({
   tableRow: {
     backgroundColor: colors.dark.secondary,
   },
+  tableData: {
+    fontSize: totalSize(1.6),
+  },
 });
