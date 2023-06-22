@@ -56,9 +56,9 @@ export default function HomeScreen() {
     error: chartError,
   } = useFetch(
     `/nepse/graph/${graphSelected}/${getTimeStampOfDate(
-      "2023-06-21",
-      10
-    )}/${getTimeStamp(new Date().getHours())}/1`
+      "2023-06-22",
+      11
+    )}/${getTimeStampOfDate("2023-06-22", 15)}/1`
   );
 
   useEffect(() => {
