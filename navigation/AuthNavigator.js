@@ -240,7 +240,7 @@ export default function AuthNavigator() {
           component={WatchListStackScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <AntDesign name="eye" color={color} size={size} />
+              <AntDesign name="eyeo" color={color} size={size} />
             ),
           }}
         />

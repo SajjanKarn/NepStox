@@ -129,10 +129,18 @@ export default function WatchListScreen({ route }) {
         </View>
       </View>
 
-      {watchListStocks.length === 0 && (
+      {!searchInput.length && watchListStocks.length === 0 && (
         <View style={styles.noStocksContainer}>
           <AppText style={styles.noStocksTitle} variant="Medium">
             Click on the + button to add stocks to your watchlist
+          </AppText>
+        </View>
+      )}
+
+      {searchInput.length > 0 && watchListStocks.length === 0 && (
+        <View style={styles.noStocksContainer}>
+          <AppText style={styles.noStocksTitle} variant="Medium">
+            No stocks found
           </AppText>
         </View>
       )}
