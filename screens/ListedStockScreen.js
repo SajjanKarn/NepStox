@@ -9,8 +9,10 @@ import StockList from "../components/StockList";
 import useFetch from "../hooks/useFetch";
 import colors from "../config/colors";
 import styles from "../styles/ListedStockScreen.styles";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ListedStockScreen() {
+  const navigation = useNavigation();
   const { data, loading, error } = useFetch(`/nepse/live-trading`);
   const [searchInput, setSearchInput] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -62,6 +64,11 @@ export default function ListedStockScreen() {
                   change_per: item["% Change"],
                   prev_close: item["Prev. Close"],
                 }}
+                onPress={() =>
+                  navigation.navigate("CompanyDetailsScreen", {
+                    symbol: item.Symbol,
+                  })
+                }
               />
             )}
           />
