@@ -32,6 +32,7 @@ import SelectStockScreen from "../screens/SelectStockScreen";
 import MyNotesScreen from "../screens/MyNotesScreen";
 import CustomDrawer from "../components/CustomDrawer";
 import ChangePasswordScreen from "../screens/UserSettingScreens/ChangePasswordScreen";
+import PortfolioScreen from "../screens/PortfolioScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -219,7 +220,7 @@ export default function AuthNavigator() {
         />
         <Tab.Screen
           name="Portfolio"
-          component={HomeScreen}
+          component={PortfolioScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="piechart" color={color} size={size} />
