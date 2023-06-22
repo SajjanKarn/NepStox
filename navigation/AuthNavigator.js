@@ -30,6 +30,8 @@ import MyProfileScreen from "../screens/MyProfileScreen";
 import WatchListScreen from "../screens/WatchListScreen";
 import SelectStockScreen from "../screens/SelectStockScreen";
 import MyNotesScreen from "../screens/MyNotesScreen";
+import CustomDrawer from "../components/CustomDrawer";
+import ChangePasswordScreen from "../screens/UserSettingScreens/ChangePasswordScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -131,37 +133,6 @@ export const HomeStack = () => (
       options={{
         headerShown: false,
       }}
-      // options={{
-      //   header: () => (
-      //     <Appbar.Header
-      //       style={{
-      //         backgroundColor: colors.dark.bottomTab,
-      //       }}
-      //     >
-      //       <Appbar.Action
-      //         icon="menu"
-      //         onPress={() => {}}
-      //         iconColor={colors.dark.textColor}
-      //       />
-      //       <Appbar.Content
-      //         title="NepStoX"
-      //         titleStyle={{
-      //           color: colors.dark.textColor,
-      //           fontFamily: "Riveruta-Bold",
-      //           fontSize: totalSize(2.3),
-      //         }}
-      //         style={{
-      //           alignItems: "center",
-      //         }}
-      //       />
-      //       <Appbar.Action
-      //         icon="magnify"
-      //         onPress={() => navigation.navigate("HomeListedStockScreen")}
-      //         iconColor={colors.dark.textColor}
-      //       />
-      //     </Appbar.Header>
-      //   ),
-      // }}
     />
     <MoreStackNavigator.Screen
       name="CompanyDetailsScreen"
@@ -172,6 +143,11 @@ export const HomeStack = () => (
       name="HomeListedStockScreen"
       component={ListedStockScreen}
       options={stackHeaderStyle("")}
+    />
+    <MoreStackNavigator.Screen
+      name="ChangePasswordScreen"
+      component={ChangePasswordScreen}
+      options={stackHeaderStyle("Change Password")}
     />
   </MoreStackNavigator.Navigator>
 );
@@ -198,6 +174,7 @@ export const WatchListStackScreen = () => (
 const MyDrawer = ({ navigation }) => (
   <Drawer.Navigator
     initialRouteName="HomeDrawer"
+    drawerContent={(props) => <CustomDrawer {...props} />}
     screenOptions={{
       headerRight: () => (
         <Appbar.Action
