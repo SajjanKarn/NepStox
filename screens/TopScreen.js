@@ -39,7 +39,7 @@ export default function TopScreen() {
       {...props}
       indicatorStyle={styles.indicator}
       style={styles.tabBar}
-      renderLabel={({ route, focused, color }) => (
+      renderLabel={({ route, focused }) => (
         <AppText
           variant="Medium"
           style={{

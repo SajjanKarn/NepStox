@@ -68,16 +68,16 @@ export default function CompanyDetailsScreen() {
             <View style={styles.companyInfoCard}>
               <View style={styles.companyInfoCardHeader}>
                 <AppText style={styles.companyInfoCardHeaderText}>
-                  {data?.data?.companyInfo?.companyName}
+                  {data?.data?.["Company Name"]}
                 </AppText>
               </View>
               <View style={styles.companyInfoCardBody}>
                 <AppText style={styles.cardBodyText} variant="Medium">
-                  Sector: {data?.data?.companyInfo?.sector}
+                  Sector: {data?.data?.["Sector"]}
                 </AppText>
-                <AppText style={styles.cardBodyText} variant="Medium">
+                {/* <AppText style={styles.cardBodyText} variant="Medium">
                   Instrument Type: Equity
-                </AppText>
+                </AppText> */}
               </View>
             </View>
 
@@ -184,33 +184,46 @@ export default function CompanyDetailsScreen() {
 
               <RowCard
                 leftText="As Of"
-                rightText={new Date().toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  timeZone: "Asia/Kathmandu",
-                  hour: "numeric",
-                  minute: "numeric",
-                })}
+                rightText={data?.data?.["Last Traded On"]}
+                increased={
+                  Number(data?.data?.["% Change"].split(" %")[0]) > 0
+                    ? true
+                    : Number(data?.data?.["% Change"].split(" %")[0]) < 0
+                    ? false
+                    : null
+                }
               />
               <RowCard
                 leftText="Last Traded Price"
-                rightText={`Rs. ${data?.data?.todaySharePrice[0]?.Close}`}
+                rightText={`Rs. ${data?.data?.["Market Price"]}`}
+                increased={
+                  Number(data?.data?.["% Change"].split(" %")[0]) > 0
+                    ? true
+                    : Number(data?.data?.["% Change"].split(" %")[0]) < 0
+                    ? false
+                    : null
+                }
               />
-              <RowCard
+              {/* <RowCard
                 leftText="Point Change"
                 rightText={data?.data?.todaySharePrice[0]?.Diff}
-              />
+              /> */}
               <RowCard
                 leftText="Percentage Change"
-                rightText={`${data?.data?.todaySharePrice[0]["Diff %"]} %`}
+                rightText={data?.data?.["% Change"]}
+                increased={
+                  Number(data?.data?.["% Change"].split(" %")[0]) > 0
+                    ? true
+                    : Number(data?.data?.["% Change"].split(" %")[0]) < 0
+                    ? false
+                    : null
+                }
               />
-              <RowCard
+              {/* <RowCard
                 leftText="Previous Close"
                 rightText={`Rs. ${data?.data?.todaySharePrice[0]["Prev. Close"]}`}
-              />
-              <RowCard
+              /> */}
+              {/* <RowCard
                 leftText="Open"
                 rightText={`Rs. ${data?.data?.todaySharePrice[0]?.Open}`}
               />
@@ -221,14 +234,18 @@ export default function CompanyDetailsScreen() {
               <RowCard
                 leftText="Low"
                 rightText={`Rs. ${data?.data?.todaySharePrice[0]?.Low}`}
-              />
+              /> */}
               <RowCard
                 leftText="52 Week High"
-                rightText={`Rs. ${data?.data?.todaySharePrice[0]["52 Weeks High"]}`}
+                rightText={`Rs. ${
+                  data?.data?.["52 Weeks High - Low"].split("-")[0]
+                }`}
               />
               <RowCard
                 leftText="52 Week Low"
-                rightText={`Rs. ${data?.data?.todaySharePrice[0]["52 Weeks Low"]}`}
+                rightText={`Rs. ${
+                  data?.data?.["52 Weeks High - Low"].split("-")[1]
+                }`}
               />
             </View>
 
@@ -237,15 +254,15 @@ export default function CompanyDetailsScreen() {
 
               <RowCard
                 leftText="EPS"
-                rightText={`Rs. ${data?.data?.todaySharePrice[0]?.Close}`}
+                rightText={`Rs. ${data?.data?.["EPS"]}`}
               />
               <RowCard
                 leftText="PE Ratio"
-                rightText={data?.data?.todaySharePrice[0]?.Diff}
+                rightText={data?.data?.["P/E Ratio"]}
               />
               <RowCard
                 leftText="Book Value Per Share"
-                rightText={`${data?.data?.todaySharePrice[0]["Diff %"]} %`}
+                rightText={`${data?.data?.["Book Value"]}`}
               />
             </View>
           </>

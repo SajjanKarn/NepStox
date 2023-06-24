@@ -14,5 +14,6 @@ export default colors = {
     bottomTab: "#181818",
     stockIncrease: "#0b8000",
     stockDecrease: "#4c0000",
+    graphLineIncrease: "#3EC70B",
   },
 };

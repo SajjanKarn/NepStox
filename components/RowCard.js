@@ -4,9 +4,23 @@ import { totalSize } from "react-native-dimension";
 import AppText from "./AppText";
 import colors from "../config/colors";
 
-export default function RowCard({ leftText = "left", rightText = "right" }) {
+export default function RowCard({
+  leftText = "left",
+  rightText = "right",
+  increased,
+}) {
   return (
-    <View style={styles.rowCard}>
+    <View
+      style={{
+        ...styles.rowCard,
+        backgroundColor:
+          increased === true
+            ? colors.dark.stockIncrease + "80"
+            : increased === false
+            ? colors.dark.stockDecrease + "40"
+            : colors.dark.secondary,
+      }}
+    >
       <View style={styles.rowCardLeft}>
         <AppText style={styles.rowCardLeftText}>{leftText}</AppText>
       </View>

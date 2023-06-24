@@ -51,6 +51,11 @@ export default function HomeScreen() {
     error: marketSummaryError,
   } = useFetch("/nepse/market-summary");
   const {
+    data: marketStatus,
+    loading: marketStatusLoading,
+    error: marketStatusError,
+  } = useFetch("/nepse/market-status");
+  const {
     data: chartData,
     loading: chartLoading,
     error: chartError,
@@ -164,38 +169,48 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        <View style={styles.indicators}>
-          <View style={[styles.indicatorTile, styles.advanced]}>
-            <AntDesign
-              name="arrowup"
-              size={20}
-              color="white"
-              style={styles.tileIcon}
-            />
-            <AppText style={styles.indicatorValue}>0</AppText>
-            <AppText style={styles.indicatorTitle}>Advanced</AppText>
+        {marketStatusLoading ? (
+          <Loader />
+        ) : (
+          <View style={styles.indicators}>
+            <View style={[styles.indicatorTile, styles.advanced]}>
+              <AntDesign
+                name="arrowup"
+                size={20}
+                color="white"
+                style={styles.tileIcon}
+              />
+              <AppText style={styles.indicatorValue}>
+                {marketStatus?.data?.advanced}
+              </AppText>
+              <AppText style={styles.indicatorTitle}>Advanced</AppText>
+            </View>
+            <View style={[styles.indicatorTile, styles.declined]}>
+              <AntDesign
+                name="arrowdown"
+                size={20}
+                color="white"
+                style={styles.tileIcon}
+              />
+              <AppText style={styles.indicatorValue}>
+                {marketStatus?.data?.declined}
+              </AppText>
+              <AppText style={styles.indicatorTitle}>Declined</AppText>
+            </View>
+            <View style={[styles.indicatorTile, styles.unchanged]}>
+              <AntDesign
+                name="minus"
+                size={20}
+                color="white"
+                style={styles.tileIcon}
+              />
+              <AppText style={styles.indicatorValue}>
+                {marketStatus?.data?.unchanged}
+              </AppText>
+              <AppText style={styles.indicatorTitle}>Unchanged</AppText>
+            </View>
           </View>
-          <View style={[styles.indicatorTile, styles.declined]}>
-            <AntDesign
-              name="arrowdown"
-              size={20}
-              color="white"
-              style={styles.tileIcon}
-            />
-            <AppText style={styles.indicatorValue}>0</AppText>
-            <AppText style={styles.indicatorTitle}>Declined</AppText>
-          </View>
-          <View style={[styles.indicatorTile, styles.unchanged]}>
-            <AntDesign
-              name="minus"
-              size={20}
-              color="white"
-              style={styles.tileIcon}
-            />
-            <AppText style={styles.indicatorValue}>0</AppText>
-            <AppText style={styles.indicatorTitle}>Unchanged</AppText>
-          </View>
-        </View>
+        )}
 
         {!chartLoading && displayData.length > 0 && (
           <View style={styles.graphOptions}>
