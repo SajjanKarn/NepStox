@@ -1,14 +1,15 @@
 import { useState } from "react";
-import {
-  View,
-  ActivityIndicator,
-  StatusBar,
-  StyleSheet,
-  ScrollView,
-} from "react-native";
+import { View, StatusBar, StyleSheet, ScrollView } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { useNavigation } from "@react-navigation/native";
-import { Modal, Portal, Button, PaperProvider } from "react-native-paper";
+import {
+  Modal,
+  Portal,
+  Button,
+  PaperProvider,
+  ActivityIndicator,
+} from "react-native-paper";
+import { height, totalSize, width } from "react-native-dimension";
 import { Picker } from "@react-native-picker/picker";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -20,15 +21,19 @@ import StockList from "../../components/StockList";
 import useFetch from "../../hooks/useFetch";
 import styles from "../../styles/ListedStockScreen.styles";
 import colors from "../../config/colors";
-import { height, totalSize, width } from "react-native-dimension";
+
+import { supabase } from "../../config/supabase";
+import { useToast } from "react-native-toast-notifications";
 
 export default function PortfolioStockScreen() {
+  const toast = useToast();
   const navgation = useNavigation();
   const { data, loading, error } = useFetch(`/nepse/live-trading`);
   const [searchInput, setSearchInput] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [selectedStock, setSelectedStock] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [addLoading, setAddLoading] = useState(false);
   const [source, setSource] = useState("IPO");
   const [todayDate, setTodayDate] = useState(
     new Date().toLocaleDateString("en-US", {
@@ -67,7 +72,60 @@ export default function PortfolioStockScreen() {
   };
 
   const handlePortfolioSubmit = async (values) => {
-    console.log(values, source, todayDate);
+    try {
+      setAddLoading(true);
+      const user = await supabase.auth.getUser();
+      // before inserting check if the stock is already in portfolio
+      const { data: portfolioData, error: portfolioError } = await supabase
+        .from("portfolio")
+        .select("*")
+        .eq("user_id", user.data.user.id)
+        .eq("symbol", selectedStock);
+      if (portfolioError) {
+        throw portfolioError;
+      }
+      if (portfolioData.length > 0) {
+        toast.show("Stock already in portfolio!", {
+          type: "danger",
+          placement: "top",
+          duration: 3000,
+        });
+        setAddLoading(false);
+        return;
+      }
+
+      const { data: portfolio, error } = await supabase
+        .from("portfolio")
+        .insert([
+          {
+            user_id: user.data.user.id,
+            symbol: selectedStock,
+            source,
+            quantity: Number(values.quantity),
+            buying_price: Number(values.buyingPrice),
+            buying_date: new Date(),
+          },
+        ]);
+      if (error) {
+        throw error;
+      }
+      setAddLoading(false);
+      setModalVisible(false);
+      toast.show("Stock added to portfolio!", {
+        type: "success",
+        placement: "top",
+        duration: 3000,
+      });
+      navgation.navigate("PortfolioScreen");
+    } catch (error) {
+      console.log(error);
+      toast.show("Something went wrong!", {
+        type: "danger",
+        placement: "top",
+        duration: 3000,
+      });
+      setAddLoading(false);
+    }
   };
 
   return (
@@ -197,13 +255,20 @@ export default function PortfolioStockScreen() {
                           />
                         </View>
                         <View style={screenStyles.modalButtonsContainer}>
-                          <Button
-                            mode="contained"
-                            onPress={handleSubmit}
-                            style={screenStyles.modalButton}
-                          >
-                            Submit
-                          </Button>
+                          {addLoading ? (
+                            <ActivityIndicator
+                              size="small"
+                              color={colors.dark.button}
+                            />
+                          ) : (
+                            <Button
+                              mode="contained"
+                              onPress={handleSubmit}
+                              style={screenStyles.modalButton}
+                            >
+                              Submit
+                            </Button>
+                          )}
                         </View>
                       </>
                     )}
