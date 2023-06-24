@@ -8,11 +8,13 @@ import {
 import { width, height, totalSize } from "react-native-dimension";
 import { FAB } from "react-native-paper";
 import { Chart, Line, Area } from "react-native-responsive-linechart";
+import { useNavigation } from "@react-navigation/native";
 
-import colors from "../config/colors";
-import AppText from "../components/AppText";
+import colors from "../../config/colors";
+import AppText from "../../components/AppText";
 
 export default function PortfolioScreen() {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -263,7 +265,7 @@ export default function PortfolioScreen() {
           backgroundColor: colors.dark.button,
         }}
         icon="plus"
-        onPress={() => console.log("Pressed")}
+        onPress={() => navigation.navigate("PortfolioStockScreen")}
       />
     </View>
   );
