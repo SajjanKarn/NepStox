@@ -1,311 +1,426 @@
-import { View, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { DataTable } from "react-native-paper";
 import { width, height, totalSize } from "react-native-dimension";
+import { Area, Chart, Line } from "react-native-responsive-linechart";
+import { useRoute } from "@react-navigation/native";
+
+import AppText from "../../components/AppText";
+import Loader from "../../components/Loader";
 
 import colors from "../../config/colors";
-import AppText from "../../components/AppText";
-import { Area, Chart, Line } from "react-native-responsive-linechart";
-import { Dimensions } from "react-native";
-import { DataTable } from "react-native-paper";
-import { ScrollView } from "react-native";
+import useFetch from "../../hooks/useFetch";
+import { supabase } from "../../config/supabase";
+import { useToast } from "react-native-toast-notifications";
 
 export default function PortfolioCompany() {
+  const params = useRoute().params;
+  const toast = useToast();
+  const {
+    data: companyData,
+    loading,
+    error,
+  } = useFetch(`/nepse/company-details/${params?.symbol}`);
+  const [portfolioCompanyData, setPortfolioCompanyData] = useState({});
+
+  useEffect(() => {
+    const fetchCompanyData = async () => {
+      try {
+        const user = await supabase.auth.getUser();
+
+        const { data, error } = await supabase
+          .from("portfolio")
+          .select("*")
+          .eq("user_id", user.data.user.id)
+          .eq("symbol", params?.symbol);
+
+        if (error) throw error;
+
+        setPortfolioCompanyData(data[0]);
+        console.log(data[0]);
+      } catch (error) {
+        toast.show("Something went wrong!", {
+          type: "danger",
+          placement: "top",
+          duration: 2000,
+        });
+      }
+    };
+
+    fetchCompanyData();
+  }, []);
+
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <AppText style={styles.headerSymbol} variant="Regular">
-          UNLB
-        </AppText>
-        <AppText style={styles.headerMarketPrice} variant="Medium">
-          Rs. 1250
-        </AppText>
-        <AppText style={styles.headerChange} variant="Medium">
-          +15 (+0.5%)
-        </AppText>
-      </View>
+      {loading ? (
+        <Loader />
+      ) : (
+        portfolioCompanyData && (
+          <>
+            <View style={styles.headerContainer}>
+              <AppText style={styles.headerSymbol} variant="Regular">
+                {params?.symbol}
+              </AppText>
+              <AppText
+                style={{
+                  ...styles.headerMarketPrice,
+                  color:
+                    Number(companyData?.data?.Others.point_change) > 0
+                      ? colors.dark.graphLineIncrease
+                      : colors.dark.topLoserText,
+                }}
+                variant="Medium"
+              >
+                Rs. {companyData?.data?.["Market Price"]}
+              </AppText>
+              <AppText
+                style={{
+                  ...styles.headerChange,
+                  color:
+                    Number(companyData?.data?.Others.point_change) > 0
+                      ? colors.dark.graphLineIncrease
+                      : colors.dark.topLoserText,
+                }}
+                variant="Medium"
+              >
+                {companyData?.data?.Others.point_change} (
+                {companyData?.data?.["% Change"]})
+              </AppText>
+            </View>
 
-      <View style={styles.chartContainer}>
-        <Chart
-          style={{
-            width: "100%",
-            height: Dimensions.get("window").height / 3,
-          }}
-          data={[
-            { x: 0, y: 0 },
-            { x: 1, y: 3 },
-            { x: 2, y: 5 },
-            { x: 3, y: 4 },
-            { x: 4, y: 7 },
-            { x: 5, y: 9 },
-            { x: 6, y: 8 },
-            { x: 7, y: 11 },
-            { x: 8, y: 13 },
-            { x: 9, y: 12 },
-            { x: 10, y: 0 },
-          ]}
-          xDomain={{ min: 0, max: 10 }}
-          yDomain={{ min: 0, max: 15 }}
-        >
-          <Area
-            style={{ flex: 1 }}
-            data={[
-              { x: 0, y: 0 },
-              { x: 1, y: 3 },
-              { x: 2, y: 5 },
-              { x: 3, y: 4 },
-              { x: 4, y: 7 },
-              { x: 5, y: 9 },
-              { x: 6, y: 8 },
-              { x: 7, y: 11 },
-              { x: 8, y: 13 },
-              { x: 9, y: 12 },
-              { x: 10, y: 0 },
-            ]}
-            smoothing="bezier"
-            tension={0.2}
-            theme={{
-              gradient: {
-                from: { color: colors.dark.stockIncrease, opacity: 0.08 },
-                to: {
-                  color: colors.dark.primary,
-                  opacity: 0,
-                },
-              },
-            }}
-          />
-          <Line
-            style={{ flex: 1 }}
-            data={[
-              { x: 0, y: 0 },
-              { x: 1, y: 3 },
-              { x: 2, y: 5 },
-              { x: 3, y: 4 },
-              { x: 4, y: 7 },
-              { x: 5, y: 9 },
-              { x: 6, y: 8 },
-              { x: 7, y: 11 },
-              { x: 8, y: 13 },
-              { x: 9, y: 12 },
-              { x: 10, y: 0 },
-            ]}
-            smoothing="bezier"
-            tension={0.2}
-            theme={{
-              stroke: {
-                color: colors.dark.graphLineIncrease,
-                width: totalSize(0.3),
-              },
-            }}
-          />
-        </Chart>
-      </View>
+            <View style={styles.chartContainer}>
+              <Chart
+                style={{
+                  width: "100%",
+                  height: Dimensions.get("window").height / 3,
+                }}
+                data={[
+                  { x: 0, y: 0 },
+                  { x: 1, y: 3 },
+                  { x: 2, y: 5 },
+                  { x: 3, y: 4 },
+                  { x: 4, y: 7 },
+                  { x: 5, y: 9 },
+                  { x: 6, y: 8 },
+                  { x: 7, y: 11 },
+                  { x: 8, y: 13 },
+                  { x: 9, y: 12 },
+                  { x: 10, y: 0 },
+                ]}
+                xDomain={{ min: 0, max: 10 }}
+                yDomain={{ min: 0, max: 15 }}
+              >
+                <Area
+                  style={{ flex: 1 }}
+                  data={[
+                    { x: 0, y: 0 },
+                    { x: 1, y: 3 },
+                    { x: 2, y: 5 },
+                    { x: 3, y: 4 },
+                    { x: 4, y: 7 },
+                    { x: 5, y: 9 },
+                    { x: 6, y: 8 },
+                    { x: 7, y: 11 },
+                    { x: 8, y: 13 },
+                    { x: 9, y: 12 },
+                    { x: 10, y: 0 },
+                  ]}
+                  smoothing="bezier"
+                  tension={0.2}
+                  theme={{
+                    gradient: {
+                      from: { color: colors.dark.stockIncrease, opacity: 0.08 },
+                      to: {
+                        color: colors.dark.primary,
+                        opacity: 0,
+                      },
+                    },
+                  }}
+                />
+                <Line
+                  style={{ flex: 1 }}
+                  data={[
+                    { x: 0, y: 0 },
+                    { x: 1, y: 3 },
+                    { x: 2, y: 5 },
+                    { x: 3, y: 4 },
+                    { x: 4, y: 7 },
+                    { x: 5, y: 9 },
+                    { x: 6, y: 8 },
+                    { x: 7, y: 11 },
+                    { x: 8, y: 13 },
+                    { x: 9, y: 12 },
+                    { x: 10, y: 0 },
+                  ]}
+                  smoothing="bezier"
+                  tension={0.2}
+                  theme={{
+                    stroke: {
+                      color:
+                        Number(companyData?.data?.Others.point_change) > 0
+                          ? colors.dark.graphLineIncrease
+                          : colors.dark.topLoserText,
+                      width: totalSize(0.3),
+                    },
+                  }}
+                />
+              </Chart>
+            </View>
 
-      <View style={styles.userPositionContainer}>
-        <AppText style={styles.statsTitle}>Your Position</AppText>
-        <DataTable>
-          <DataTable.Row>
-            <DataTable.Cell>
-              <AppText variant="Medium" style={styles.rowTitle}>
-                Shares
-              </AppText>
-            </DataTable.Cell>
-            <DataTable.Cell numeric>
-              <AppText variant="Medium" style={styles.rowValue}>
-                100
-              </AppText>
-            </DataTable.Cell>
-          </DataTable.Row>
-          <DataTable.Row>
-            <DataTable.Cell>
-              <AppText variant="Medium" style={styles.rowTitle}>
-                Equity
-              </AppText>
-            </DataTable.Cell>
-            <DataTable.Cell numeric>
-              <AppText variant="Medium" style={styles.rowValue}>
-                Rs. 125000
-              </AppText>
-            </DataTable.Cell>
-          </DataTable.Row>
-          <DataTable.Row>
-            <DataTable.Cell>
-              <AppText variant="Medium" style={styles.rowTitle}>
-                AVG Cost
-              </AppText>
-            </DataTable.Cell>
-            <DataTable.Cell numeric>
-              <AppText variant="Medium" style={styles.rowValue}>
-                Rs. 1250
-              </AppText>
-            </DataTable.Cell>
-          </DataTable.Row>
-          <DataTable.Row>
-            <DataTable.Cell>
-              <AppText variant="Medium" style={styles.rowTitle}>
-                Portfolio Diversity
-              </AppText>
-            </DataTable.Cell>
-            <DataTable.Cell numeric>
-              <AppText variant="Medium" style={styles.rowValue}>
-                10%
-              </AppText>
-            </DataTable.Cell>
-          </DataTable.Row>
-          <DataTable.Row>
-            <DataTable.Cell>
-              <AppText variant="Medium" style={styles.rowTitle}>
-                Today's Return
-              </AppText>
-            </DataTable.Cell>
-            <DataTable.Cell numeric>
-              <AppText variant="Medium" style={styles.rowValue}>
-                Rs. 1250
-              </AppText>
-            </DataTable.Cell>
-          </DataTable.Row>
-          <DataTable.Row>
-            <DataTable.Cell>
-              <AppText variant="Medium" style={styles.rowTitle}>
-                Total Return
-              </AppText>
-            </DataTable.Cell>
-            <DataTable.Cell numeric>
-              <AppText variant="Medium" style={styles.rowValue}>
-                Rs. 1250
-              </AppText>
-            </DataTable.Cell>
-          </DataTable.Row>
-        </DataTable>
-      </View>
+            <View style={styles.userPositionContainer}>
+              <AppText style={styles.statsTitle}>Your Position</AppText>
+              <DataTable>
+                <DataTable.Row>
+                  <DataTable.Cell>
+                    <AppText variant="Medium" style={styles.rowTitle}>
+                      Shares
+                    </AppText>
+                  </DataTable.Cell>
+                  <DataTable.Cell numeric>
+                    <AppText variant="Medium" style={styles.rowValue}>
+                      {portfolioCompanyData?.quantity}
+                    </AppText>
+                  </DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>
+                    <AppText variant="Medium" style={styles.rowTitle}>
+                      Equity
+                    </AppText>
+                  </DataTable.Cell>
+                  <DataTable.Cell numeric>
+                    <AppText variant="Medium" style={styles.rowValue}>
+                      Rs.{" "}
+                      {(
+                        portfolioCompanyData?.quantity *
+                        parseFloat(
+                          companyData?.data?.["Market Price"].replace(/,/g, "")
+                        )
+                      ).toLocaleString()}
+                    </AppText>
+                  </DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>
+                    <AppText variant="Medium" style={styles.rowTitle}>
+                      AVG Cost
+                    </AppText>
+                  </DataTable.Cell>
+                  <DataTable.Cell numeric>
+                    <AppText variant="Medium" style={styles.rowValue}>
+                      Rs. {portfolioCompanyData?.buying_price}
+                    </AppText>
+                  </DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>
+                    <AppText variant="Medium" style={styles.rowTitle}>
+                      Portfolio Diversity
+                    </AppText>
+                  </DataTable.Cell>
+                  <DataTable.Cell numeric>
+                    <AppText variant="Medium" style={styles.rowValue}>
+                      10%
+                    </AppText>
+                  </DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>
+                    <AppText variant="Medium" style={styles.rowTitle}>
+                      Today's Return
+                    </AppText>
+                  </DataTable.Cell>
+                  <DataTable.Cell numeric>
+                    <AppText variant="Medium" style={styles.rowValue}>
+                      Rs. 1250
+                    </AppText>
+                  </DataTable.Cell>
+                </DataTable.Row>
+                <DataTable.Row>
+                  <DataTable.Cell>
+                    <AppText variant="Medium" style={styles.rowTitle}>
+                      Total Return
+                    </AppText>
+                  </DataTable.Cell>
+                  <DataTable.Cell numeric>
+                    <AppText variant="Medium" style={styles.rowValue}>
+                      Rs. 1250
+                    </AppText>
+                  </DataTable.Cell>
+                </DataTable.Row>
+              </DataTable>
+            </View>
 
-      <View style={styles.statsContainer}>
-        <AppText style={styles.statsTitle}>Today's Stats</AppText>
-        <View style={styles.statsRow}>
-          <DataTable>
-            <DataTable.Row style={styles.statsTableRow}>
-              <DataTable.Cell>
-                <AppText variant="Medium" style={styles.rowTitle}>
-                  Open
-                </AppText>
-              </DataTable.Cell>
-              <DataTable.Cell numeric>
-                <AppText variant="Medium" style={styles.rowValue}>
-                  Rs. 1250
-                </AppText>
-              </DataTable.Cell>
-            </DataTable.Row>
-            <DataTable.Row style={styles.statsTableRow}>
-              <DataTable.Cell>
-                <AppText variant="Medium" style={styles.rowTitle}>
-                  High
-                </AppText>
-              </DataTable.Cell>
-              <DataTable.Cell numeric>
-                <AppText variant="Medium" style={styles.rowValue}>
-                  Rs. 1250
-                </AppText>
-              </DataTable.Cell>
-            </DataTable.Row>
-            <DataTable.Row style={styles.statsTableRow}>
-              <DataTable.Cell>
-                <AppText variant="Medium" style={styles.rowTitle}>
-                  Low
-                </AppText>
-              </DataTable.Cell>
-              <DataTable.Cell numeric>
-                <AppText variant="Medium" style={styles.rowValue}>
-                  Rs. 1250
-                </AppText>
-              </DataTable.Cell>
-            </DataTable.Row>
-            <DataTable.Row style={styles.statsTableRow}>
-              <DataTable.Cell>
-                <AppText variant="Medium" style={styles.rowTitle}>
-                  52 Week High
-                </AppText>
-              </DataTable.Cell>
-              <DataTable.Cell numeric>
-                <AppText variant="Medium" style={styles.rowValue}>
-                  Rs. 1250
-                </AppText>
-              </DataTable.Cell>
-            </DataTable.Row>
-          </DataTable>
-        </View>
-        <View style={styles.statsRow}>
-          <DataTable>
-            <DataTable.Row style={styles.statsTableRow}>
-              <DataTable.Cell>
-                <AppText variant="Medium" style={styles.rowTitle}>
-                  Volume
-                </AppText>
-              </DataTable.Cell>
-              <DataTable.Cell numeric>
-                <AppText variant="Medium" style={styles.rowValue}>
-                  Rs. 1250
-                </AppText>
-              </DataTable.Cell>
-            </DataTable.Row>
-            <DataTable.Row style={styles.statsTableRow}>
-              <DataTable.Cell>
-                <AppText variant="Medium" style={styles.rowTitle}>
-                  Avg Price
-                </AppText>
-              </DataTable.Cell>
-              <DataTable.Cell numeric>
-                <AppText variant="Medium" style={styles.rowValue}>
-                  Rs. 1250
-                </AppText>
-              </DataTable.Cell>
-            </DataTable.Row>
-            <DataTable.Row style={styles.statsTableRow}>
-              <DataTable.Cell>
-                <AppText variant="Medium" style={styles.rowTitle}>
-                  Prev. Price
-                </AppText>
-              </DataTable.Cell>
-              <DataTable.Cell numeric>
-                <AppText variant="Medium" style={styles.rowValue}>
-                  Rs. 1250
-                </AppText>
-              </DataTable.Cell>
-            </DataTable.Row>
-            <DataTable.Row style={styles.statsTableRow}>
-              <DataTable.Cell>
-                <AppText variant="Medium" style={styles.rowTitle}>
-                  MKT Cap
-                </AppText>
-              </DataTable.Cell>
-              <DataTable.Cell numeric>
-                <AppText variant="Medium" style={styles.rowValue}>
-                  Rs. 1250
-                </AppText>
-              </DataTable.Cell>
-            </DataTable.Row>
-          </DataTable>
-        </View>
-      </View>
+            <View style={styles.statsContainer}>
+              <AppText style={styles.statsTitle}>Today's Stats</AppText>
+              <View style={styles.statsRow}>
+                <DataTable>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Open
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs. {companyData?.data?.Others.open}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        High
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs. {companyData?.data?.Others.high}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Low
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs. {companyData?.data?.Others.low}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        52 Week High
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs.{" "}
+                        {
+                          companyData?.data?.["52 Weeks High - Low"].split(
+                            "-"
+                          )[0]
+                        }
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        52 Week Low
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs.{" "}
+                        {
+                          companyData?.data?.["52 Weeks High - Low"].split(
+                            "-"
+                          )[1]
+                        }
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                </DataTable>
+              </View>
+              <View style={styles.statsRow}>
+                <DataTable>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        30D Avg Volume
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs. {companyData?.data?.["30-Day Avg Volume"]}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Avg Price
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs. 1250
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Prev. Price
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs. {companyData?.data?.Others.prev}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Market Cap.
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        {companyData?.data?.["Market Capitalization"] ?? "N/A"}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Last Traded on
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        {companyData?.data?.["Last Traded On"] ?? "N/A"}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                </DataTable>
+              </View>
+            </View>
 
-      <View style={styles.tradeHistoryContainer}>
-        <AppText style={styles.statsTitle}>Trade History</AppText>
-        <View style={styles.tradeHistory}>
-          <View style={styles.row1}>
-            <AppText style={styles.tradePurchaseTitle} variant="Regular">
-              6/23/2023
-            </AppText>
-            <AppText style={styles.tradeSource} variant="Medium">
-              from IPO
-            </AppText>
-          </View>
-          <View style={styles.row2}>
-            <AppText style={styles.tradePurchasePrice} variant="Medium">
-              Rs. 1000
-            </AppText>
-            <AppText style={styles.tradeUnits} variant="Regular">
-              10 units
-            </AppText>
-          </View>
-        </View>
-      </View>
+            <View style={styles.tradeHistoryContainer}>
+              <AppText style={styles.statsTitle}>Trade History</AppText>
+              <View style={styles.tradeHistory}>
+                <View style={styles.row1}>
+                  <AppText style={styles.tradePurchaseTitle} variant="Regular">
+                    {portfolioCompanyData?.buying_date}
+                  </AppText>
+                  <AppText style={styles.tradeSource} variant="Medium">
+                    from {portfolioCompanyData?.source}
+                  </AppText>
+                </View>
+                <View style={styles.row2}>
+                  <AppText style={styles.tradePurchasePrice} variant="Medium">
+                    Rs.{" "}
+                    {Number(
+                      portfolioCompanyData?.buying_price *
+                        portfolioCompanyData?.quantity
+                    ).toLocaleString()}
+                  </AppText>
+                  <AppText style={styles.tradeUnits} variant="Regular">
+                    {portfolioCompanyData?.quantity} units
+                  </AppText>
+                </View>
+              </View>
+            </View>
+          </>
+        )
+      )}
     </ScrollView>
   );
 }
@@ -330,6 +445,12 @@ const styles = StyleSheet.create({
   headerChange: {
     fontSize: totalSize(1.5),
     color: colors.dark.textColor,
+  },
+  flexCentre: {
+    flex: 1,
+
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   // table

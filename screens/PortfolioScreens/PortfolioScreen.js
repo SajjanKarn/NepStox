@@ -142,7 +142,6 @@ export default function PortfolioScreen() {
   const fetchStockData = (symbol) => {
     try {
       const stock = liveTrading?.data?.find((stock) => stock.Symbol === symbol);
-      console.log(stock);
       return stock;
     } catch (err) {
       console.log(err);
