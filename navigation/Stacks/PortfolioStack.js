@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 // screens
 import PortfolioScreen from "../../screens/PortfolioScreens/PortfolioScreen";
 import PortfolioStockScreen from "../../screens/PortfolioScreens/PortfolioStockScreen";
+import PortfolioCompany from "../../screens/PortfolioScreens/PortfolioCompany";
 
 import stackHeaderStyle from "../stackHeaderStyle";
 
@@ -21,6 +22,11 @@ const PortfolioStackNavigator = () => (
       name="PortfolioStockScreen"
       component={PortfolioStockScreen}
       options={stackHeaderStyle("Select Stock")}
+    />
+    <PortfolioStack.Screen
+      name="PortfolioCompany"
+      component={PortfolioCompany}
+      options={stackHeaderStyle("")}
     />
   </PortfolioStack.Navigator>
 );

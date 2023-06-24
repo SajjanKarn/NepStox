@@ -314,7 +314,11 @@ export default function PortfolioScreen() {
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     style={styles.stock}
-                    onPress={() => console.log("Pressed")}
+                    onPress={() =>
+                      navigation.navigate("PortfolioCompany", {
+                        symbol: item.symbol,
+                      })
+                    }
                     activeOpacity={0.6}
                     onLongPress={() => handleHold(item.id)}
                   >
@@ -342,12 +346,14 @@ export default function PortfolioScreen() {
                               Number(
                                 fetchStockData(item?.symbol)?.["Point Change"]
                               ) > 0
-                                ? colors.dark.topGainerText
+                                ? colors.dark.graphLineIncrease
                                 : colors.dark.topLoserText,
                           }}
                           variant="Regular"
                         >
-                          {fetchStockData(item?.symbol)?.["Point Change"]}
+                          {Number(
+                            fetchStockData(item?.symbol)?.["Point Change"]
+                          ) * item?.quantity}
                         </AppText>
                       </View>
                     </>
