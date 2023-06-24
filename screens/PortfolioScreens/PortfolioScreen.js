@@ -23,18 +23,16 @@ import useFetch from "../../hooks/useFetch";
 export default function PortfolioScreen() {
   const toast = useToast();
   const navigation = useNavigation();
-  const [userInvestmentDetails, setUserInvestmentDetails] = useState({
-    todaysTotalReturn: 0,
-    todaysTotalReturnChange: 0,
-    userStocks: [],
-  });
   const [myStocksLoading, setMyStocksLoading] = useState(false);
+  const [totalNetChange, setTotalNetChange] = useState(0);
+  const [totalNetPerChange, setTotalNetPerChange] = useState(0);
+  const [totalInvestment, setTotalInvestment] = useState(0);
   const [myStocks, setMyStocks] = useState([]);
   const {
     data: liveTrading,
     loading: liveTradingLoading,
     error: liveTradingError,
-  } = useFetch(`/live-trading`);
+  } = useFetch(`/nepse/live-trading`);
 
   useEffect(() => {
     // get user stocks
@@ -55,8 +53,34 @@ export default function PortfolioScreen() {
             duration: 2000,
           });
         } else {
-          console.log("stocks", stocks);
           setMyStocks(stocks);
+          const totalInvestment = stocks.reduce((acc, curr) => {
+            liveTrading?.data?.forEach((stock) => {
+              if (stock.Symbol === curr.symbol) {
+                acc += curr.quantity * parseFloat(stock.LTP.replace(/,/g, ""));
+              }
+            });
+            return acc;
+          }, 0);
+          const totalNetChange = stocks.reduce((acc, curr) => {
+            liveTrading?.data?.forEach((stock) => {
+              if (stock.Symbol === curr.symbol) {
+                acc += parseFloat(stock["Point Change"].replace(/,/g, ""));
+              }
+            });
+            return acc;
+          }, 0);
+          const totalNetPerChange = stocks.reduce((acc, curr) => {
+            liveTrading?.data?.forEach((stock) => {
+              if (stock.Symbol === curr.symbol) {
+                acc += parseFloat(stock["% Change"].replace(/,/g, ""));
+              }
+            });
+            return acc;
+          }, 0);
+          setTotalNetPerChange(totalNetPerChange.toLocaleString());
+          setTotalNetChange(totalNetChange.toLocaleString());
+          setTotalInvestment(totalInvestment.toLocaleString());
         }
         setMyStocksLoading(false);
 
@@ -113,7 +137,17 @@ export default function PortfolioScreen() {
     };
 
     fetchMyStocks();
-  }, []);
+  }, [liveTrading?.data, myStocks?.length]);
+
+  const fetchStockData = (symbol) => {
+    try {
+      const stock = liveTrading?.data?.find((stock) => stock.Symbol === symbol);
+      console.log(stock);
+      return stock;
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // handle hold
   const handleHold = (id) => {
@@ -166,17 +200,19 @@ export default function PortfolioScreen() {
           Investing
         </AppText>
         <AppText style={styles.headerTotalReturn} variant="Regular">
-          Rs.{" "}
-          {!myStocksLoading && myStocks.length > 0
-            ? myStocks
-                .reduce(
-                  (acc, curr) => acc + curr.quantity * curr.buying_price,
-                  0
-                )
-                .toLocaleString()
-            : 0}
+          Rs. {totalInvestment}
         </AppText>
-        <AppText style={styles.netReturnPoint}>+95.00 (+0.62%)</AppText>
+        <AppText
+          style={{
+            ...styles.netReturnPoint,
+            color:
+              totalNetChange > 0
+                ? colors.dark.graphLineIncrease
+                : colors.dark.topLoserText,
+          }}
+        >
+          {totalNetChange} ({totalNetPerChange}%)
+        </AppText>
       </View>
 
       <View style={styles.chartContainer}>
@@ -294,12 +330,24 @@ export default function PortfolioScreen() {
                       <View style={styles.stockRight}>
                         <AppText style={styles.stockPrice} variant="Medium">
                           Rs.{" "}
-                          {(
-                            item?.quantity * item?.buying_price
-                          ).toLocaleString()}
+                          {item?.quantity *
+                            parseFloat(
+                              fetchStockData(item?.symbol).LTP.replace(/,/g, "")
+                            )}
                         </AppText>
-                        <AppText style={styles.stockReturn} variant="Regular">
-                          100.00
+                        <AppText
+                          style={{
+                            ...styles.stockReturn,
+                            color:
+                              Number(
+                                fetchStockData(item?.symbol)?.["Point Change"]
+                              ) > 0
+                                ? colors.dark.topGainerText
+                                : colors.dark.topLoserText,
+                          }}
+                          variant="Regular"
+                        >
+                          {fetchStockData(item?.symbol)?.["Point Change"]}
                         </AppText>
                       </View>
                     </>
