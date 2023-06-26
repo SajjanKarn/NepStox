@@ -4,14 +4,17 @@ import { DataTable } from "react-native-paper";
 import { width, height, totalSize } from "react-native-dimension";
 import { Area, Chart, Line } from "react-native-responsive-linechart";
 import { useRoute } from "@react-navigation/native";
+import { useToast } from "react-native-toast-notifications";
 
 import AppText from "../../components/AppText";
 import Loader from "../../components/Loader";
 
 import colors from "../../config/colors";
 import useFetch from "../../hooks/useFetch";
+
+import { getTimeStampOfDate } from "../../utils/time";
+
 import { supabase } from "../../config/supabase";
-import { useToast } from "react-native-toast-notifications";
 
 export default function PortfolioCompany() {
   const params = useRoute().params;
@@ -21,6 +24,17 @@ export default function PortfolioCompany() {
     loading,
     error,
   } = useFetch(`/nepse/company-details/${params?.symbol}`);
+  const {
+    data: companyGraphData,
+    loading: graphLoading,
+    error: graphError,
+  } = useFetch(
+    `/nepse/graph/${params?.symbol}/${getTimeStampOfDate(
+      "2023-06-25",
+      10
+    )}/${getTimeStampOfDate("2023-06-25", 15)}/1`
+  );
+  console.log(companyGraphData);
   const [portfolioCompanyData, setPortfolioCompanyData] = useState({});
 
   useEffect(() => {
@@ -89,29 +103,14 @@ export default function PortfolioCompany() {
             </View>
 
             <View style={styles.chartContainer}>
-              <Chart
-                style={{
-                  width: "100%",
-                  height: Dimensions.get("window").height / 3,
-                }}
-                data={[
-                  { x: 0, y: 0 },
-                  { x: 1, y: 3 },
-                  { x: 2, y: 5 },
-                  { x: 3, y: 4 },
-                  { x: 4, y: 7 },
-                  { x: 5, y: 9 },
-                  { x: 6, y: 8 },
-                  { x: 7, y: 11 },
-                  { x: 8, y: 13 },
-                  { x: 9, y: 12 },
-                  { x: 10, y: 0 },
-                ]}
-                xDomain={{ min: 0, max: 10 }}
-                yDomain={{ min: 0, max: 15 }}
-              >
-                <Area
-                  style={{ flex: 1 }}
+              {graphLoading ? (
+                <Loader />
+              ) : (
+                <Chart
+                  style={{
+                    width: "100%",
+                    height: Dimensions.get("window").height / 3,
+                  }}
                   data={[
                     { x: 0, y: 0 },
                     { x: 1, y: 3 },
@@ -125,46 +124,71 @@ export default function PortfolioCompany() {
                     { x: 9, y: 12 },
                     { x: 10, y: 0 },
                   ]}
-                  smoothing="bezier"
-                  tension={0.2}
-                  theme={{
-                    gradient: {
-                      from: { color: colors.dark.stockIncrease, opacity: 0.08 },
-                      to: {
-                        color: colors.dark.primary,
-                        opacity: 0,
+                  xDomain={{ min: 0, max: 10 }}
+                  yDomain={{ min: 0, max: 15 }}
+                >
+                  <Area
+                    style={{ flex: 1 }}
+                    data={[
+                      { x: 0, y: 0 },
+                      { x: 1, y: 3 },
+                      { x: 2, y: 5 },
+                      { x: 3, y: 4 },
+                      { x: 4, y: 7 },
+                      { x: 5, y: 9 },
+                      { x: 6, y: 8 },
+                      { x: 7, y: 11 },
+                      { x: 8, y: 13 },
+                      { x: 9, y: 12 },
+                      { x: 10, y: 0 },
+                    ]}
+                    smoothing="bezier"
+                    tension={0.2}
+                    theme={{
+                      gradient: {
+                        from: {
+                          color:
+                            Number(companyData?.data?.Others.point_change) > 0
+                              ? colors.dark.stockIncrease
+                              : colors.dark.stockDecrease,
+                          opacity: 0.08,
+                        },
+                        to: {
+                          color: colors.dark.primary,
+                          opacity: 0,
+                        },
                       },
-                    },
-                  }}
-                />
-                <Line
-                  style={{ flex: 1 }}
-                  data={[
-                    { x: 0, y: 0 },
-                    { x: 1, y: 3 },
-                    { x: 2, y: 5 },
-                    { x: 3, y: 4 },
-                    { x: 4, y: 7 },
-                    { x: 5, y: 9 },
-                    { x: 6, y: 8 },
-                    { x: 7, y: 11 },
-                    { x: 8, y: 13 },
-                    { x: 9, y: 12 },
-                    { x: 10, y: 0 },
-                  ]}
-                  smoothing="bezier"
-                  tension={0.2}
-                  theme={{
-                    stroke: {
-                      color:
-                        Number(companyData?.data?.Others.point_change) > 0
-                          ? colors.dark.graphLineIncrease
-                          : colors.dark.topLoserText,
-                      width: totalSize(0.3),
-                    },
-                  }}
-                />
-              </Chart>
+                    }}
+                  />
+                  <Line
+                    style={{ flex: 1 }}
+                    data={[
+                      { x: 0, y: 0 },
+                      { x: 1, y: 3 },
+                      { x: 2, y: 5 },
+                      { x: 3, y: 4 },
+                      { x: 4, y: 7 },
+                      { x: 5, y: 9 },
+                      { x: 6, y: 8 },
+                      { x: 7, y: 11 },
+                      { x: 8, y: 13 },
+                      { x: 9, y: 12 },
+                      { x: 10, y: 0 },
+                    ]}
+                    smoothing="bezier"
+                    tension={0.2}
+                    theme={{
+                      stroke: {
+                        color:
+                          Number(companyData?.data?.Others.point_change) > 0
+                            ? colors.dark.graphLineIncrease
+                            : colors.dark.topLoserText,
+                        width: totalSize(0.3),
+                      },
+                    }}
+                  />
+                </Chart>
+              )}
             </View>
 
             <View style={styles.userPositionContainer}>

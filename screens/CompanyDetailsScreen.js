@@ -5,7 +5,6 @@ import {
   StatusBar,
   View,
 } from "react-native";
-import { LineChart } from "react-native-chart-kit";
 import { useRoute } from "@react-navigation/native";
 
 import AppText from "../components/AppText";
@@ -138,9 +137,19 @@ export default function CompanyDetailsScreen() {
                       // smoothing="cubic-spline"
                       theme={{
                         gradient: {
-                          from: { color: colors.dark.topGainerText },
+                          from: {
+                            color:
+                              Number(data?.data?.["% Change"].split(" %")[0]) >=
+                              0
+                                ? colors.dark.topGainerText
+                                : colors.dark.topLoserText,
+                          },
                           to: {
-                            color: colors.dark.stockIncrease,
+                            color:
+                              Number(data?.data?.["% Change"].split(" %")[0]) >=
+                              0
+                                ? colors.dark.topGainerText
+                                : colors.dark.topLoserText,
                             opacity: 0.09,
                           },
                         },
@@ -150,7 +159,10 @@ export default function CompanyDetailsScreen() {
                       // smoothing="cubic-spline"
                       theme={{
                         stroke: {
-                          color: colors.dark.button,
+                          color:
+                            Number(data?.data?.["% Change"].split(" %")[0]) >= 0
+                              ? colors.dark.button
+                              : colors.dark.topLoserText,
                           width: 1.3,
                           opacity: 0.7,
                         },
@@ -204,10 +216,17 @@ export default function CompanyDetailsScreen() {
                     : null
                 }
               />
-              {/* <RowCard
+              <RowCard
                 leftText="Point Change"
-                rightText={data?.data?.todaySharePrice[0]?.Diff}
-              /> */}
+                rightText={`Rs. ${data?.data?.Others?.point_change}`}
+                increased={
+                  Number(data?.data?.["% Change"].split(" %")[0]) > 0
+                    ? true
+                    : Number(data?.data?.["% Change"].split(" %")[0]) < 0
+                    ? false
+                    : null
+                }
+              />
               <RowCard
                 leftText="Percentage Change"
                 rightText={data?.data?.["% Change"]}
@@ -219,22 +238,22 @@ export default function CompanyDetailsScreen() {
                     : null
                 }
               />
-              {/* <RowCard
+              <RowCard
                 leftText="Previous Close"
-                rightText={`Rs. ${data?.data?.todaySharePrice[0]["Prev. Close"]}`}
-              /> */}
-              {/* <RowCard
+                rightText={`Rs. ${data?.data?.Others?.prev}`}
+              />
+              <RowCard
                 leftText="Open"
-                rightText={`Rs. ${data?.data?.todaySharePrice[0]?.Open}`}
+                rightText={`Rs. ${data?.data?.Others?.open}`}
               />
               <RowCard
                 leftText="High"
-                rightText={`Rs. ${data?.data?.todaySharePrice[0]?.High}`}
+                rightText={`Rs. ${data?.data?.Others?.high}`}
               />
               <RowCard
                 leftText="Low"
-                rightText={`Rs. ${data?.data?.todaySharePrice[0]?.Low}`}
-              /> */}
+                rightText={`Rs. ${data?.data?.Others?.low}`}
+              />
               <RowCard
                 leftText="52 Week High"
                 rightText={`Rs. ${

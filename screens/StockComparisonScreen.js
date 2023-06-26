@@ -30,7 +30,7 @@ export default function StockComparisonScreen() {
     loading: companyLoading2,
     error: companyError2,
   } = useFetch(`/nepse/company-details/${pickerInput2}`);
-
+  console.log(companyData1);
   useEffect(() => {
     if (!companyLoading1 && !companyData1?.data) {
       ToastAndroid.show("Company 1 data not found!", ToastAndroid.SHORT);
@@ -110,12 +110,12 @@ export default function StockComparisonScreen() {
                     </DataTable.Title>
                     <DataTable.Title numeric>
                       <AppText style={styles.tableHeader}>
-                        {companyData1?.data?.companyInfo.symbol}
+                        {/* {companyData1?.data?.companyInfo.symbol} */}
                       </AppText>
                     </DataTable.Title>
                     <DataTable.Title numeric>
                       <AppText style={styles.tableHeader}>
-                        {companyData2?.data?.companyInfo.symbol}
+                        {/* {companyData2?.data?.companyInfo.symbol} */}
                       </AppText>
                     </DataTable.Title>
                   </DataTable.Header>
@@ -123,69 +123,41 @@ export default function StockComparisonScreen() {
                   <RowComparison
                     title="LTP"
                     value1={`Rs. ${
-                      companyData1?.data?.todaySharePrice[0]?.Close || "N/A"
+                      companyData1?.data?.["Market Price"] || "N/A"
                     }`}
                     value2={`Rs. ${
-                      companyData2?.data?.todaySharePrice[0]?.Close || "N/A"
+                      companyData2?.data?.["Market Price"] || "N/A"
                     }`}
                   />
                   <RowComparison
                     title="Change"
-                    value1={
-                      companyData1?.data?.todaySharePrice[0]?.Diff || "N/A"
-                    }
-                    value2={
-                      companyData2?.data?.todaySharePrice[0]?.Diff || "N/A"
-                    }
+                    value1={companyData1?.data?.Others?.point_change || "N/A"}
+                    value2={companyData2?.data?.Others?.point_change || "N/A"}
                   />
                   <RowComparison
                     title="Change %"
-                    value1={`${
-                      companyData1?.data?.todaySharePrice[0]?.["Diff %"] ||
-                      "N/A"
-                    }%`}
-                    value2={`${
-                      companyData2?.data?.todaySharePrice[0]?.["Diff %"] ||
-                      "N/A"
-                    }%`}
+                    value1={`${companyData1?.data?.["% Change"] || "N/A"}%`}
+                    value2={`${companyData2?.data?.["% Change"] || "N/A"}%`}
                   />
                   <RowComparison
                     title="Pr. Close"
-                    value1={`Rs. ${
-                      companyData1?.data?.todaySharePrice[0]?.["Prev. Close"] ||
-                      "N/A"
-                    }`}
-                    value2={`Rs. ${
-                      companyData2?.data?.todaySharePrice[0]?.["Prev. Close"] ||
-                      "N/A"
-                    }`}
+                    value1={`Rs. ${companyData1?.data?.Others?.prev || "N/A"}`}
+                    value2={`Rs. ${companyData2?.data?.Others?.prev || "N/A"}`}
                   />
                   <RowComparison
                     title="Open Price"
-                    value1={`Rs. ${
-                      companyData1?.data?.todaySharePrice[0]?.Open || "N/A"
-                    }`}
-                    value2={`Rs. ${
-                      companyData2?.data?.todaySharePrice[0]?.Open || "N/A"
-                    }`}
+                    value1={`Rs. ${companyData1?.data?.Others?.open || "N/A"}`}
+                    value2={`Rs. ${companyData2?.data?.Others?.open || "N/A"}`}
                   />
                   <RowComparison
                     title="High Price"
-                    value1={`Rs. ${
-                      companyData1?.data?.todaySharePrice[0]?.High || "N/A"
-                    }`}
-                    value2={`Rs. ${
-                      companyData2?.data?.todaySharePrice[0]?.High || "N/A"
-                    }`}
+                    value1={`Rs. ${companyData1?.data?.Others?.high || "N/A"}`}
+                    value2={`Rs. ${companyData2?.data?.Others?.high || "N/A"}`}
                   />
                   <RowComparison
                     title="Low Price"
-                    value1={`Rs. ${
-                      companyData1?.data?.todaySharePrice[0]?.Low || "N/A"
-                    }`}
-                    value2={`Rs. ${
-                      companyData2?.data?.todaySharePrice[0]?.Low || "N/A"
-                    }`}
+                    value1={`Rs. ${companyData1?.data?.Others?.low || "N/A"}`}
+                    value2={`Rs. ${companyData2?.data?.Others?.low || "N/A"}`}
                   />
                 </DataTable>
               )}
