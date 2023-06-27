@@ -58,7 +58,11 @@ export default function CustomDrawer(props) {
           )}
           style={styles.accordin}
         >
-          <List.Item title="About Us" titleStyle={styles.titleStyle} />
+          <List.Item
+            title="About Us"
+            titleStyle={styles.titleStyle}
+            onPress={() => props.navigation.navigate("AboutScreen")}
+          />
           <List.Item title="Privacy Policy" titleStyle={styles.titleStyle} />
           <List.Item title="Terms & Condition" titleStyle={styles.titleStyle} />
           <List.Item title="Rate Us" titleStyle={styles.titleStyle} />

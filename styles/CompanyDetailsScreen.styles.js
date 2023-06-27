@@ -11,7 +11,8 @@ export default styles = StyleSheet.create({
   companyInfoCard: {
     backgroundColor: colors.dark.secondary,
     borderRadius: totalSize(1),
-    padding: totalSize(1),
+    paddingHorizontal: width(5),
+    paddingVertical: height(2),
     marginVertical: totalSize(1),
   },
   companyInfoCardHeader: {
@@ -43,6 +44,20 @@ export default styles = StyleSheet.create({
     textAlign: "center",
   },
 
+  // scroll info
+  scrollInfoContainer: {
+    flex: 1,
+    paddingVertical: height(2),
+  },
+  yValueText: {
+    fontSize: totalSize(2.5),
+    color: colors.dark.graphLineIncrease,
+    marginBottom: height(1),
+  },
+  timeStampText: {
+    fontSize: totalSize(1.8),
+    color: colors.dark.placeholderText,
+  },
   // chart section
   chartContainer: {
     flex: 1,

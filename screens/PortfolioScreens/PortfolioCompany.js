@@ -19,6 +19,7 @@ import { supabase } from "../../config/supabase";
 export default function PortfolioCompany() {
   const params = useRoute().params;
   const toast = useToast();
+  const [displayData, setDisplayData] = useState([]);
   const {
     data: companyData,
     loading,
@@ -30,9 +31,9 @@ export default function PortfolioCompany() {
     error: graphError,
   } = useFetch(
     `/nepse/graph/${params?.symbol}/${getTimeStampOfDate(
-      "2023-06-25",
+      "2023-06-27",
       10
-    )}/${getTimeStampOfDate("2023-06-25", 15)}/1`
+    )}/${getTimeStampOfDate("2023-06-27", 15)}/1D`
   );
   console.log(companyGraphData);
   const [portfolioCompanyData, setPortfolioCompanyData] = useState({});
@@ -63,6 +64,17 @@ export default function PortfolioCompany() {
 
     fetchCompanyData();
   }, []);
+
+  useEffect(() => {
+    if (companyGraphData?.data?.t) {
+      const data = companyGraphData?.data?.t?.map((item, index) => ({
+        x: Number(item),
+        y: Number(companyGraphData?.data?.c[index]),
+      }));
+
+      setDisplayData(data);
+    }
+  }, [companyGraphData]);
 
   return (
     <ScrollView style={styles.container}>
@@ -111,37 +123,19 @@ export default function PortfolioCompany() {
                     width: "100%",
                     height: Dimensions.get("window").height / 3,
                   }}
-                  data={[
-                    { x: 0, y: 0 },
-                    { x: 1, y: 3 },
-                    { x: 2, y: 5 },
-                    { x: 3, y: 4 },
-                    { x: 4, y: 7 },
-                    { x: 5, y: 9 },
-                    { x: 6, y: 8 },
-                    { x: 7, y: 11 },
-                    { x: 8, y: 13 },
-                    { x: 9, y: 12 },
-                    { x: 10, y: 0 },
-                  ]}
-                  xDomain={{ min: 0, max: 10 }}
-                  yDomain={{ min: 0, max: 15 }}
+                  data={displayData}
+                  xDomain={{
+                    min: displayData[0]?.x,
+                    max: displayData[displayData.length - 1]?.x,
+                  }}
+                  yDomain={{
+                    min: Math.min(...displayData.map((item) => item.y)) - 30,
+                    max: Math.max(...displayData.map((item) => item.y)) + 80,
+                  }}
                 >
                   <Area
                     style={{ flex: 1 }}
-                    data={[
-                      { x: 0, y: 0 },
-                      { x: 1, y: 3 },
-                      { x: 2, y: 5 },
-                      { x: 3, y: 4 },
-                      { x: 4, y: 7 },
-                      { x: 5, y: 9 },
-                      { x: 6, y: 8 },
-                      { x: 7, y: 11 },
-                      { x: 8, y: 13 },
-                      { x: 9, y: 12 },
-                      { x: 10, y: 0 },
-                    ]}
+                    data={displayData}
                     smoothing="bezier"
                     tension={0.2}
                     theme={{
@@ -151,7 +145,7 @@ export default function PortfolioCompany() {
                             Number(companyData?.data?.Others.point_change) > 0
                               ? colors.dark.stockIncrease
                               : colors.dark.stockDecrease,
-                          opacity: 0.08,
+                          opacity: 0.2,
                         },
                         to: {
                           color: colors.dark.primary,
@@ -162,19 +156,7 @@ export default function PortfolioCompany() {
                   />
                   <Line
                     style={{ flex: 1 }}
-                    data={[
-                      { x: 0, y: 0 },
-                      { x: 1, y: 3 },
-                      { x: 2, y: 5 },
-                      { x: 3, y: 4 },
-                      { x: 4, y: 7 },
-                      { x: 5, y: 9 },
-                      { x: 6, y: 8 },
-                      { x: 7, y: 11 },
-                      { x: 8, y: 13 },
-                      { x: 9, y: 12 },
-                      { x: 10, y: 0 },
-                    ]}
+                    data={displayData}
                     smoothing="bezier"
                     tension={0.2}
                     theme={{

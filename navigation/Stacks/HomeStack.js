@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import CompanyDetailsScreen from "../../screens/CompanyDetailsScreen";
 import ListedStockScreen from "../../screens/ListedStockScreen";
 import ChangePasswordScreen from "../../screens/UserSettingScreens/ChangePasswordScreen";
+import AboutScreen from "../../screens/AboutScreen";
 
 import MyDrawer from "../Drawer/Drawer";
 import stackHeaderStyle from "../stackHeaderStyle";
@@ -33,6 +34,11 @@ const HomeStackNavigator = () => (
       name="ChangePasswordScreen"
       component={ChangePasswordScreen}
       options={stackHeaderStyle("Change Password")}
+    />
+    <HomeStack.Screen
+      name="AboutScreen"
+      component={AboutScreen}
+      options={stackHeaderStyle("About NepStoX")}
     />
   </HomeStack.Navigator>
 );

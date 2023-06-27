@@ -23,11 +23,21 @@ import {
   Tooltip,
   VerticalAxis,
 } from "react-native-responsive-linechart";
-import { getTimeStamp, getTimeStampOfDate } from "../utils/time";
+import {
+  getTimeStamp,
+  getTimeStampOfDate,
+  parseTimestamp,
+} from "../utils/time";
+import { Button } from "react-native-paper";
 
 export default function CompanyDetailsScreen() {
   const { symbol } = useRoute().params;
   const [displayData, setDisplayData] = useState([]);
+  const [graphInterval, setGraphInterval] = useState("1Y");
+  const [scrollValue, setScrollValue] = useState({
+    x: 0,
+    y: 0,
+  });
   const { data, loading, error } = useFetch(`/nepse/company-details/${symbol}`);
   const {
     data: chartData,
@@ -35,9 +45,9 @@ export default function CompanyDetailsScreen() {
     error: chartError,
   } = useFetch(
     `/nepse/graph/${symbol.toUpperCase()}/${getTimeStampOfDate(
-      "2023-06-19",
+      "2023-06-27",
       10
-    )}/${getTimeStamp(new Date().getHours())}/1`
+    )}/${getTimeStampOfDate("2023-06-27", 15)}/1D`
   );
 
   useEffect(() => {
@@ -50,6 +60,30 @@ export default function CompanyDetailsScreen() {
       setDisplayData(data);
     }
   }, [chartData]);
+
+  const handleGraphIntervalChange = (interval) => {
+    if (interval === "1D") {
+      setGraphInterval("1D");
+
+      const intervalInitialOneDay = getTimeStampOfDate("2023-06-26", 10);
+      const intervalFinalOneDay = getTimeStampOfDate("2023-06-26", 15);
+
+      // split the data for [{x, y}] format for 1 day interval and select timestamp between 10:00 AM to 3:00 PM
+      const data = chartData?.data?.t?.map((item, index) => ({
+        x: Number(item),
+        y: Number(chartData?.data?.c[index]),
+      }));
+
+      const filteredData = data.filter(
+        (item) =>
+          item.x >= intervalInitialOneDay && item.x <= intervalFinalOneDay
+      );
+      console.log(data);
+      console.log(filteredData);
+      setDisplayData(filteredData);
+      return;
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -79,6 +113,41 @@ export default function CompanyDetailsScreen() {
                 </AppText> */}
               </View>
             </View>
+
+            {/* <View style={styles.graphIntervalContainer}>
+              <Button
+                mode="contained"
+                style={styles.graphIntervalButton}
+                onPress={() => handleGraphIntervalChange("1D")}
+                color={graphInterval === "1D" ? "#fff" : "#000"}
+              >
+                1D
+              </Button>
+            </View> */}
+
+            {scrollValue.x !== 0 && (
+              <View style={styles.scrollInfoContainer}>
+                <View style={styles.yValue}>
+                  <AppText
+                    style={{
+                      ...styles.yValueText,
+                      color:
+                        Number(data?.data?.["% Change"].split(" %")[0]) >= 0
+                          ? colors.dark.graphLineIncrease
+                          : colors.dark.topLoserText,
+                    }}
+                    variant="Medium"
+                  >
+                    {scrollValue.y}
+                  </AppText>
+                </View>
+                <View style={styles.timeStamp}>
+                  <AppText style={styles.timeStampText} variant="Medium">
+                    {parseTimestamp(scrollValue.x)}
+                  </AppText>
+                </View>
+              </View>
+            )}
 
             {chartLoading ? (
               <Loader />
@@ -157,6 +226,7 @@ export default function CompanyDetailsScreen() {
                     />
                     <Line
                       // smoothing="cubic-spline"
+
                       theme={{
                         stroke: {
                           color:
@@ -177,6 +247,12 @@ export default function CompanyDetailsScreen() {
                       }}
                       tension={0.3}
                       hideTooltipAfter={500}
+                      onTooltipSelect={(tooltipData) => {
+                        setScrollValue({
+                          x: tooltipData?.x,
+                          y: tooltipData?.y,
+                        });
+                      }}
                       tooltipComponent={
                         <Tooltip
                           theme={{

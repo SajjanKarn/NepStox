@@ -38,11 +38,7 @@ function parseTimestamp(timestamp) {
   const formattedDate = `${year}-${month}-${day}`;
   const formattedTime = `${hours}:${minutes}:${seconds}`;
 
-  return {
-    date: formattedDate,
-    time: formattedTime,
-    hour: hours,
-  };
+  return `${formattedDate} ${formattedTime}`;
 }
 
 function getTimeStampOfDate(date, hour) {
