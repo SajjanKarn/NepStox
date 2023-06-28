@@ -7,6 +7,7 @@ export default function useFetch(url) {
   const [error, setError] = useState(null);
 
   async function request() {
+    setLoading(true);
     try {
       const response = await client.get(url);
       setData(response.data);

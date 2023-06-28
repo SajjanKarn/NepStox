@@ -15,26 +15,12 @@ import useFetch from "../../hooks/useFetch";
 import { getTimeStampOfDate } from "../../utils/time";
 
 import { supabase } from "../../config/supabase";
+import { TouchableOpacity } from "react-native";
 
 export default function PortfolioCompany() {
   const params = useRoute().params;
   const toast = useToast();
-  const [displayData, setDisplayData] = useState(
-    [
-      {
-        x: 0,
-        y: 3,
-      },
-      {
-        x: 1,
-        y: 4,
-      },
-    ],
-    {
-      x: 2,
-      y: 5,
-    }
-  );
+  const [graphInterval, setGraphInterval] = useState("1D");
   const {
     data: companyData,
     loading,
@@ -48,7 +34,7 @@ export default function PortfolioCompany() {
     `/nepse/graph/company/${params?.symbol}/${getTimeStampOfDate(
       "2023-06-27",
       10
-    )}/${getTimeStampOfDate("2023-06-28", 15)}/1/1D`
+    )}/${getTimeStampOfDate("2023-06-28", 15)}/1/${graphInterval}`
   );
   const [portfolioCompanyData, setPortfolioCompanyData] = useState({});
 
@@ -181,6 +167,105 @@ export default function PortfolioCompany() {
                   />
                 </Chart>
               )}
+            </View>
+
+            <View style={styles.graphIntervalButtons}>
+              <TouchableOpacity
+                style={{
+                  ...styles.rowButton,
+                  backgroundColor:
+                    graphInterval === "1D"
+                      ? Number(companyData?.data?.Others.point_change) >= 0
+                        ? colors.dark.graphLineIncrease
+                        : colors.dark.topLoserText
+                      : colors.dark.secondary,
+                }}
+                onPress={() => setGraphInterval("1D")}
+              >
+                <AppText
+                  style={styles.rowButtonText}
+                  variant="Medium"
+                  color={
+                    graphInterval === "1D"
+                      ? colors.dark.textColor
+                      : colors.dark.primary
+                  }
+                >
+                  1D
+                </AppText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  ...styles.rowButton,
+                  backgroundColor:
+                    graphInterval === "1W"
+                      ? Number(companyData?.data?.Others.point_change) >= 0
+                        ? colors.dark.graphLineIncrease
+                        : colors.dark.topLoserText
+                      : colors.dark.secondary,
+                }}
+                onPress={() => setGraphInterval("1W")}
+              >
+                <AppText
+                  style={styles.rowButtonText}
+                  variant="Medium"
+                  color={
+                    graphInterval === "1W"
+                      ? colors.dark.textColor
+                      : colors.dark.primary
+                  }
+                >
+                  1W
+                </AppText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  ...styles.rowButton,
+                  backgroundColor:
+                    graphInterval === "1M"
+                      ? Number(companyData?.data?.Others.point_change) >= 0
+                        ? colors.dark.graphLineIncrease
+                        : colors.dark.topLoserText
+                      : colors.dark.secondary,
+                }}
+                onPress={() => setGraphInterval("1M")}
+              >
+                <AppText
+                  style={styles.rowButtonText}
+                  variant="Medium"
+                  color={
+                    graphInterval === "1M"
+                      ? colors.dark.textColor
+                      : colors.dark.primary
+                  }
+                >
+                  1M
+                </AppText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  ...styles.rowButton,
+                  backgroundColor:
+                    graphInterval === "1Y"
+                      ? Number(companyData?.data?.Others.point_change) >= 0
+                        ? colors.dark.graphLineIncrease
+                        : colors.dark.topLoserText
+                      : colors.dark.secondary,
+                }}
+                onPress={() => setGraphInterval("1Y")}
+              >
+                <AppText
+                  style={styles.rowButtonText}
+                  variant="Medium"
+                  color={
+                    graphInterval === "1Y"
+                      ? colors.dark.textColor
+                      : colors.dark.primary
+                  }
+                >
+                  1Y
+                </AppText>
+              </TouchableOpacity>
             </View>
 
             <View style={styles.userPositionContainer}>
@@ -464,9 +549,25 @@ const styles = StyleSheet.create({
   },
   flexCentre: {
     flex: 1,
-
     justifyContent: "center",
     alignItems: "center",
+  },
+  // graph interval
+  graphIntervalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: width(5),
+    marginTop: height(2),
+  },
+  rowButton: {
+    paddingHorizontal: width(5),
+    paddingVertical: height(1.5),
+    borderRadius: 5,
+    backgroundColor: colors.dark.secondary,
+  },
+  rowButtonText: {
+    fontSize: totalSize(1.3),
+    color: colors.dark.textColor,
   },
 
   // table
