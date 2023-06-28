@@ -123,7 +123,7 @@ export default function PortfolioCompany() {
                 <Chart
                   style={{
                     width: "100%",
-                    height: Dimensions.get("window").height / 3,
+                    height: Dimensions.get("window").height / 2,
                   }}
                   data={companyGraphData?.data}
                   xDomain={{
@@ -136,11 +136,11 @@ export default function PortfolioCompany() {
                     min:
                       Math.min(
                         ...companyGraphData?.data?.map((item) => item.y)
-                      ) - 30,
+                      ) - 5,
                     max:
                       Math.max(
                         ...companyGraphData?.data?.map((item) => item.y)
-                      ) + 80,
+                      ) + 2,
                   }}
                 >
                   <Area
