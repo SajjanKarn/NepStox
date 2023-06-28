@@ -19,7 +19,22 @@ import { supabase } from "../../config/supabase";
 export default function PortfolioCompany() {
   const params = useRoute().params;
   const toast = useToast();
-  const [displayData, setDisplayData] = useState([]);
+  const [displayData, setDisplayData] = useState(
+    [
+      {
+        x: 0,
+        y: 3,
+      },
+      {
+        x: 1,
+        y: 4,
+      },
+    ],
+    {
+      x: 2,
+      y: 5,
+    }
+  );
   const {
     data: companyData,
     loading,
@@ -30,12 +45,11 @@ export default function PortfolioCompany() {
     loading: graphLoading,
     error: graphError,
   } = useFetch(
-    `/nepse/graph/${params?.symbol}/${getTimeStampOfDate(
+    `/nepse/graph/company/${params?.symbol}/${getTimeStampOfDate(
       "2023-06-27",
       10
-    )}/${getTimeStampOfDate("2023-06-27", 15)}/1D`
+    )}/${getTimeStampOfDate("2023-06-28", 15)}/1/1D`
   );
-  console.log(companyGraphData);
   const [portfolioCompanyData, setPortfolioCompanyData] = useState({});
 
   useEffect(() => {
@@ -52,7 +66,6 @@ export default function PortfolioCompany() {
         if (error) throw error;
 
         setPortfolioCompanyData(data[0]);
-        console.log(data[0]);
       } catch (error) {
         toast.show("Something went wrong!", {
           type: "danger",
@@ -64,17 +77,6 @@ export default function PortfolioCompany() {
 
     fetchCompanyData();
   }, []);
-
-  useEffect(() => {
-    if (companyGraphData?.data?.t) {
-      const data = companyGraphData?.data?.t?.map((item, index) => ({
-        x: Number(item),
-        y: Number(companyGraphData?.data?.c[index]),
-      }));
-
-      setDisplayData(data);
-    }
-  }, [companyGraphData]);
 
   return (
     <ScrollView style={styles.container}>
@@ -123,19 +125,27 @@ export default function PortfolioCompany() {
                     width: "100%",
                     height: Dimensions.get("window").height / 3,
                   }}
-                  data={displayData}
+                  data={companyGraphData?.data}
                   xDomain={{
-                    min: displayData[0]?.x,
-                    max: displayData[displayData.length - 1]?.x,
+                    min: companyGraphData?.data?.[0]?.x,
+                    max: companyGraphData?.data?.[
+                      companyGraphData?.data?.length - 1
+                    ]?.x,
                   }}
                   yDomain={{
-                    min: Math.min(...displayData.map((item) => item.y)) - 30,
-                    max: Math.max(...displayData.map((item) => item.y)) + 80,
+                    min:
+                      Math.min(
+                        ...companyGraphData?.data?.map((item) => item.y)
+                      ) - 30,
+                    max:
+                      Math.max(
+                        ...companyGraphData?.data?.map((item) => item.y)
+                      ) + 80,
                   }}
                 >
                   <Area
                     style={{ flex: 1 }}
-                    data={displayData}
+                    data={companyGraphData?.data}
                     smoothing="bezier"
                     tension={0.2}
                     theme={{
@@ -156,7 +166,7 @@ export default function PortfolioCompany() {
                   />
                   <Line
                     style={{ flex: 1 }}
-                    data={displayData}
+                    data={companyGraphData?.data}
                     smoothing="bezier"
                     tension={0.2}
                     theme={{

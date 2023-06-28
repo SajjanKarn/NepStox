@@ -58,6 +58,24 @@ export default styles = StyleSheet.create({
     fontSize: totalSize(1.8),
     color: colors.dark.placeholderText,
   },
+  // row button
+  graphIntervalContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: height(1),
+  },
+  rowButton: {
+    backgroundColor: colors.dark.secondary,
+    borderRadius: totalSize(1),
+    paddingHorizontal: width(6),
+    paddingVertical: height(1.5),
+  },
+  rowButtonText: {
+    fontSize: totalSize(1.6),
+    color: colors.dark.textColor,
+    textTransform: "uppercase",
+  },
   // chart section
   chartContainer: {
     flex: 1,

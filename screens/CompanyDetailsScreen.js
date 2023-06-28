@@ -3,6 +3,7 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
@@ -29,11 +30,11 @@ import {
   parseTimestamp,
 } from "../utils/time";
 import { Button } from "react-native-paper";
+import colors from "../config/colors";
 
 export default function CompanyDetailsScreen() {
   const { symbol } = useRoute().params;
-  const [displayData, setDisplayData] = useState([]);
-  const [graphInterval, setGraphInterval] = useState("1Y");
+  const [graphInterval, setGraphInterval] = useState("1D");
   const [scrollValue, setScrollValue] = useState({
     x: 0,
     y: 0,
@@ -44,45 +45,14 @@ export default function CompanyDetailsScreen() {
     loading: chartLoading,
     error: chartError,
   } = useFetch(
-    `/nepse/graph/${symbol.toUpperCase()}/${getTimeStampOfDate(
+    `/nepse/graph/company/${symbol.toUpperCase()}/${getTimeStampOfDate(
       "2023-06-27",
       10
-    )}/${getTimeStampOfDate("2023-06-27", 15)}/1D`
+    )}/${getTimeStampOfDate("2023-06-28", 15)}/1/${graphInterval}`
   );
 
-  useEffect(() => {
-    if (chartData?.data?.t) {
-      const data = chartData?.data?.t?.map((item, index) => ({
-        x: Number(item),
-        y: Number(chartData?.data?.c[index]),
-      }));
-
-      setDisplayData(data);
-    }
-  }, [chartData]);
-
   const handleGraphIntervalChange = (interval) => {
-    if (interval === "1D") {
-      setGraphInterval("1D");
-
-      const intervalInitialOneDay = getTimeStampOfDate("2023-06-26", 10);
-      const intervalFinalOneDay = getTimeStampOfDate("2023-06-26", 15);
-
-      // split the data for [{x, y}] format for 1 day interval and select timestamp between 10:00 AM to 3:00 PM
-      const data = chartData?.data?.t?.map((item, index) => ({
-        x: Number(item),
-        y: Number(chartData?.data?.c[index]),
-      }));
-
-      const filteredData = data.filter(
-        (item) =>
-          item.x >= intervalInitialOneDay && item.x <= intervalFinalOneDay
-      );
-      console.log(data);
-      console.log(filteredData);
-      setDisplayData(filteredData);
-      return;
-    }
+    setGraphInterval(interval);
   };
 
   return (
@@ -114,16 +84,104 @@ export default function CompanyDetailsScreen() {
               </View>
             </View>
 
-            {/* <View style={styles.graphIntervalContainer}>
-              <Button
-                mode="contained"
-                style={styles.graphIntervalButton}
+            <View style={styles.graphIntervalContainer}>
+              <TouchableOpacity
+                activeOpacity={0.7}
                 onPress={() => handleGraphIntervalChange("1D")}
-                color={graphInterval === "1D" ? "#fff" : "#000"}
+                style={{
+                  ...styles.rowButton,
+                  backgroundColor:
+                    graphInterval === "1D"
+                      ? colors.dark.button
+                      : colors.dark.secondary,
+                }}
               >
-                1D
-              </Button>
-            </View> */}
+                <AppText
+                  style={{
+                    ...styles.rowButtonText,
+                    color:
+                      graphInterval === "1D"
+                        ? colors.dark.primary
+                        : colors.dark.textColor,
+                  }}
+                  variant="Medium"
+                >
+                  1D
+                </AppText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => handleGraphIntervalChange("1W")}
+                style={{
+                  ...styles.rowButton,
+                  backgroundColor:
+                    graphInterval === "1W"
+                      ? colors.dark.button
+                      : colors.dark.secondary,
+                }}
+              >
+                <AppText
+                  style={{
+                    ...styles.rowButtonText,
+                    color:
+                      graphInterval === "1W"
+                        ? colors.dark.primary
+                        : colors.dark.textColor,
+                  }}
+                  variant="Medium"
+                >
+                  1W
+                </AppText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => handleGraphIntervalChange("1M")}
+                style={{
+                  ...styles.rowButton,
+                  backgroundColor:
+                    graphInterval === "1M"
+                      ? colors.dark.button
+                      : colors.dark.secondary,
+                }}
+              >
+                <AppText
+                  style={{
+                    ...styles.rowButtonText,
+                    color:
+                      graphInterval === "1M"
+                        ? colors.dark.primary
+                        : colors.dark.textColor,
+                  }}
+                  variant="Medium"
+                >
+                  1M
+                </AppText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => handleGraphIntervalChange("1Y")}
+                style={{
+                  ...styles.rowButton,
+                  backgroundColor:
+                    graphInterval === "1Y"
+                      ? colors.dark.button
+                      : colors.dark.secondary,
+                }}
+              >
+                <AppText
+                  style={{
+                    ...styles.rowButtonText,
+                    color:
+                      graphInterval === "1Y"
+                        ? colors.dark.primary
+                        : colors.dark.textColor,
+                  }}
+                  variant="Medium"
+                >
+                  1Y
+                </AppText>
+              </TouchableOpacity>
+            </View>
 
             {scrollValue.x !== 0 && (
               <View style={styles.scrollInfoContainer}>
@@ -152,20 +210,20 @@ export default function CompanyDetailsScreen() {
             {chartLoading ? (
               <Loader />
             ) : (
-              displayData.length > 0 && (
+              chartData?.data?.length > 0 && (
                 <View style={styles.chartContainer}>
                   <Chart
                     style={{
                       height: (35 / 100) * Dimensions.get("screen").height,
                       width: "100%",
                     }}
-                    data={displayData}
+                    data={chartData?.data}
                     padding={{ left: 45, bottom: 20, right: 1, top: 20 }}
                     xDomain={
-                      displayData.length > 0
+                      chartData?.data?.length > 0
                         ? {
-                            min: displayData[0].x,
-                            max: displayData[displayData.length - 1].x,
+                            min: chartData?.data[0].x,
+                            max: chartData?.data[chartData?.data?.length - 1].x,
                           }
                         : { min: 0, max: 0 }
                     }
