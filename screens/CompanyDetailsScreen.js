@@ -56,7 +56,13 @@ export default function CompanyDetailsScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: "center",
+      }}
+    >
       <SafeAreaView>
         <StatusBar barStyle="default" />
         {loading ? (

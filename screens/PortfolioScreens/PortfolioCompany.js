@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { DataTable } from "react-native-paper";
 import { width, height, totalSize } from "react-native-dimension";
 import { Area, Chart, Line } from "react-native-responsive-linechart";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useToast } from "react-native-toast-notifications";
 
 import AppText from "../../components/AppText";
@@ -15,9 +21,9 @@ import useFetch from "../../hooks/useFetch";
 import { getTimeStampOfDate } from "../../utils/time";
 
 import { supabase } from "../../config/supabase";
-import { TouchableOpacity } from "react-native";
 
 export default function PortfolioCompany() {
+  const navigation = useNavigation();
   const params = useRoute().params;
   const toast = useToast();
   const [graphInterval, setGraphInterval] = useState("1D");
@@ -39,6 +45,10 @@ export default function PortfolioCompany() {
   const [portfolioCompanyData, setPortfolioCompanyData] = useState({});
 
   useEffect(() => {
+    // set navigation bar title
+    navigation.setOptions({
+      headerTitle: params?.symbol,
+    });
     const fetchCompanyData = async () => {
       try {
         const user = await supabase.auth.getUser();
@@ -65,7 +75,13 @@ export default function PortfolioCompany() {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: "center",
+      }}
+    >
       {loading ? (
         <Loader />
       ) : (
