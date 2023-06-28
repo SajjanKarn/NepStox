@@ -30,6 +30,8 @@ export default function MyNotesScreen() {
   const containerStyle = {
     backgroundColor: colors.dark.primary,
     padding: width(5),
+    margin: width(5),
+    borderRadius: 10,
   };
 
   const handleDelete = async (note) => {

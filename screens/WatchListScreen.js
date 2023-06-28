@@ -179,37 +179,6 @@ export default function WatchListScreen({ route }) {
               </DataTable.Title>
             </DataTable.Header>
 
-            {/* {watchListStocks.map((item) => (
-                <DataTable.Row
-                  key={item.Symbol}
-                  style={{
-                    backgroundColor:
-                      Number(item["Point Change"]) > 0
-                        ? colors.dark.stockIncrease
-                        : colors.dark.stockDecrease,
-                  }}
-                  // handle hold press
-                  onLongPress={() => handleHold(item.Symbol)}
-                >
-                  <DataTable.Cell>
-                    <AppText style={styles.tableText}>{item.Symbol}</AppText>
-                  </DataTable.Cell>
-                  <DataTable.Cell numeric>
-                    <AppText style={styles.tableText}>{item.LTP}</AppText>
-                  </DataTable.Cell>
-                  <DataTable.Cell numeric>
-                    <AppText style={styles.tableText}>
-                      {item["Point Change"]}
-                    </AppText>
-                  </DataTable.Cell>
-                  <DataTable.Cell numeric>
-                    <AppText style={styles.tableText}>
-                      {item["% Change"]}%
-                    </AppText>
-                  </DataTable.Cell>
-                </DataTable.Row>
-              ))} */}
-
             <FlatList
               data={watchListStocks}
               keyExtractor={(item) => item.Symbol}
@@ -255,6 +224,7 @@ export default function WatchListScreen({ route }) {
         size="medium"
         icon="plus"
         onPress={() => navigation.navigate("SelectStockScreen")}
+        color={colors.dark.primary}
       />
     </View>
   );

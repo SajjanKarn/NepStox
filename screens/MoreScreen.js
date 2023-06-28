@@ -100,6 +100,11 @@ export default function MoreScreen() {
         icon: "swap",
         onPress: () => navigation.navigate("StockComparisonScreen"),
       },
+      {
+        name: "News",
+        icon: "exception1",
+        onPress: () => navigation.navigate("NewsScreen"),
+      },
     ],
     utilities: [
       {

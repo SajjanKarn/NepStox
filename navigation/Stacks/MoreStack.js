@@ -17,6 +17,7 @@ import FloorSheetScreen from "../../screens/FloorSheetScreen";
 import MyProfileScreen from "../../screens/MyProfileScreen";
 import MyNotesScreen from "../../screens/MyNotesScreen";
 import MarketScreen from "../../screens/MarketScreen";
+import NewsScreen from "../../screens/NewsScreen";
 
 import stackHeaderStyle from "../stackHeaderStyle";
 
@@ -93,6 +94,11 @@ const MoreStackNavigator = () => (
       name="MyNotesScreen"
       component={MyNotesScreen}
       options={stackHeaderStyle("My Notes")}
+    />
+    <MoreStack.Screen
+      name="NewsScreen"
+      component={NewsScreen}
+      options={stackHeaderStyle("Latest News")}
     />
   </MoreStack.Navigator>
 );

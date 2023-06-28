@@ -215,6 +215,10 @@ export default function CompanyDetailsScreen() {
 
             {chartLoading ? (
               <Loader />
+            ) : chartError ? (
+              <AppText style={styles.errorText}>
+                Sorry, something went wrong.
+              </AppText>
             ) : (
               chartData?.data?.length > 0 && (
                 <View style={styles.chartContainer}>
@@ -234,38 +238,42 @@ export default function CompanyDetailsScreen() {
                         : { min: 0, max: 0 }
                     }
                   >
-                    <VerticalAxis
-                      tickCount={7}
-                      theme={{
-                        grid: {
-                          stroke: {
-                            color: colors.dark.placeholderText,
-                            width: 0.5,
+                    {chartData?.data?.length > 1 && (
+                      <VerticalAxis
+                        tickCount={7}
+                        theme={{
+                          grid: {
+                            stroke: {
+                              color: colors.dark.placeholderText,
+                              width: 0.5,
+                            },
                           },
-                        },
-                        labels: {
-                          formatter: (v) => v.toFixed(2),
-                          label: { color: colors.dark.textColor },
-                        },
-                      }}
-                    />
-                    <HorizontalAxis
-                      tickCount={5}
-                      theme={{
-                        grid: {
-                          stroke: {
-                            color: colors.dark.placeholderText,
-                            width: 0.5,
+                          labels: {
+                            formatter: (v) => v.toFixed(2),
+                            label: { color: colors.dark.textColor },
                           },
-                        },
-                        labels: {
-                          visible: false,
-                          label: {
-                            color: colors.dark.textColor,
+                        }}
+                      />
+                    )}
+                    {chartData?.data?.length > 1 && (
+                      <HorizontalAxis
+                        tickCount={5}
+                        theme={{
+                          grid: {
+                            stroke: {
+                              color: colors.dark.placeholderText,
+                              width: 0.5,
+                            },
                           },
-                        },
-                      }}
-                    />
+                          labels: {
+                            visible: false,
+                            label: {
+                              color: colors.dark.textColor,
+                            },
+                          },
+                        }}
+                      />
+                    )}
                     <Area
                       // smoothing="cubic-spline"
                       theme={{

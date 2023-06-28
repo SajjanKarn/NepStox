@@ -384,6 +384,7 @@ export default function PortfolioScreen() {
           backgroundColor: colors.dark.button,
         }}
         icon="plus"
+        color={colors.dark.primary}
         onPress={() => navigation.navigate("PortfolioStockScreen")}
       />
     </View>
