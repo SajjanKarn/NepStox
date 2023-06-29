@@ -28,6 +28,7 @@ export default function PortfolioScreen() {
   const [totalNetPerChange, setTotalNetPerChange] = useState(0);
   const [totalInvestment, setTotalInvestment] = useState(0);
   const [myStocks, setMyStocks] = useState([]);
+  const [graphPoints, setGraphPoints] = useState([]);
   const {
     data: liveTrading,
     loading: liveTradingLoading,
@@ -80,7 +81,7 @@ export default function PortfolioScreen() {
           }, 0);
           setTotalNetPerChange(totalNetPerChange.toLocaleString());
           setTotalNetChange(totalNetChange.toLocaleString());
-          setTotalInvestment(totalInvestment.toLocaleString());
+          setTotalInvestment(totalInvestment);
         }
         setMyStocksLoading(false);
 
@@ -138,6 +139,69 @@ export default function PortfolioScreen() {
 
     fetchMyStocks();
   }, [liveTrading?.data, myStocks?.length]);
+
+  useEffect(() => {
+    // store the total investment amount in supabase for today date inside user meta_data
+    const storeTotalInvestment = async () => {
+      try {
+        const user = await supabase.auth.getUser();
+        // check if the data is already stored in portfolio_graph table for today
+        const { data: portfolioGraph, error: portfolioGraphError } =
+          await supabase
+            .from("portfolio_graph")
+            .select("*")
+            .eq("user_id", user.data.user.id)
+            .eq("date", new Date().toISOString().split("T")[0]);
+
+        if (portfolioGraphError) throw portfolioGraphError;
+
+        if (portfolioGraph.length === 0 && totalInvestment > 0) {
+          // store the total investment amount in portfolio_graph table
+          const { data, error } = await supabase
+            .from("portfolio_graph")
+            .insert([
+              {
+                user_id: user.data.user.id,
+                investing: totalInvestment,
+                date: new Date().toISOString().split("T")[0],
+              },
+            ]);
+          if (error) throw error;
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    const getGraphPoints = async () => {
+      try {
+        const user = await supabase.auth.getUser();
+        const { data: portfolioGraph, error: portfolioGraphError } =
+          await supabase
+            .from("portfolio_graph")
+            .select("*")
+            .eq("user_id", user.data.user.id);
+
+        if (portfolioGraphError) throw portfolioGraphError;
+
+        const graphPoints = portfolioGraph.map((item, index) => {
+          return {
+            x: index,
+            y: item.investing,
+          };
+        });
+
+        console.log("graphPoints", graphPoints);
+
+        setGraphPoints(graphPoints);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    storeTotalInvestment();
+    getGraphPoints();
+  }, [totalInvestment]);
 
   const fetchStockData = (symbol) => {
     try {
@@ -199,7 +263,7 @@ export default function PortfolioScreen() {
           Investing
         </AppText>
         <AppText style={styles.headerTotalReturn} variant="Regular">
-          Rs. {totalInvestment}
+          Rs. {totalInvestment.toLocaleString()}
         </AppText>
         <AppText
           style={{
@@ -214,81 +278,53 @@ export default function PortfolioScreen() {
         </AppText>
       </View>
 
-      <View style={styles.chartContainer}>
-        <Chart
-          style={{
-            width: "100%",
-            height: Dimensions.get("window").height / 3,
-          }}
-          data={[
-            { x: 0, y: 0 },
-            { x: 1, y: 3 },
-            { x: 2, y: 5 },
-            { x: 3, y: 4 },
-            { x: 4, y: 7 },
-            { x: 5, y: 9 },
-            { x: 6, y: 8 },
-            { x: 7, y: 11 },
-            { x: 8, y: 13 },
-            { x: 9, y: 12 },
-            { x: 10, y: 0 },
-          ]}
-          xDomain={{ min: 0, max: 10 }}
-          yDomain={{ min: 0, max: 15 }}
-        >
-          <Area
-            style={{ flex: 1 }}
-            data={[
-              { x: 0, y: 0 },
-              { x: 1, y: 3 },
-              { x: 2, y: 5 },
-              { x: 3, y: 4 },
-              { x: 4, y: 7 },
-              { x: 5, y: 9 },
-              { x: 6, y: 8 },
-              { x: 7, y: 11 },
-              { x: 8, y: 13 },
-              { x: 9, y: 12 },
-              { x: 10, y: 0 },
-            ]}
-            smoothing="bezier"
-            tension={0.2}
-            theme={{
-              gradient: {
-                from: { color: colors.dark.stockIncrease, opacity: 0.08 },
-                to: {
-                  color: colors.dark.primary,
-                  opacity: 0,
+      {graphPoints.length > 0 && (
+        <View style={styles.chartContainer}>
+          <Chart
+            style={{
+              width: "100%",
+              height: Dimensions.get("window").height / 3,
+            }}
+            data={graphPoints}
+            xDomain={{
+              min: graphPoints[0].x,
+              max: graphPoints[graphPoints.length - 1].x,
+            }}
+            yDomain={{
+              min: 0,
+              max: Math.max(...graphPoints.map((item) => item.y)),
+            }}
+          >
+            <Area
+              style={{ flex: 1 }}
+              data={graphPoints}
+              smoothing="bezier"
+              tension={0.2}
+              theme={{
+                gradient: {
+                  from: { color: colors.dark.stockIncrease, opacity: 0.08 },
+                  to: {
+                    color: colors.dark.primary,
+                    opacity: 0,
+                  },
                 },
-              },
-            }}
-          />
-          <Line
-            style={{ flex: 1 }}
-            data={[
-              { x: 0, y: 0 },
-              { x: 1, y: 3 },
-              { x: 2, y: 5 },
-              { x: 3, y: 4 },
-              { x: 4, y: 7 },
-              { x: 5, y: 9 },
-              { x: 6, y: 8 },
-              { x: 7, y: 11 },
-              { x: 8, y: 13 },
-              { x: 9, y: 12 },
-              { x: 10, y: 0 },
-            ]}
-            smoothing="bezier"
-            tension={0.2}
-            theme={{
-              stroke: {
-                color: colors.dark.graphLineIncrease,
-                width: totalSize(0.3),
-              },
-            }}
-          />
-        </Chart>
-      </View>
+              }}
+            />
+            <Line
+              style={{ flex: 1 }}
+              data={graphPoints}
+              smoothing="bezier"
+              tension={0.2}
+              theme={{
+                stroke: {
+                  color: colors.dark.graphLineIncrease,
+                  width: totalSize(0.3),
+                },
+              }}
+            />
+          </Chart>
+        </View>
+      )}
 
       {liveTradingLoading ? (
         <ActivityIndicator

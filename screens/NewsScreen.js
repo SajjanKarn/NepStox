@@ -1,25 +1,33 @@
 import { useState } from "react";
-import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
 import { width, height, totalSize } from "react-native-dimension";
-
-import colors from "../config/colors";
-import AppText from "../components/AppText";
-import useFetch from "../hooks/useFetch";
-import Loader from "../components/Loader";
 import { FlashList } from "@shopify/flash-list";
+
+import AppText from "../components/AppText";
+import Loader from "../components/Loader";
+import colors from "../config/colors";
+import useFetch from "../hooks/useFetch";
 
 const NewsScreen = () => {
   const [symbol, setSymbol] = useState("NEPSE");
   const [start, setStart] = useState(1);
   const [length, setLength] = useState(10);
+  const [payload, setPayload] = useState("");
+  const [url, setUrl] = useState(`/nepse/latest-news`);
   const {
     data: news,
     loading: newsLoading,
     error: newsError,
-  } = useFetch(`/nepse/news/${symbol}/${start}/${length}`);
+  } = useFetch(`${url}${payload}`);
 
   const handleLoadMore = () => {
-    console.log("Load More");
+    setPayload(`?payload=${news?.data?.nextPayload}`);
   };
 
   return (
@@ -29,51 +37,52 @@ const NewsScreen = () => {
       ) : (
         news?.data?.data?.length > 0 && (
           <View style={styles.newsContainer}>
-            {!newsLoading && (
-              <FlashList
-                data={news?.data?.data}
-                renderItem={({ item }) => (
-                  <TouchableOpacity activeOpacity={0.8} style={styles.news}>
-                    <Image
-                      source={{
-                        uri: "https://www.setopati.com/uploads/posts/1596959778siraha.jpg",
-                      }}
-                      style={styles.newsThumbnail}
-                    />
-                    <AppText variant="Medium" style={styles.newsTitle}>
-                      {item.title}
-                    </AppText>
-                    <AppText variant="Light" style={styles.newsDate}>
-                      {item.published_date}
+            <FlashList
+              data={news?.data?.data}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.news}
+                  onPress={() => {
+                    Linking.openURL(item.url);
+                  }}
+                >
+                  <Image
+                    source={{
+                      uri: item.imageUrl,
+                    }}
+                    style={styles.newsThumbnail}
+                  />
+                  <AppText variant="Medium" style={styles.newsTitle}>
+                    {item.title}
+                  </AppText>
+                  <AppText variant="Light" style={styles.newsDate}>
+                    {item.date}
+                  </AppText>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item) => item.url}
+              estimatedItemSize={news?.data?.data?.length}
+              // showsVerticalScrollIndicator={false}
+              ListEmptyComponent={() => (
+                <AppText variant="Medium" style={{ textAlign: "center" }}>
+                  No News Found
+                </AppText>
+              )}
+              ListFooterComponent={() => (
+                <View style={styles.loadMoreButtonContainer}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.loadMoreButton}
+                    onPress={handleLoadMore}
+                  >
+                    <AppText variant="Medium" style={styles.loadMoreButtonText}>
+                      Load More
                     </AppText>
                   </TouchableOpacity>
-                )}
-                keyExtractor={(item) => item.slug}
-                estimatedItemSize={news?.data?.data?.length}
-                // showsVerticalScrollIndicator={false}
-                ListEmptyComponent={() => (
-                  <AppText variant="Medium" style={{ textAlign: "center" }}>
-                    No News Found
-                  </AppText>
-                )}
-                ListFooterComponent={() => (
-                  <View style={styles.loadMoreButtonContainer}>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      style={styles.loadMoreButton}
-                      onPress={handleLoadMore}
-                    >
-                      <AppText
-                        variant="Medium"
-                        style={styles.loadMoreButtonText}
-                      >
-                        Load More
-                      </AppText>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              />
-            )}
+                </View>
+              )}
+            />
           </View>
         )
       )}

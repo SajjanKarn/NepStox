@@ -46,9 +46,9 @@ export default function CompanyDetailsScreen() {
     error: chartError,
   } = useFetch(
     `/nepse/graph/company/${symbol.toUpperCase()}/${getTimeStampOfDate(
-      "2023-06-27",
+      "2023-06-28",
       10
-    )}/${getTimeStampOfDate("2023-06-28", 15)}/1/${graphInterval}`
+    )}/${getTimeStampOfDate("2023-06-29", 15)}/1/${graphInterval}`
   );
 
   const handleGraphIntervalChange = (interval) => {
