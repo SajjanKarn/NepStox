@@ -19,13 +19,24 @@ import colors from "../../config/colors";
 import useFetch from "../../hooks/useFetch";
 
 import { getTimeStampOfDate } from "../../utils/time";
-
+import {
+  broker_commission,
+  cost_per_share,
+  sebon_commission,
+  share_amount,
+  total_paying_amount,
+  sell_result,
+} from "../../utils/formula";
 import { supabase } from "../../config/supabase";
 
 export default function PortfolioCompany() {
   const navigation = useNavigation();
   const params = useRoute().params;
   const toast = useToast();
+  const [stockSummary, setStockSummary] = useState({
+    sellResult: null,
+    totalReceivedAmount: 0,
+  });
   const [graphInterval, setGraphInterval] = useState("1D");
   const {
     data: companyData,
@@ -38,9 +49,9 @@ export default function PortfolioCompany() {
     error: graphError,
   } = useFetch(
     `/nepse/graph/company/${params?.symbol}/${getTimeStampOfDate(
-      "2023-06-27",
+      "2023-06-28",
       10
-    )}/${getTimeStampOfDate("2023-06-28", 15)}/1/${graphInterval}`
+    )}/${getTimeStampOfDate("2023-06-29", 15)}/1/${graphInterval}`
   );
   const [portfolioCompanyData, setPortfolioCompanyData] = useState({});
 
@@ -61,6 +72,35 @@ export default function PortfolioCompany() {
 
         if (error) throw error;
 
+        console.log(data[0]);
+        const shareAmount = share_amount(
+          data[0].quantity,
+          data[0].buying_price
+        );
+        const sebonCommission = Number(sebon_commission(shareAmount));
+        const brokerCommission = Number(broker_commission(shareAmount));
+        const dpFee = 25;
+
+        const totalPayingAmount = Number(
+          total_paying_amount(
+            Number(shareAmount),
+            Number(sebonCommission),
+            Number(brokerCommission),
+            Number(dpFee)
+          )
+        );
+        const sellResult = sell_result(
+          data[0].quantity,
+          data[0].buying_price,
+          parseFloat(companyData?.data?.["Market Price"].replace(/,/g, "")),
+          7.5
+        );
+        console.log(sellResult);
+        setStockSummary({
+          ...stockSummary,
+          sellResult,
+          totalReceivedAmount: totalPayingAmount,
+        });
         setPortfolioCompanyData(data[0]);
       } catch (error) {
         toast.show("Something went wrong!", {
@@ -72,7 +112,7 @@ export default function PortfolioCompany() {
     };
 
     fetchCompanyData();
-  }, []);
+  }, [companyData?.data, portfolioCompanyData]);
 
   return (
     <ScrollView
@@ -366,6 +406,153 @@ export default function PortfolioCompany() {
                   </DataTable.Cell>
                 </DataTable.Row>
               </DataTable>
+            </View>
+
+            <View style={styles.statsContainer}>
+              <AppText style={styles.statsTitle}>Stock Summary</AppText>
+              <View style={styles.statsRow}>
+                <DataTable>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Current Units
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        {portfolioCompanyData?.quantity}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Investment
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs.{" "}
+                        {Math.floor(
+                          stockSummary.totalReceivedAmount
+                        ).toLocaleString()}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        WACC
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs.{" "}
+                        {(
+                          stockSummary?.totalReceivedAmount /
+                          portfolioCompanyData?.quantity
+                        ).toLocaleString()}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Current Value
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs.{" "}
+                        {(
+                          parseFloat(
+                            companyData?.data?.["Market Price"].replace(
+                              /,/g,
+                              ""
+                            )
+                          ) * portfolioCompanyData?.quantity
+                        ).toLocaleString()}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Est. Profit
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs.{" "}
+                        {Math.ceil(
+                          stockSummary?.sellResult?.netProfit
+                        ).toLocaleString()}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                </DataTable>
+              </View>
+              <View style={styles.statsRow}>
+                <DataTable>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Today's{" "}
+                        {Number(companyData?.data?.Others?.point_change) >= 0
+                          ? "Profit"
+                          : "Loss"}
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText
+                        variant="Medium"
+                        style={{
+                          ...styles.rowValue,
+                          color:
+                            Number(companyData?.data?.Others?.point_change) >= 0
+                              ? colors.dark.graphLineIncrease
+                              : colors.dark.topLoserText,
+                        }}
+                      >
+                        Rs. {Number(companyData?.data?.Others?.point_change)}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Proft %
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs.{" "}
+                        {(
+                          (stockSummary.sellResult?.netProfit /
+                            Math.floor(stockSummary.totalReceivedAmount)) *
+                          100
+                        ).toLocaleString()}
+                        %
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                  <DataTable.Row style={styles.statsTableRow}>
+                    <DataTable.Cell>
+                      <AppText variant="Medium" style={styles.rowTitle}>
+                        Receivable Amount
+                      </AppText>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric>
+                      <AppText variant="Medium" style={styles.rowValue}>
+                        Rs.{" "}
+                        {Math.ceil(
+                          Number(stockSummary.sellResult?.receivableAmount)
+                        ).toLocaleString()}
+                      </AppText>
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                </DataTable>
+              </View>
             </View>
 
             <View style={styles.statsContainer}>

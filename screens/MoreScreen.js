@@ -26,7 +26,7 @@ export default function MoreScreen() {
       {
         name: "My WatchList",
         icon: "eye",
-        onPress: () => {},
+        onPress: () => navigation.navigate("WatchList"),
       },
       {
         name: "Odd Lot",
@@ -41,7 +41,7 @@ export default function MoreScreen() {
       {
         name: "My Portfolio",
         icon: "piechart",
-        onPress: () => {},
+        onPress: () => navigation.navigate("Portfolio"),
       },
       {
         name: "Logout",
