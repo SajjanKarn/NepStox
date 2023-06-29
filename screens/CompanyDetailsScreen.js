@@ -90,104 +90,106 @@ export default function CompanyDetailsScreen() {
               </View>
             </View>
 
-            <View style={styles.graphIntervalContainer}>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => handleGraphIntervalChange("1D")}
-                style={{
-                  ...styles.rowButton,
-                  backgroundColor:
-                    graphInterval === "1D"
-                      ? colors.dark.button
-                      : colors.dark.secondary,
-                }}
-              >
-                <AppText
+            {chartData?.data?.length > 0 && (
+              <View style={styles.graphIntervalContainer}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => handleGraphIntervalChange("1D")}
                   style={{
-                    ...styles.rowButtonText,
-                    color:
+                    ...styles.rowButton,
+                    backgroundColor:
                       graphInterval === "1D"
-                        ? colors.dark.primary
-                        : colors.dark.textColor,
+                        ? colors.dark.button
+                        : colors.dark.secondary,
                   }}
-                  variant="Medium"
                 >
-                  1D
-                </AppText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => handleGraphIntervalChange("1W")}
-                style={{
-                  ...styles.rowButton,
-                  backgroundColor:
-                    graphInterval === "1W"
-                      ? colors.dark.button
-                      : colors.dark.secondary,
-                }}
-              >
-                <AppText
+                  <AppText
+                    style={{
+                      ...styles.rowButtonText,
+                      color:
+                        graphInterval === "1D"
+                          ? colors.dark.primary
+                          : colors.dark.textColor,
+                    }}
+                    variant="Medium"
+                  >
+                    1D
+                  </AppText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => handleGraphIntervalChange("1W")}
                   style={{
-                    ...styles.rowButtonText,
-                    color:
+                    ...styles.rowButton,
+                    backgroundColor:
                       graphInterval === "1W"
-                        ? colors.dark.primary
-                        : colors.dark.textColor,
+                        ? colors.dark.button
+                        : colors.dark.secondary,
                   }}
-                  variant="Medium"
                 >
-                  1W
-                </AppText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => handleGraphIntervalChange("1M")}
-                style={{
-                  ...styles.rowButton,
-                  backgroundColor:
-                    graphInterval === "1M"
-                      ? colors.dark.button
-                      : colors.dark.secondary,
-                }}
-              >
-                <AppText
+                  <AppText
+                    style={{
+                      ...styles.rowButtonText,
+                      color:
+                        graphInterval === "1W"
+                          ? colors.dark.primary
+                          : colors.dark.textColor,
+                    }}
+                    variant="Medium"
+                  >
+                    1W
+                  </AppText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => handleGraphIntervalChange("1M")}
                   style={{
-                    ...styles.rowButtonText,
-                    color:
+                    ...styles.rowButton,
+                    backgroundColor:
                       graphInterval === "1M"
-                        ? colors.dark.primary
-                        : colors.dark.textColor,
+                        ? colors.dark.button
+                        : colors.dark.secondary,
                   }}
-                  variant="Medium"
                 >
-                  1M
-                </AppText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => handleGraphIntervalChange("1Y")}
-                style={{
-                  ...styles.rowButton,
-                  backgroundColor:
-                    graphInterval === "1Y"
-                      ? colors.dark.button
-                      : colors.dark.secondary,
-                }}
-              >
-                <AppText
+                  <AppText
+                    style={{
+                      ...styles.rowButtonText,
+                      color:
+                        graphInterval === "1M"
+                          ? colors.dark.primary
+                          : colors.dark.textColor,
+                    }}
+                    variant="Medium"
+                  >
+                    1M
+                  </AppText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => handleGraphIntervalChange("1Y")}
                   style={{
-                    ...styles.rowButtonText,
-                    color:
+                    ...styles.rowButton,
+                    backgroundColor:
                       graphInterval === "1Y"
-                        ? colors.dark.primary
-                        : colors.dark.textColor,
+                        ? colors.dark.button
+                        : colors.dark.secondary,
                   }}
-                  variant="Medium"
                 >
-                  1Y
-                </AppText>
-              </TouchableOpacity>
-            </View>
+                  <AppText
+                    style={{
+                      ...styles.rowButtonText,
+                      color:
+                        graphInterval === "1Y"
+                          ? colors.dark.primary
+                          : colors.dark.textColor,
+                    }}
+                    variant="Medium"
+                  >
+                    1Y
+                  </AppText>
+                </TouchableOpacity>
+              </View>
+            )}
 
             {scrollValue.x !== 0 && (
               <View style={styles.scrollInfoContainer}>

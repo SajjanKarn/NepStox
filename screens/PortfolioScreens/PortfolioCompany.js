@@ -72,7 +72,6 @@ export default function PortfolioCompany() {
 
         if (error) throw error;
 
-        console.log(data[0]);
         const shareAmount = share_amount(
           data[0].quantity,
           data[0].buying_price
@@ -95,7 +94,6 @@ export default function PortfolioCompany() {
           parseFloat(companyData?.data?.["Market Price"].replace(/,/g, "")),
           7.5
         );
-        console.log(sellResult);
         setStockSummary({
           ...stockSummary,
           sellResult,
@@ -158,171 +156,175 @@ export default function PortfolioCompany() {
               </AppText>
             </View>
 
-            <View style={styles.chartContainer}>
-              {graphLoading ? (
-                <Loader />
-              ) : (
-                <Chart
-                  style={{
-                    width: "100%",
-                    height: Dimensions.get("window").height / 2,
-                  }}
-                  data={companyGraphData?.data}
-                  xDomain={{
-                    min: companyGraphData?.data?.[0]?.x,
-                    max: companyGraphData?.data?.[
-                      companyGraphData?.data?.length - 1
-                    ]?.x,
-                  }}
-                  yDomain={{
-                    min:
-                      Math.min(
-                        ...companyGraphData?.data?.map((item) => item.y)
-                      ) - 5,
-                    max:
-                      Math.max(
-                        ...companyGraphData?.data?.map((item) => item.y)
-                      ) + 2,
-                  }}
-                >
-                  <Area
-                    style={{ flex: 1 }}
+            {companyGraphData?.data?.length > 0 && (
+              <View style={styles.chartContainer}>
+                {graphLoading ? (
+                  <Loader />
+                ) : (
+                  <Chart
+                    style={{
+                      width: "100%",
+                      height: Dimensions.get("window").height / 2,
+                    }}
                     data={companyGraphData?.data}
-                    smoothing="bezier"
-                    tension={0.2}
-                    theme={{
-                      gradient: {
-                        from: {
+                    xDomain={{
+                      min: companyGraphData?.data?.[0]?.x,
+                      max: companyGraphData?.data?.[
+                        companyGraphData?.data?.length - 1
+                      ]?.x,
+                    }}
+                    yDomain={{
+                      min:
+                        Math.min(
+                          ...companyGraphData?.data?.map((item) => item.y)
+                        ) - 5,
+                      max:
+                        Math.max(
+                          ...companyGraphData?.data?.map((item) => item.y)
+                        ) + 2,
+                    }}
+                  >
+                    <Area
+                      style={{ flex: 1 }}
+                      data={companyGraphData?.data}
+                      smoothing="bezier"
+                      tension={0.2}
+                      theme={{
+                        gradient: {
+                          from: {
+                            color:
+                              Number(companyData?.data?.Others.point_change) > 0
+                                ? colors.dark.stockIncrease
+                                : colors.dark.stockDecrease,
+                            opacity: 0.2,
+                          },
+                          to: {
+                            color: colors.dark.primary,
+                            opacity: 0,
+                          },
+                        },
+                      }}
+                    />
+                    <Line
+                      style={{ flex: 1 }}
+                      data={companyGraphData?.data}
+                      smoothing="bezier"
+                      tension={0.2}
+                      theme={{
+                        stroke: {
                           color:
                             Number(companyData?.data?.Others.point_change) > 0
-                              ? colors.dark.stockIncrease
-                              : colors.dark.stockDecrease,
-                          opacity: 0.2,
+                              ? colors.dark.graphLineIncrease
+                              : colors.dark.topLoserText,
+                          width: totalSize(0.3),
                         },
-                        to: {
-                          color: colors.dark.primary,
-                          opacity: 0,
-                        },
-                      },
-                    }}
-                  />
-                  <Line
-                    style={{ flex: 1 }}
-                    data={companyGraphData?.data}
-                    smoothing="bezier"
-                    tension={0.2}
-                    theme={{
-                      stroke: {
-                        color:
-                          Number(companyData?.data?.Others.point_change) > 0
-                            ? colors.dark.graphLineIncrease
-                            : colors.dark.topLoserText,
-                        width: totalSize(0.3),
-                      },
-                    }}
-                  />
-                </Chart>
-              )}
-            </View>
+                      }}
+                    />
+                  </Chart>
+                )}
+              </View>
+            )}
 
-            <View style={styles.graphIntervalButtons}>
-              <TouchableOpacity
-                style={{
-                  ...styles.rowButton,
-                  backgroundColor:
-                    graphInterval === "1D"
-                      ? Number(companyData?.data?.Others.point_change) >= 0
-                        ? colors.dark.graphLineIncrease
-                        : colors.dark.topLoserText
-                      : colors.dark.secondary,
-                }}
-                onPress={() => setGraphInterval("1D")}
-              >
-                <AppText
-                  style={styles.rowButtonText}
-                  variant="Medium"
-                  color={
-                    graphInterval === "1D"
-                      ? colors.dark.textColor
-                      : colors.dark.primary
-                  }
+            {companyGraphData?.data?.length > 0 && (
+              <View style={styles.graphIntervalButtons}>
+                <TouchableOpacity
+                  style={{
+                    ...styles.rowButton,
+                    backgroundColor:
+                      graphInterval === "1D"
+                        ? Number(companyData?.data?.Others.point_change) >= 0
+                          ? colors.dark.graphLineIncrease
+                          : colors.dark.topLoserText
+                        : colors.dark.secondary,
+                  }}
+                  onPress={() => setGraphInterval("1D")}
                 >
-                  1D
-                </AppText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  ...styles.rowButton,
-                  backgroundColor:
-                    graphInterval === "1W"
-                      ? Number(companyData?.data?.Others.point_change) >= 0
-                        ? colors.dark.graphLineIncrease
-                        : colors.dark.topLoserText
-                      : colors.dark.secondary,
-                }}
-                onPress={() => setGraphInterval("1W")}
-              >
-                <AppText
-                  style={styles.rowButtonText}
-                  variant="Medium"
-                  color={
-                    graphInterval === "1W"
-                      ? colors.dark.textColor
-                      : colors.dark.primary
-                  }
+                  <AppText
+                    style={styles.rowButtonText}
+                    variant="Medium"
+                    color={
+                      graphInterval === "1D"
+                        ? colors.dark.textColor
+                        : colors.dark.primary
+                    }
+                  >
+                    1D
+                  </AppText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    ...styles.rowButton,
+                    backgroundColor:
+                      graphInterval === "1W"
+                        ? Number(companyData?.data?.Others.point_change) >= 0
+                          ? colors.dark.graphLineIncrease
+                          : colors.dark.topLoserText
+                        : colors.dark.secondary,
+                  }}
+                  onPress={() => setGraphInterval("1W")}
                 >
-                  1W
-                </AppText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  ...styles.rowButton,
-                  backgroundColor:
-                    graphInterval === "1M"
-                      ? Number(companyData?.data?.Others.point_change) >= 0
-                        ? colors.dark.graphLineIncrease
-                        : colors.dark.topLoserText
-                      : colors.dark.secondary,
-                }}
-                onPress={() => setGraphInterval("1M")}
-              >
-                <AppText
-                  style={styles.rowButtonText}
-                  variant="Medium"
-                  color={
-                    graphInterval === "1M"
-                      ? colors.dark.textColor
-                      : colors.dark.primary
-                  }
+                  <AppText
+                    style={styles.rowButtonText}
+                    variant="Medium"
+                    color={
+                      graphInterval === "1W"
+                        ? colors.dark.textColor
+                        : colors.dark.primary
+                    }
+                  >
+                    1W
+                  </AppText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    ...styles.rowButton,
+                    backgroundColor:
+                      graphInterval === "1M"
+                        ? Number(companyData?.data?.Others.point_change) >= 0
+                          ? colors.dark.graphLineIncrease
+                          : colors.dark.topLoserText
+                        : colors.dark.secondary,
+                  }}
+                  onPress={() => setGraphInterval("1M")}
                 >
-                  1M
-                </AppText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  ...styles.rowButton,
-                  backgroundColor:
-                    graphInterval === "1Y"
-                      ? Number(companyData?.data?.Others.point_change) >= 0
-                        ? colors.dark.graphLineIncrease
-                        : colors.dark.topLoserText
-                      : colors.dark.secondary,
-                }}
-                onPress={() => setGraphInterval("1Y")}
-              >
-                <AppText
-                  style={styles.rowButtonText}
-                  variant="Medium"
-                  color={
-                    graphInterval === "1Y"
-                      ? colors.dark.textColor
-                      : colors.dark.primary
-                  }
+                  <AppText
+                    style={styles.rowButtonText}
+                    variant="Medium"
+                    color={
+                      graphInterval === "1M"
+                        ? colors.dark.textColor
+                        : colors.dark.primary
+                    }
+                  >
+                    1M
+                  </AppText>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    ...styles.rowButton,
+                    backgroundColor:
+                      graphInterval === "1Y"
+                        ? Number(companyData?.data?.Others.point_change) >= 0
+                          ? colors.dark.graphLineIncrease
+                          : colors.dark.topLoserText
+                        : colors.dark.secondary,
+                  }}
+                  onPress={() => setGraphInterval("1Y")}
                 >
-                  1Y
-                </AppText>
-              </TouchableOpacity>
-            </View>
+                  <AppText
+                    style={styles.rowButtonText}
+                    variant="Medium"
+                    color={
+                      graphInterval === "1Y"
+                        ? colors.dark.textColor
+                        : colors.dark.primary
+                    }
+                  >
+                    1Y
+                  </AppText>
+                </TouchableOpacity>
+              </View>
+            )}
 
             <View style={styles.userPositionContainer}>
               <AppText style={styles.statsTitle}>Your Position</AppText>
