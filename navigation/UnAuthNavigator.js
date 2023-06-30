@@ -6,6 +6,8 @@ const Stack = createStackNavigator();
 // screens
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
+import ResetPasswordScreen from "../screens/ResetPasswordScreen";
+import colors from "../config/colors";
 
 export default function UnAuthNavigator() {
   return (
@@ -24,6 +26,19 @@ export default function UnAuthNavigator() {
           component={RegisterScreen}
           options={{
             headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="ResetPasswordScreen"
+          component={ResetPasswordScreen}
+          options={{
+            headerTitle: "Reset Password",
+            headerStyle: {
+              backgroundColor: colors.dark.primary,
+              elevation: 0.5,
+            },
+            headerTintColor: colors.dark.textColor,
           }}
         />
       </Stack.Navigator>

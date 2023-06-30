@@ -102,7 +102,12 @@ export default function LoginScreen() {
               )}
 
               <View style={styles.forgotPasswordContainer}>
-                <AppText style={styles.forgotText}>Forgot Password?</AppText>
+                <AppText
+                  style={styles.forgotText}
+                  onPress={() => navigation.navigate("ResetPasswordScreen")}
+                >
+                  Forgot Password?
+                </AppText>
               </View>
 
               <View style={styles.forgotPasswordContainer}>
