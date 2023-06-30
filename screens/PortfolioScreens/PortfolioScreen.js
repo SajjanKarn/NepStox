@@ -191,8 +191,6 @@ export default function PortfolioScreen() {
           };
         });
 
-        console.log("graphPoints", graphPoints);
-
         setGraphPoints(graphPoints);
       } catch (error) {
         console.log("error", error);
@@ -201,7 +199,7 @@ export default function PortfolioScreen() {
 
     storeTotalInvestment();
     getGraphPoints();
-  }, [totalInvestment]);
+  }, [totalInvestment, graphPoints?.length]);
 
   const fetchStockData = (symbol) => {
     try {
@@ -278,7 +276,7 @@ export default function PortfolioScreen() {
         </AppText>
       </View>
 
-      {graphPoints.length > 0 && (
+      {graphPoints.length > 1 && (
         <View style={styles.chartContainer}>
           <Chart
             style={{
@@ -292,7 +290,7 @@ export default function PortfolioScreen() {
             }}
             yDomain={{
               min: 0,
-              max: Math.max(...graphPoints.map((item) => item.y)),
+              max: Math.max(...graphPoints.map((item) => item.y)) + 2000,
             }}
           >
             <Area
