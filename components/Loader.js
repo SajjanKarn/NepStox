@@ -1,8 +1,8 @@
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
-export default function Loader({ color = colors.dark.button }) {
+export default function Loader({ color = colors.dark.button, margin }) {
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, marginVertical: margin ? margin : 0 }}>
       <ActivityIndicator color={color} size="large" style={styles.loader} />
     </View>
   );
