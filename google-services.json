@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "10559689193",
+    "project_id": "nepstox-7f67b",
+    "storage_bucket": "nepstox-7f67b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:10559689193:android:73f2a97e4426841c083b78",
+        "android_client_info": {
+          "package_name": "com.app.nepstox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "10559689193-5h46uhlfsrgj5sn7tittn6n0vssl3gn6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.nepstox",
+            "certificate_hash": "29de092579376893625bc31824bfdec9bb15e3f4"
+          }
+        },
+        {
+          "client_id": "10559689193-pm6rk1tq2vr886tha80gp6airfm069f3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.nepstox",
+            "certificate_hash": "e4e9eb04887687dfcacdba8ee512bc4f7932fe7c"
+          }
+        },
+        {
+          "client_id": "10559689193-1f5906k88b2eiqo0natr8if1bef3akbr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF_DmXcIgtWLclG6SmEeB7Zfwlzh6JrNo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "10559689193-1f5906k88b2eiqo0natr8if1bef3akbr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

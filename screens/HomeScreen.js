@@ -56,27 +56,19 @@ export default function HomeScreen() {
     error: marketStatusError,
   } = useFetch("/nepse/market-status");
   const {
+    data: marketOpenStatus,
+    loading: marketOpenStatusLoading,
+    error: marketOpenStatusError,
+  } = useFetch("/nepse/status");
+  const {
     data: chartData,
     loading: chartLoading,
     error: chartError,
   } = useFetch(
     `/nepse/graph/${graphSelected}/${getTimeStampOfDate(
-      `${new Date().getFullYear()}-${
-        new Date().getMonth() + 1 < 10
-          ? `0${new Date().getMonth() + 1}`
-          : new Date().getMonth() + 1
-      }-${new Date().getDate()}`,
+      `${marketOpenStatus?.data?.date}`,
       10
-    )}/${getTimeStampOfDate(
-      `
-    ${new Date().getFullYear()}-${
-        new Date().getMonth() + 1 < 10
-          ? `0${new Date().getMonth() + 1}`
-          : new Date().getMonth() + 1
-      }-${new Date().getDate()}
-    `,
-      15
-    )}/1`
+    )}/${getTimeStampOfDate(`${marketOpenStatus?.data?.date}`, 15)}/1`
   );
 
   useEffect(() => {
@@ -159,28 +151,34 @@ export default function HomeScreen() {
           )}
         </View>
 
-        <View style={styles.marketStatusContainer}>
-          <View style={styles.marketStatus}>
-            <AppText style={styles.marketStatusTitle}>Market Status</AppText>
-            <View style={styles.statusContainer}>
-              <View style={[styles.dot, styles.red]} />
-              <AppText style={styles.marketStatusValue}>Closed</AppText>
+        {marketOpenStatusLoading ? (
+          <Loader />
+        ) : (
+          <View style={styles.marketStatusContainer}>
+            <View style={styles.marketStatus}>
+              <AppText style={styles.marketStatusTitle}>Market Status</AppText>
+              <View style={styles.statusContainer}>
+                <View
+                  style={[
+                    styles.dot,
+                    marketOpenStatus?.data?.marketOpen
+                      ? styles.green
+                      : styles.red,
+                  ]}
+                />
+                <AppText style={styles.marketStatusValue}>
+                  {marketOpenStatus?.data?.marketOpen ? "Open  " : "Closed  "}
+                  {marketOpenStatus?.data?.date.split(" ")[0]}
+                </AppText>
+              </View>
+            </View>
+            <View style={styles.marketStatusTime}>
+              <AppText style={styles.marketStatusTimeTitle}>
+                {marketOpenStatus?.data?.date.split(" ")[1]}
+              </AppText>
             </View>
           </View>
-          <View style={styles.marketStatusDate}>
-            <AppText style={styles.marketStatusDateTitle}>
-              {new Date().toLocaleDateString("en-US", {
-                weekday: "short",
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-            </AppText>
-          </View>
-          <View style={styles.marketStatusTime}>
-            <AppText style={styles.marketStatusTimeTitle}>3:00PM</AppText>
-          </View>
-        </View>
+        )}
 
         {marketStatusLoading ? (
           <Loader />
@@ -225,27 +223,29 @@ export default function HomeScreen() {
           </View>
         )}
 
-        {!chartLoading && displayData.length > 0 && (
-          <View style={styles.graphOptions}>
-            <Picker
-              selectedValue={graphSelected}
-              onValueChange={(itemValue, itemIndex) =>
-                setGraphSelected(itemValue)
-              }
-              dropdownIconColor={colors.dark.placeholderText}
-              style={{
-                color: colors.dark.textColor,
-                backgroundColor: colors.dark.secondary,
-                marginVertical: height(1),
-              }}
-            >
-              <Picker.Item label="NEPSE" value="NEPSE" />
-              <Picker.Item label="Sensitive" value="SENSITIVE" />
-              <Picker.Item label="Float" value="FLOAT" />
-              <Picker.Item label="Sensitive Float" value="SENFLOAT" />
-            </Picker>
-          </View>
-        )}
+        {!chartLoading &&
+          displayData.length > 0 &&
+          !marketOpenStatusLoading && (
+            <View style={styles.graphOptions}>
+              <Picker
+                selectedValue={graphSelected}
+                onValueChange={(itemValue, itemIndex) =>
+                  setGraphSelected(itemValue)
+                }
+                dropdownIconColor={colors.dark.placeholderText}
+                style={{
+                  color: colors.dark.textColor,
+                  backgroundColor: colors.dark.secondary,
+                  marginVertical: height(1),
+                }}
+              >
+                <Picker.Item label="NEPSE" value="NEPSE" />
+                <Picker.Item label="Sensitive" value="SENSITIVE" />
+                <Picker.Item label="Float" value="FLOAT" />
+                <Picker.Item label="Sensitive Float" value="SENFLOAT" />
+              </Picker>
+            </View>
+          )}
 
         {chartLoading ? (
           <Loader />
@@ -264,6 +264,15 @@ export default function HomeScreen() {
                     ? {
                         min: displayData[0].x,
                         max: displayData[displayData.length - 1].x,
+                      }
+                    : { min: 0, max: 0 }
+                }
+                yDomain={
+                  displayData.length > 0
+                    ? {
+                        // find the min and max of y axis
+                        min: Math.min(...displayData.map((item) => item.y)),
+                        max: Math.max(...displayData.map((item) => item.y)) + 5,
                       }
                     : { min: 0, max: 0 }
                 }
