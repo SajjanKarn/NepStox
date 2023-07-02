@@ -1,24 +1,19 @@
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
-import { width, height, totalSize } from "react-native-dimension";
+import { useEffect, useState } from "react";
+import { View, TouchableOpacity, Dimensions, Alert } from "react-native";
+import { totalSize } from "react-native-dimension";
 import { ActivityIndicator, FAB } from "react-native-paper";
 import { Chart, Line, Area } from "react-native-responsive-linechart";
 import { useNavigation } from "@react-navigation/native";
-
-import colors from "../../config/colors";
-import AppText from "../../components/AppText";
-import { useEffect, useState } from "react";
-
-import { supabase } from "../../config/supabase";
 import { useToast } from "react-native-toast-notifications";
 import { FlashList } from "@shopify/flash-list";
-import { Alert } from "react-native";
+
+import AppText from "../../components/AppText";
 import useFetch from "../../hooks/useFetch";
+
+import colors from "../../config/colors";
+import { supabase } from "../../config/supabase";
+
+import styles from "./styles/PortfolioScreen.styles";
 
 export default function PortfolioScreen() {
   const toast = useToast();
@@ -34,6 +29,11 @@ export default function PortfolioScreen() {
     loading: liveTradingLoading,
     error: liveTradingError,
   } = useFetch(`/nepse/live-trading`);
+  const {
+    data: marketOpenStatus,
+    loading: marketOpenStatusLoading,
+    error: marketOpenStatusError,
+  } = useFetch("/nepse/status");
 
   useEffect(() => {
     // get user stocks
@@ -145,6 +145,9 @@ export default function PortfolioScreen() {
     const storeTotalInvestment = async () => {
       try {
         const user = await supabase.auth.getUser();
+        // check if the market is open => if not open then return
+        if (!marketOpenStatus?.data?.marketOpen) return;
+
         // check if the data is already stored in portfolio_graph table for today
         const { data: portfolioGraph, error: portfolioGraphError } =
           await supabase
@@ -199,7 +202,7 @@ export default function PortfolioScreen() {
 
     storeTotalInvestment();
     getGraphPoints();
-  }, [totalInvestment, graphPoints?.length]);
+  }, [totalInvestment, graphPoints?.length, marketOpenStatus]);
 
   const fetchStockData = (symbol) => {
     try {
@@ -424,84 +427,3 @@ export default function PortfolioScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.dark.primary,
-  },
-  headerInvestmentContainer: {
-    marginTop: height(1),
-    paddingHorizontal: width(5),
-  },
-  headerTitle: {
-    fontSize: totalSize(2),
-    color: colors.dark.textColor,
-    marginBottom: height(1),
-  },
-  headerTotalReturn: {
-    fontSize: totalSize(2.8),
-    color: colors.dark.textColor,
-    marginBottom: height(0.3),
-  },
-  netReturnPoint: {
-    fontSize: totalSize(1.6),
-    color: colors.dark.textColor,
-  },
-  // chart
-  dotSlider: {
-    width: totalSize(1.2),
-    height: totalSize(1.2),
-    borderRadius: totalSize(1.2),
-    backgroundColor: colors.dark.button,
-  },
-  // stocks
-  stocks: {
-    flex: 1,
-    marginTop: height(2),
-    paddingHorizontal: width(5),
-  },
-  stocksContainer: {
-    flex: 1,
-  },
-  stocksContainerTitle: {
-    fontSize: totalSize(2.5),
-    color: colors.dark.textColor,
-    marginBottom: height(1),
-  },
-  stock: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: height(1.5),
-    paddingHorizontal: width(1),
-  },
-  stockName: {
-    fontSize: totalSize(2),
-    color: colors.dark.textColor,
-    paddingTop: height(1),
-  },
-  stockUnit: {
-    fontSize: totalSize(1.6),
-    color: colors.dark.textColor,
-  },
-  stockLeft: {
-    alignItems: "flex-start",
-  },
-  stockRight: {
-    alignItems: "flex-end",
-  },
-  stockPrice: {
-    fontSize: totalSize(2),
-    color: colors.dark.textColor,
-    paddingTop: height(1),
-  },
-  stockReturn: {
-    fontSize: totalSize(1.6),
-    color: colors.dark.textColor,
-  },
-  // spacer
-  spacer: {
-    height: height(10),
-  },
-});

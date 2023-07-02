@@ -1,6 +1,6 @@
-import { View, ScrollView, StyleSheet } from "react-native";
-import { width, height, totalSize } from "react-native-dimension";
 import { useEffect, useState } from "react";
+import { View, StyleSheet, FlatList, Alert } from "react-native";
+import { width, height, totalSize } from "react-native-dimension";
 import { useNavigation } from "@react-navigation/native";
 import {
   ActivityIndicator,
@@ -8,22 +8,18 @@ import {
   FAB,
   TextInput,
 } from "react-native-paper";
-import { Alert } from "react-native";
 
 import AppText from "../components/AppText";
+import useFetch from "../hooks/useFetch";
 
 import colors from "../config/colors";
 import { getStock, removeSingleStock } from "../config/storage";
-
-import useFetch from "../hooks/useFetch";
-import { FlatList } from "react-native";
 
 export default function WatchListScreen({ route }) {
   const navigation = useNavigation();
   const [searchInput, setSearchInput] = useState("");
   const [watchListStocks, setWatchListStocks] = useState([]);
   const [watchListLoading, setWatchListLoading] = useState(false);
-  const [searchResult, setSearchResult] = useState([]);
   const { data, loading, error } = useFetch(`/nepse/live-trading`);
 
   const getData = async () => {
@@ -78,6 +74,18 @@ export default function WatchListScreen({ route }) {
     }
   };
 
+  const handleSearch = (text) => {
+    setSearchInput(text);
+    if (text.length > 0) {
+      const result = watchListStocks.filter((item) =>
+        item.Symbol.toLowerCase().includes(text.toLowerCase())
+      );
+      setWatchListStocks(result);
+    } else {
+      getData();
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
@@ -87,17 +95,7 @@ export default function WatchListScreen({ route }) {
             style={styles.searchInput}
             placeholder="Symbol or Name..."
             placeholderTextColor={colors.dark.textColor}
-            onChangeText={(text) => {
-              setSearchInput(text);
-              if (text.length > 0) {
-                const result = watchListStocks.filter((item) =>
-                  item.Symbol.toLowerCase().includes(text.toLowerCase())
-                );
-                setWatchListStocks(result);
-              } else {
-                getData();
-              }
-            }}
+            onChangeText={(text) => handleSearch(text)}
             value={searchInput}
             activeUnderlineColor={colors.dark.placeholderText}
             textColor={colors.dark.textColor}
@@ -193,6 +191,11 @@ export default function WatchListScreen({ route }) {
                   }}
                   // handle hold press
                   onLongPress={() => handleHold(item.Symbol)}
+                  onPress={() =>
+                    navigation.navigate("CompanyDetailsScreen", {
+                      symbol: item.Symbol,
+                    })
+                  }
                 >
                   <DataTable.Cell>
                     <AppText style={styles.tableText}>{item.Symbol}</AppText>

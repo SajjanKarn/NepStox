@@ -15,6 +15,7 @@ import {
   VerticalAxis,
   Tooltip,
 } from "react-native-responsive-linechart";
+import { Picker } from "@react-native-picker/picker";
 
 // components
 import AppText from "../components/AppText";
@@ -28,8 +29,7 @@ import useFetch from "../hooks/useFetch";
 // styles
 import styles from "../styles/HomeScreen.styles";
 import { useEffect, useState } from "react";
-import { getTimeStamp, getTimeStampOfDate } from "../utils/time";
-import { Picker } from "@react-native-picker/picker";
+import { getTimeStampOfDate } from "../utils/time";
 
 export default function HomeScreen() {
   const [displayData, setDisplayData] = useState([]);

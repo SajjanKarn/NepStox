@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, StatusBar } from "react-native";
+import { View, StatusBar, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { width } from "react-native-dimension";
 import { DataTable } from "react-native-paper";
@@ -11,7 +11,6 @@ import Loader from "../components/Loader";
 
 import useFetch from "../hooks/useFetch";
 import styles from "../styles/MarketScreen.styles";
-import { TouchableOpacity } from "react-native";
 
 export default function MarketScreen() {
   const { data, loading, error } = useFetch(`/nepse/live-trading`);
