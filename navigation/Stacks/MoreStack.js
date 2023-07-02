@@ -20,6 +20,7 @@ import MarketScreen from "../../screens/MarketScreen";
 import NewsScreen from "../../screens/NewsScreen";
 
 import stackHeaderStyle from "../stackHeaderStyle";
+import BulkIPOScreen from "../../screens/BulkIPOScreen";
 
 const MoreStackNavigator = () => (
   <MoreStack.Navigator initialRouteName="MoreScreen">
@@ -99,6 +100,11 @@ const MoreStackNavigator = () => (
       name="NewsScreen"
       component={NewsScreen}
       options={stackHeaderStyle("Latest News")}
+    />
+    <MoreStack.Screen
+      name="BulkIPOScreen"
+      component={BulkIPOScreen}
+      options={stackHeaderStyle("Bulk IPO")}
     />
   </MoreStack.Navigator>
 );

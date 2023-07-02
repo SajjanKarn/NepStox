@@ -110,6 +110,66 @@ const removeSingleNote = async (value) => {
   }
 };
 
+// bulk ipo store format: [{boid: "123", username: "yaman"}, {boid: "456", username: "yaman"]
+const storeBoid = async (value) => {
+  try {
+    const boids = await getBoid();
+    // check if the value is array type
+    if (value.constructor === Array) {
+      await SecureStore.setItemAsync("boids", JSON.stringify(value));
+      return;
+    }
+
+    // check if the boid already exists
+    if (boids) {
+      const boidExists = boids.find((boid) => boid.boid === value.boid);
+      if (boidExists) return;
+    }
+
+    // now store the boid
+    if (boids) {
+      const newBoids = [...boids, value];
+      await SecureStore.setItemAsync("boids", JSON.stringify(newBoids));
+      return newBoids;
+    }
+    // if there is no boid, create a new one
+    else {
+      await SecureStore.setItemAsync("boids", JSON.stringify([value]));
+      return [value];
+    }
+  } catch (error) {
+    console.log("Error storing the boid", error);
+  }
+};
+
+const getBoid = async () => {
+  try {
+    const data = await SecureStore.getItemAsync("boids");
+    return JSON.parse(data);
+  } catch (error) {
+    console.log("Error getting the boid", error);
+  }
+};
+
+const removeBoid = async (boid) => {
+  try {
+    const boids = await getBoid();
+    const newBoids = boids.filter((b) => b.boid !== boid);
+    await storeBoid(newBoids);
+    return newBoids;
+  } catch (error) {
+    console.log("Error removing single boid", error);
+  }
+};
+
+const removeAllBoid = async () => {
+  try {
+    await SecureStore.deleteItemAsync("boids");
+  } catch (error) {
+    console.log("Error removing the boid", error);
+  }
+};
+
 export {
   storeStock,
   getStock,
@@ -120,4 +180,9 @@ export {
   getNote,
   removeNote,
   removeSingleNote,
+  // boid
+  storeBoid,
+  getBoid,
+  removeBoid,
+  removeAllBoid,
 };

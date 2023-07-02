@@ -105,6 +105,11 @@ export default function MoreScreen() {
         icon: "exception1",
         onPress: () => navigation.navigate("NewsScreen"),
       },
+      {
+        name: "Bulk IPO",
+        icon: "file1",
+        onPress: () => navigation.navigate("BulkIPOScreen"),
+      },
     ],
     utilities: [
       {
