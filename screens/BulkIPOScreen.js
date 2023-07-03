@@ -35,6 +35,7 @@ export default function BulkIPOScreen() {
   const [allottedStatus, setAllottedStatus] = useState("");
   const [bulkStatus, setBulkStatus] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [collapsable, setCollapsable] = useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -296,32 +297,62 @@ export default function BulkIPOScreen() {
 
         <View style={styles.savedAccountContainer}>
           <AppText style={styles.savedAccountTitle}>Saved Accounts</AppText>
-          <Button
-            mode="contained"
-            onPress={handleAddAccount}
-            style={{ marginVertical: height(1) }}
-          >
-            Add Account
-          </Button>
-          {boids.map((boid) => (
-            <View style={styles.savedAccount} key={boid.boid}>
-              <View style={styles.infoContainer}>
-                <AppText style={styles.savedAccountText}>
-                  boid: {boid.boid}
-                </AppText>
-                <AppText style={styles.savedAccountText}>
-                  username: {boid.username}
-                </AppText>
+          <View style={styles.collapsableContainer}>
+            <Button
+              mode="contained"
+              onPress={handleAddAccount}
+              style={{ marginVertical: height(1) }}
+            >
+              Add Account
+            </Button>
+            {boids.length > 0 && (
+              <Button
+                mode="contained"
+                onPress={() => setCollapsable(!collapsable)}
+                style={{
+                  alignContent: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                buttonColor={colors.dark.secondary}
+                textColor={colors.dark.textColor}
+              >
+                {collapsable ? (
+                  <AntDesign
+                    name="up"
+                    size={24}
+                    color={colors.dark.textColor}
+                  />
+                ) : (
+                  <AntDesign
+                    name="down"
+                    size={24}
+                    color={colors.dark.textColor}
+                  />
+                )}
+              </Button>
+            )}
+          </View>
+          {collapsable &&
+            boids.map((boid) => (
+              <View style={styles.savedAccount} key={boid.boid}>
+                <View style={styles.infoContainer}>
+                  <AppText style={styles.savedAccountText}>
+                    boid: {boid.boid}
+                  </AppText>
+                  <AppText style={styles.savedAccountText}>
+                    username: {boid.username}
+                  </AppText>
+                </View>
+                <AntDesign
+                  name="delete"
+                  size={24}
+                  color={colors.dark.topLoserText}
+                  style={styles.deleteIcon}
+                  onPress={() => handleRemoveBoid(boid.boid)}
+                />
               </View>
-              <AntDesign
-                name="delete"
-                size={24}
-                color={colors.dark.topLoserText}
-                style={styles.deleteIcon}
-                onPress={() => handleRemoveBoid(boid.boid)}
-              />
-            </View>
-          ))}
+            ))}
 
           {boids.length === 0 && (
             <AppText style={styles.noAccountText}>No saved account</AppText>
@@ -335,7 +366,7 @@ export default function BulkIPOScreen() {
           onDismiss={hideModal}
           contentContainerStyle={containerStyle}
         >
-          <AppText style={styles.modalTitle}>Edit Note</AppText>
+          <AppText style={styles.modalTitle}>Add Account</AppText>
           <Formik
             initialValues={{ boid: "", username: "" }}
             onSubmit={(values) => handleSaveBoid(values)}
@@ -465,6 +496,11 @@ const styles = StyleSheet.create({
   },
   deleteIcon: {
     marginLeft: width(2),
+  },
+  collapsableContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   noAccountText: {
     color: colors.dark.topLoserText,
