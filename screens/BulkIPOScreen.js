@@ -13,7 +13,13 @@ import Loader from "../components/Loader";
 import { ScrollView } from "react-native";
 import AppButton from "../components/AppButton";
 import { AntDesign } from "@expo/vector-icons";
-import { Button, Modal, PaperProvider, Portal } from "react-native-paper";
+import {
+  Button,
+  Modal,
+  PaperProvider,
+  Portal,
+  Switch,
+} from "react-native-paper";
 import {
   getBoid,
   removeAllBoid,
@@ -306,53 +312,42 @@ export default function BulkIPOScreen() {
               Add Account
             </Button>
             {boids.length > 0 && (
-              <Button
-                mode="contained"
-                onPress={() => setCollapsable(!collapsable)}
-                style={{
-                  alignContent: "center",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                buttonColor={colors.dark.secondary}
-                textColor={colors.dark.textColor}
-              >
-                {collapsable ? (
-                  <AntDesign
-                    name="up"
-                    size={24}
-                    color={colors.dark.textColor}
-                  />
-                ) : (
-                  <AntDesign
-                    name="down"
-                    size={24}
-                    color={colors.dark.textColor}
-                  />
-                )}
-              </Button>
-            )}
-          </View>
-          {collapsable &&
-            boids.map((boid) => (
-              <View style={styles.savedAccount} key={boid.boid}>
-                <View style={styles.infoContainer}>
-                  <AppText style={styles.savedAccountText}>
-                    boid: {boid.boid}
-                  </AppText>
-                  <AppText style={styles.savedAccountText}>
-                    username: {boid.username}
-                  </AppText>
-                </View>
-                <AntDesign
-                  name="delete"
-                  size={24}
-                  color={colors.dark.topLoserText}
-                  style={styles.deleteIcon}
-                  onPress={() => handleRemoveBoid(boid.boid)}
+              <View style={styles.collapsableContainer}>
+                <AppText>Show Boid</AppText>
+                <Switch
+                  value={collapsable}
+                  onValueChange={() => setCollapsable(!collapsable)}
                 />
               </View>
-            ))}
+            )}
+          </View>
+          {boids.map((boid) => (
+            <View style={styles.savedAccount} key={boid.boid}>
+              <View style={styles.infoContainer}>
+                <AppText style={styles.savedAccountText}>
+                  boid:{" "}
+                  {!collapsable
+                    ? `${boid.boid.slice(0, 5)}***********`
+                    : boid.boid}
+                </AppText>
+                <AppText style={styles.savedAccountText}>
+                  username:{" "}
+                  {!collapsable
+                    ? `${boid.username.slice(0, 3)}${"*".repeat(
+                        boid.username.length - 3
+                      )}`
+                    : boid.username}
+                </AppText>
+              </View>
+              <AntDesign
+                name="delete"
+                size={24}
+                color={colors.dark.topLoserText}
+                style={styles.deleteIcon}
+                onPress={() => handleRemoveBoid(boid.boid)}
+              />
+            </View>
+          ))}
 
           {boids.length === 0 && (
             <AppText style={styles.noAccountText}>No saved account</AppText>
