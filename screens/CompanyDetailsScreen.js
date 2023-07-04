@@ -44,7 +44,6 @@ export default function CompanyDetailsScreen() {
     loading: marketOpenStatusLoading,
     error: marketOpenStatusError,
   } = useFetch("/nepse/status");
-  console.log(marketOpenStatus?.data?.date);
   const { data, loading, error } = useFetch(`/nepse/company-details/${symbol}`);
   const {
     data: chartData,
@@ -52,9 +51,12 @@ export default function CompanyDetailsScreen() {
     error: chartError,
   } = useFetch(
     `/nepse/graph/company/${symbol.toUpperCase()}/${getTimeStampOfDate(
-      `2023-06-28`,
+      `${marketOpenStatus?.data?.date}`,
       10
-    )}/${getTimeStampOfDate(`2023-06-28`, 15)}/1/${graphInterval}`
+    )}/${getTimeStampOfDate(
+      `${marketOpenStatus?.data?.date}`,
+      15
+    )}/1/${graphInterval}`
   );
 
   const handleGraphIntervalChange = (interval) => {

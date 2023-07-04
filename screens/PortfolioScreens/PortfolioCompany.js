@@ -39,14 +39,22 @@ export default function PortfolioCompany() {
     error,
   } = useFetch(`/nepse/company-details/${params?.symbol}`);
   const {
+    data: marketOpenStatus,
+    loading: marketOpenStatusLoading,
+    error: marketOpenStatusError,
+  } = useFetch("/nepse/status");
+  const {
     data: companyGraphData,
     loading: graphLoading,
     error: graphError,
   } = useFetch(
     `/nepse/graph/company/${params?.symbol}/${getTimeStampOfDate(
-      "2023-06-28",
+      `${marketOpenStatus?.data?.date}`,
       10
-    )}/${getTimeStampOfDate("2023-06-29", 15)}/1/${graphInterval}`
+    )}/${getTimeStampOfDate(
+      `${marketOpenStatus?.data?.date}`,
+      15
+    )}/1/${graphInterval}`
   );
   const [portfolioCompanyData, setPortfolioCompanyData] = useState({});
 
@@ -151,83 +159,96 @@ export default function PortfolioCompany() {
               </AppText>
             </View>
 
-            {companyGraphData?.data?.length > 0 && (
-              <View style={styles.chartContainer}>
-                {graphLoading ? (
-                  <Loader />
-                ) : (
-                  <Chart
-                    style={{
-                      width: "100%",
-                      height: Dimensions.get("window").height / 2,
-                    }}
-                    data={companyGraphData?.data}
-                    xDomain={{
-                      min: companyGraphData?.data?.[0]?.x,
-                      max: companyGraphData?.data?.[
-                        companyGraphData?.data?.length - 1
-                      ]?.x,
-                    }}
-                    yDomain={{
-                      min:
-                        Math.min(
-                          ...companyGraphData?.data?.map((item) => item.y)
-                        ) - 5,
-                      max:
-                        Math.max(
-                          ...companyGraphData?.data?.map((item) => item.y)
-                        ) + 2,
-                    }}
-                  >
-                    <Area
-                      style={{ flex: 1 }}
+            {graphLoading ? (
+              <Loader />
+            ) : (
+              companyGraphData?.data?.length > 0 && (
+                <View style={styles.chartContainer}>
+                  {graphLoading ? (
+                    <Loader />
+                  ) : (
+                    <Chart
+                      style={{
+                        width: "100%",
+                        height: Dimensions.get("window").height / 2,
+                      }}
                       data={companyGraphData?.data}
-                      smoothing="bezier"
-                      tension={0.2}
-                      theme={{
-                        gradient: {
-                          from: {
+                      xDomain={{
+                        min: companyGraphData?.data?.[0]?.x,
+                        max: companyGraphData?.data?.[
+                          companyGraphData?.data?.length - 1
+                        ]?.x,
+                      }}
+                      yDomain={{
+                        min:
+                          Math.min(
+                            ...companyGraphData?.data?.map((item) => item.y)
+                          ) - 5,
+                        max:
+                          Math.max(
+                            ...companyGraphData?.data?.map((item) => item.y)
+                          ) + 2,
+                      }}
+                    >
+                      <Area
+                        style={{ flex: 1 }}
+                        data={companyGraphData?.data}
+                        smoothing="bezier"
+                        tension={0.2}
+                        theme={{
+                          gradient: {
+                            from: {
+                              color:
+                                Number(companyData?.data?.Others.point_change) >
+                                0
+                                  ? colors.dark.stockIncrease
+                                  : colors.dark.stockDecrease,
+                              opacity: 0.2,
+                            },
+                            to: {
+                              color: colors.dark.primary,
+                              opacity: 0,
+                            },
+                          },
+                        }}
+                      />
+                      <Line
+                        style={{ flex: 1 }}
+                        data={companyGraphData?.data}
+                        smoothing="bezier"
+                        tension={0.2}
+                        theme={{
+                          stroke: {
                             color:
                               Number(companyData?.data?.Others.point_change) > 0
-                                ? colors.dark.stockIncrease
-                                : colors.dark.stockDecrease,
-                            opacity: 0.2,
+                                ? colors.dark.graphLineIncrease
+                                : colors.dark.topLoserText,
+                            width: totalSize(0.3),
                           },
-                          to: {
-                            color: colors.dark.primary,
-                            opacity: 0,
-                          },
-                        },
-                      }}
-                    />
-                    <Line
-                      style={{ flex: 1 }}
-                      data={companyGraphData?.data}
-                      smoothing="bezier"
-                      tension={0.2}
-                      theme={{
-                        stroke: {
-                          color:
-                            Number(companyData?.data?.Others.point_change) > 0
-                              ? colors.dark.graphLineIncrease
-                              : colors.dark.topLoserText,
-                          width: totalSize(0.3),
-                        },
-                      }}
-                    />
-                  </Chart>
-                )}
+                        }}
+                      />
+                    </Chart>
+                  )}
+                </View>
+              )
+            )}
+
+            {graphInterval && companyGraphData?.data?.length === 0 && (
+              <View style={styles.noDataContainer}>
+                <AppText style={styles.noDataText} variant="Medium">
+                  No graphical data available for {graphInterval}
+                </AppText>
               </View>
             )}
 
-            {companyGraphData?.data?.length > 0 && (
+            {graphInterval && (
               <View style={styles.graphIntervalButtons}>
                 <TouchableOpacity
                   style={{
                     ...styles.rowButton,
                     backgroundColor:
                       graphInterval === "1D"
-                        ? Number(companyData?.data?.Others.point_change) >= 0
+                        ? Number(companyData?.data?.Others.point_change) > 0
                           ? colors.dark.graphLineIncrease
                           : colors.dark.topLoserText
                         : colors.dark.secondary,
@@ -251,7 +272,7 @@ export default function PortfolioCompany() {
                     ...styles.rowButton,
                     backgroundColor:
                       graphInterval === "1W"
-                        ? Number(companyData?.data?.Others.point_change) >= 0
+                        ? Number(companyData?.data?.Others.point_change) > 0
                           ? colors.dark.graphLineIncrease
                           : colors.dark.topLoserText
                         : colors.dark.secondary,
@@ -275,7 +296,7 @@ export default function PortfolioCompany() {
                     ...styles.rowButton,
                     backgroundColor:
                       graphInterval === "1M"
-                        ? Number(companyData?.data?.Others.point_change) >= 0
+                        ? Number(companyData?.data?.Others.point_change) > 0
                           ? colors.dark.graphLineIncrease
                           : colors.dark.topLoserText
                         : colors.dark.secondary,
@@ -299,7 +320,7 @@ export default function PortfolioCompany() {
                     ...styles.rowButton,
                     backgroundColor:
                       graphInterval === "1Y"
-                        ? Number(companyData?.data?.Others.point_change) >= 0
+                        ? Number(companyData?.data?.Others.point_change) > 0
                           ? colors.dark.graphLineIncrease
                           : colors.dark.topLoserText
                         : colors.dark.secondary,

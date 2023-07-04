@@ -28,6 +28,14 @@ export default styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  noDataContainer: {
+    paddingHorizontal: width(5),
+    marginTop: height(2),
+  },
+  noDataText: {
+    fontSize: totalSize(2),
+    color: colors.dark.topLoserText,
+  },
   // graph interval
   graphIntervalButtons: {
     flexDirection: "row",
