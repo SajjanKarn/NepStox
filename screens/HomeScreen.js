@@ -90,7 +90,7 @@ export default function HomeScreen() {
         <View style={styles.nepseIndexContainer}>
           {indicesLoading ? (
             <Loader />
-          ) : (
+          ) : indices?.data?.data ? (
             <>
               <View style={styles.data}>
                 <AppText style={styles.dataTitle}>Nepse</AppText>
@@ -148,6 +148,10 @@ export default function HomeScreen() {
                 </AppText>
               </View>
             </>
+          ) : (
+            <View style={styles.data}>
+              <AppText style={styles.dataTitle}>No Data Available</AppText>
+            </View>
           )}
         </View>
 
