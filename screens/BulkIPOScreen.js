@@ -40,6 +40,7 @@ export default function BulkIPOScreen() {
   const [boids, setBoids] = useState([]);
   const [allottedStatus, setAllottedStatus] = useState("");
   const [bulkStatus, setBulkStatus] = useState([]);
+  const [bulkStatusLoading, setBulkStatusLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [collapsable, setCollapsable] = useState(false);
 
@@ -162,12 +163,14 @@ export default function BulkIPOScreen() {
     };
 
     try {
+      setBulkStatusLoading(true);
       const result = await client.post(`/ipo/bulk-check`, data, {
         headers: {
           "Content-Type": "application/json",
         },
       });
       setBulkStatus(result?.data?.data);
+      setBulkStatusLoading(false);
     } catch (error) {
       toast.show("Something went wrong", {
         type: "danger",
@@ -175,6 +178,7 @@ export default function BulkIPOScreen() {
         duration: 3000,
       });
       console.log(error);
+      setBulkStatusLoading(false);
     }
   };
 
@@ -271,6 +275,8 @@ export default function BulkIPOScreen() {
             </>
           )}
         </Formik>
+
+        {bulkStatusLoading && <Loader />}
 
         {bulkStatus.length > 0 && (
           <View style={styles.bulkStatusContainer}>

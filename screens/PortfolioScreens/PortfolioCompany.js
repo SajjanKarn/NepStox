@@ -12,7 +12,7 @@ import Loader from "../../components/Loader";
 import colors from "../../config/colors";
 import useFetch from "../../hooks/useFetch";
 
-import { getTimeStampOfDate } from "../../utils/time";
+import { determineMarketClose, getTimeStampOfDate } from "../../utils/time";
 import {
   broker_commission,
   sebon_commission,
@@ -52,7 +52,7 @@ export default function PortfolioCompany() {
       `${marketOpenStatus?.data?.date}`,
       10
     )}/${getTimeStampOfDate(
-      `${marketOpenStatus?.data?.date}`,
+      `${determineMarketClose() ?? `${marketOpenStatus?.data?.date}`}`,
       15
     )}/1/${graphInterval}`
   );

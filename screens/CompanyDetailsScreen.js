@@ -15,7 +15,7 @@ import RowCard from "../components/RowCard";
 import useFetch from "../hooks/useFetch";
 
 import styles from "../styles/CompanyDetailsScreen.styles";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Area,
   Chart,
@@ -25,11 +25,11 @@ import {
   VerticalAxis,
 } from "react-native-responsive-linechart";
 import {
+  determineMarketClose,
   getTimeStamp,
   getTimeStampOfDate,
   parseTimestamp,
 } from "../utils/time";
-import { Button } from "react-native-paper";
 import colors from "../config/colors";
 
 export default function CompanyDetailsScreen() {
@@ -54,7 +54,7 @@ export default function CompanyDetailsScreen() {
       `${marketOpenStatus?.data?.date}`,
       10
     )}/${getTimeStampOfDate(
-      `${marketOpenStatus?.data?.date}`,
+      `${determineMarketClose() ?? `${marketOpenStatus?.data?.date}`}`,
       15
     )}/1/${graphInterval}`
   );

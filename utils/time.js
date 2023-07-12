@@ -52,10 +52,26 @@ function getTimeStampOfDate(date, hour) {
   return Math.floor(currentDate.getTime() / 1000);
 }
 
+function determineMarketClose() {
+  const now = new Date();
+  const currentHour = now.getHours();
+
+  if (currentHour < 11) {
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  return null;
+}
+
 export {
   convertTimestampToTime,
   getTimeStamp,
   getTimeStampOneDayBefore,
   parseTimestamp,
   getTimeStampOfDate,
+  determineMarketClose,
 };
