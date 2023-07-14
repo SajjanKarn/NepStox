@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { width, height, totalSize } from "react-native-dimension";
 import { Picker } from "@react-native-picker/picker";
 import { Formik } from "formik";
@@ -96,15 +96,33 @@ export default function BulkIPOScreen() {
   };
 
   const handleRemoveBoid = async (boid) => {
-    try {
-      const result = await removeBoid(boid);
-      console.log(result);
-      if (result) {
-        setBoids(result);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    Alert.alert(
+      "Remove Account",
+      "Are you sure you want to remove this account?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => {},
+          style: "cancel",
+        },
+
+        {
+          text: "OK",
+          onPress: async () => {
+            try {
+              const result = await removeBoid(boid);
+              console.log(result);
+              if (result) {
+                setBoids(result);
+              }
+            } catch (error) {
+              console.log(error);
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const handleViewResult = async (values) => {
@@ -331,7 +349,7 @@ export default function BulkIPOScreen() {
             <View style={styles.savedAccount} key={boid.boid}>
               <View style={styles.infoContainer}>
                 <AppText style={styles.savedAccountText}>
-                  boid:{" "}
+                  BOID:{" "}
                   {!collapsable
                     ? `${boid.boid.slice(0, 5)}***********`
                     : boid.boid}

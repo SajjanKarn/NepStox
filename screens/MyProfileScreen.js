@@ -14,8 +14,6 @@ import { AntDesign } from "@expo/vector-icons";
 export default function MyProfileScreen() {
   const { user } = useContext(AuthProvider);
 
-  console.log(user);
-
   return (
     <View style={styles.container}>
       <AppText style={styles.headerTitle}>Your Profile Information</AppText>
