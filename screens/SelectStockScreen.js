@@ -43,13 +43,15 @@ export default function SelectStockScreen() {
       <StatusBar barStyle="default" />
       <View style={styles.searchContainer}>
         <AppText style={styles.searchTitle}>Search</AppText>
-        <AppInput
-          placeholder="Symbol or Name..."
-          squared
-          value={searchInput}
-          onChangeText={handleInputChange}
-          autoCapitalize="none"
-        />
+        {!loading && (
+          <AppInput
+            placeholder="Symbol or Name..."
+            squared
+            value={searchInput}
+            onChangeText={handleInputChange}
+            autoCapitalize="none"
+          />
+        )}
       </View>
 
       {loading ? (

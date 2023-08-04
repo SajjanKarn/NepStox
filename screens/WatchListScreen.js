@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, FlatList, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Alert,
+  RefreshControl,
+} from "react-native";
 import { width, height, totalSize } from "react-native-dimension";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -30,6 +36,16 @@ export default function WatchListScreen({ route }) {
       const result = data?.data?.filter((item) => stocks.includes(item.Symbol));
       setWatchListStocks(result);
     }
+
+    setWatchListLoading(false);
+  };
+
+  const handleRefresh = async () => {
+    setWatchListLoading(true);
+    const stocks = await getStock();
+
+    const result = data?.data?.filter((item) => stocks.includes(item.Symbol));
+    setWatchListStocks(result);
 
     setWatchListLoading(false);
   };
@@ -150,7 +166,7 @@ export default function WatchListScreen({ route }) {
           size="small"
         />
       ) : (
-        watchListStocks.length > 0 && (
+        watchListStocks && (
           <DataTable
             style={{
               flex: 1,
@@ -180,6 +196,12 @@ export default function WatchListScreen({ route }) {
             <FlatList
               data={watchListStocks}
               keyExtractor={(item) => item.Symbol}
+              refreshControl={
+                <RefreshControl
+                  refreshing={loading}
+                  onRefresh={() => handleRefresh()}
+                />
+              }
               renderItem={({ item }) => (
                 <DataTable.Row
                   key={item.Symbol}

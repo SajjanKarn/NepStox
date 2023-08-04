@@ -68,7 +68,7 @@ export default function HomeScreen() {
     `/nepse/graph/${graphSelected}/${getTimeStampOfDate(
       `${marketOpenStatus?.data?.date}`,
       10
-    )}/${getTimeStampOfDate(`${marketOpenStatus?.data?.date}`, 15)}/1`
+    )}/2114360100/1`
   );
 
   useEffect(() => {
