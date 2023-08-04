@@ -32,7 +32,7 @@ export default function PortfolioCompany() {
     sellResult: null,
     totalReceivedAmount: 0,
   });
-  const [graphInterval, setGraphInterval] = useState("1D");
+  const [graphInterval, setGraphInterval] = useState("1");
   const {
     data: companyData,
     loading,
@@ -51,10 +51,7 @@ export default function PortfolioCompany() {
     `/nepse/graph/company/${params?.symbol}/${getTimeStampOfDate(
       `${marketOpenStatus?.data?.date}`,
       10
-    )}/${getTimeStampOfDate(
-      `${determineMarketClose() ?? `${marketOpenStatus?.data?.date}`}`,
-      15
-    )}/1/${graphInterval}`
+    )}/2114360100/${graphInterval}`
   );
   const [portfolioCompanyData, setPortfolioCompanyData] = useState({});
 
@@ -247,19 +244,19 @@ export default function PortfolioCompany() {
                   style={{
                     ...styles.rowButton,
                     backgroundColor:
-                      graphInterval === "1D"
+                      graphInterval === "1"
                         ? Number(companyData?.data?.Others.point_change) > 0
                           ? colors.dark.graphLineIncrease
                           : colors.dark.topLoserText
                         : colors.dark.secondary,
                   }}
-                  onPress={() => setGraphInterval("1D")}
+                  onPress={() => setGraphInterval("1")}
                 >
                   <AppText
                     style={styles.rowButtonText}
                     variant="Medium"
                     color={
-                      graphInterval === "1D"
+                      graphInterval === "1"
                         ? colors.dark.textColor
                         : colors.dark.primary
                     }

@@ -34,7 +34,7 @@ import colors from "../config/colors";
 
 export default function CompanyDetailsScreen() {
   const { symbol } = useRoute().params;
-  const [graphInterval, setGraphInterval] = useState("1D");
+  const [graphInterval, setGraphInterval] = useState("1");
   const [scrollValue, setScrollValue] = useState({
     x: 0,
     y: 0,
@@ -45,6 +45,24 @@ export default function CompanyDetailsScreen() {
     error: marketOpenStatusError,
   } = useFetch("/nepse/status");
   const { data, loading, error } = useFetch(`/nepse/company-details/${symbol}`);
+  // const {
+  //   data: chartData,
+  //   loading: chartLoading,
+  //   error: chartError,
+  // } = useFetch(
+  //   `/nepse/graph/company/${symbol.toUpperCase()}/${getTimeStampOfDate(
+  //     `${marketOpenStatus?.data?.date}`,
+  //     10
+  //   )}/${getTimeStampOfDate(
+  //     `${determineMarketClose() ?? `${marketOpenStatus?.data?.date}`}`,
+  //     15
+  //   )}/1/${graphInterval}`
+  // );
+
+  const [initialTimeStamp, setInitialTimeStamp] = useState(
+    getTimeStampOfDate(`${marketOpenStatus?.data?.date}`, 10)
+  );
+
   const {
     data: chartData,
     loading: chartLoading,
@@ -53,10 +71,7 @@ export default function CompanyDetailsScreen() {
     `/nepse/graph/company/${symbol.toUpperCase()}/${getTimeStampOfDate(
       `${marketOpenStatus?.data?.date}`,
       10
-    )}/${getTimeStampOfDate(
-      `${determineMarketClose() ?? `${marketOpenStatus?.data?.date}`}`,
-      15
-    )}/1/${graphInterval}`
+    )}/2114360100/${graphInterval}`
   );
 
   const handleGraphIntervalChange = (interval) => {
@@ -102,11 +117,11 @@ export default function CompanyDetailsScreen() {
               <View style={styles.graphIntervalContainer}>
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  onPress={() => handleGraphIntervalChange("1D")}
+                  onPress={() => handleGraphIntervalChange("1")}
                   style={{
                     ...styles.rowButton,
                     backgroundColor:
-                      graphInterval === "1D"
+                      graphInterval === "1"
                         ? colors.dark.button
                         : colors.dark.secondary,
                   }}
@@ -115,7 +130,7 @@ export default function CompanyDetailsScreen() {
                     style={{
                       ...styles.rowButtonText,
                       color:
-                        graphInterval === "1D"
+                        graphInterval === "1"
                           ? colors.dark.primary
                           : colors.dark.textColor,
                     }}
@@ -126,11 +141,11 @@ export default function CompanyDetailsScreen() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  onPress={() => handleGraphIntervalChange("1W")}
+                  onPress={() => handleGraphIntervalChange("15")}
                   style={{
                     ...styles.rowButton,
                     backgroundColor:
-                      graphInterval === "1W"
+                      graphInterval === "15"
                         ? colors.dark.button
                         : colors.dark.secondary,
                   }}
@@ -139,7 +154,7 @@ export default function CompanyDetailsScreen() {
                     style={{
                       ...styles.rowButtonText,
                       color:
-                        graphInterval === "1W"
+                        graphInterval === "15"
                           ? colors.dark.primary
                           : colors.dark.textColor,
                     }}
