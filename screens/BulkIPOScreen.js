@@ -28,6 +28,10 @@ import {
 } from "../config/storage";
 import { useToast } from "react-native-toast-notifications";
 import client from "../config/client";
+import {
+  checkIPOAllotment,
+  checkIPOAllotmentMultiple,
+} from "../utils/checkIPO";
 
 export default function BulkIPOScreen() {
   const toast = useToast();
@@ -145,17 +149,17 @@ export default function BulkIPOScreen() {
     };
 
     try {
-      const result = await client.post(`/ipo/bulk-check`, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (result?.data?.data?.[0]?.message.includes("not allotted")) {
-        setAllottedStatus(result?.data?.data?.[0]?.message);
+      const result = await checkIPOAllotment(values.boid, selectedCompany);
+      console.log(result);
+      // const result = await client.post(`/ipo/bulk-check`, data, {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // });
+      if (!result?.status && result?.message.includes("Congratulation")) {
+        setAllottedStatus(result.message);
       } else {
-        setAllottedStatus(
-          `${result?.data?.data?.[0]?.message} you are alloted`
-        );
+        setAllottedStatus("Not Allotted");
       }
     } catch (error) {
       toast.show("Something went wrong", {
@@ -182,12 +186,16 @@ export default function BulkIPOScreen() {
 
     try {
       setBulkStatusLoading(true);
-      const result = await client.post(`/ipo/bulk-check`, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setBulkStatus(result?.data?.data);
+      // const result = await client.post(`/ipo/bulk-check`, data, {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // });
+      // setBulkStatus(result?.data?.data);
+      // setBulkStatusLoading(false);
+      const result = await checkIPOAllotmentMultiple(boids, selectedCompany);
+      console.log(result);
+      setBulkStatus(result);
       setBulkStatusLoading(false);
     } catch (error) {
       toast.show("Something went wrong", {
@@ -267,7 +275,7 @@ export default function BulkIPOScreen() {
                 <View
                   style={{
                     ...styles.allotedStatus,
-                    backgroundColor: allottedStatus.includes("not allotted")
+                    backgroundColor: allottedStatus.includes("Not Allotted")
                       ? colors.dark.topLoserText
                       : colors.dark.stockIncrease,
                   }}
@@ -309,16 +317,16 @@ export default function BulkIPOScreen() {
               <View
                 style={{
                   ...styles.bulkStatus,
-                  backgroundColor: status.message.includes("not allotted")
+                  backgroundColor: status.message.includes("Sorry")
                     ? colors.dark.topLoserText
                     : colors.dark.stockIncrease,
                 }}
                 key={index}
               >
                 <AppText style={styles.bulkStatusText}>
-                  {status.message.includes("not allotted")
-                    ? `${status.username} ${status.message}`
-                    : `${status.username} ${status.message} you are alloted`}
+                  {status.message.includes("Sorry")
+                    ? `${status.message}`
+                    : `${status.message}`}
                 </AppText>
               </View>
             ))}
