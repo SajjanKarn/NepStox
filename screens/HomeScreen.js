@@ -39,12 +39,12 @@ export default function HomeScreen() {
     loading: indicesLoading,
     error: indicesError,
   } = useFetch("/nepse/indices");
-  const { data, loading, error } = useFetch("/nepse/top-gainer");
+  const { data, loading, error } = useFetch("/nepse/top-gainer/new");
   const {
     data: topLoserData,
     loading: topLoserLoading,
     error: topLoserError,
-  } = useFetch("/nepse/top-loser");
+  } = useFetch("/nepse/top-loser/new");
   const {
     data: marketSummary,
     loading: marketSummaryLoading,
@@ -85,7 +85,7 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.container}>
       <SafeAreaView>
-        <StatusBar />
+        <StatusBar barStyle="default" />
 
         <View style={styles.nepseIndexContainer}>
           {indicesLoading ? (
@@ -400,13 +400,13 @@ export default function HomeScreen() {
 
         <Gainer
           title="Top Gainers"
-          data={data?.data?.data?.slice(0, 5)}
+          data={data?.data?.slice(0, 5)}
           loading={loading}
         />
 
         <Gainer
           title="Top Losers"
-          data={topLoserData?.data?.data?.slice(0, 5)}
+          data={topLoserData?.data?.slice(0, 5)}
           loading={topLoserLoading}
           headerColor={colors.dark.topLoserText}
         />

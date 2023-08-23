@@ -48,25 +48,25 @@ export default function Gainer({
 
           {data?.map((item) => (
             <DataTable.Row
-              key={item.symbol}
+              key={item.Symbol}
               style={styles.tableRow}
               onPress={() =>
                 navigation.navigate("CompanyDetailsScreen", {
-                  symbol: item.symbol,
+                  symbol: item.Symbol,
                 })
               }
             >
               <DataTable.Cell>
-                <AppText style={styles.tableData}>{item.symbol}</AppText>
+                <AppText style={styles.tableData}>{item.Symbol}</AppText>
               </DataTable.Cell>
               <DataTable.Cell numeric>
-                <AppText style={styles.tableData}>{item.change_pts}</AppText>
+                <AppText style={styles.tableData}>{item.Qty}</AppText>
               </DataTable.Cell>
               <DataTable.Cell numeric>
-                <AppText style={styles.tableData}>{item.diff_per}</AppText>
+                <AppText style={styles.tableData}>{item?.["% Change"]}</AppText>
               </DataTable.Cell>
               <DataTable.Cell numeric>
-                <AppText style={styles.tableData}>{item.close}</AppText>
+                <AppText style={styles.tableData}>{item.LTP}</AppText>
               </DataTable.Cell>
             </DataTable.Row>
           ))}

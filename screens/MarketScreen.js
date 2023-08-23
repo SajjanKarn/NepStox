@@ -11,6 +11,7 @@ import Loader from "../components/Loader";
 
 import useFetch from "../hooks/useFetch";
 import styles from "../styles/MarketScreen.styles";
+import colors from "../config/colors";
 
 export default function MarketScreen() {
   const { data, loading, error } = useFetch(`/nepse/live-trading`);
@@ -226,7 +227,16 @@ export default function MarketScreen() {
             <FlashList
               data={searchResults.length > 0 ? searchResults : data?.data}
               renderItem={({ item }) => (
-                <DataTable.Row>
+                <DataTable.Row
+                  style={{
+                    backgroundColor:
+                      Number(item["Point Change"]) > 0
+                        ? colors.dark.stockIncrease + "20"
+                        : Number(item["Point Change"]) < 0
+                        ? colors.dark.stockDecrease + "20"
+                        : null,
+                  }}
+                >
                   <DataTable.Cell style={{ flex: 1.5 }}>
                     <AppText style={styles.tableCell} variant="Medium">
                       {item.Symbol}

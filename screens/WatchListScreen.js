@@ -16,6 +16,7 @@ import {
 } from "react-native-paper";
 
 import AppText from "../components/AppText";
+import Loader from "../components/Loader";
 import useFetch from "../hooks/useFetch";
 
 import colors from "../config/colors";
@@ -27,6 +28,11 @@ export default function WatchListScreen({ route }) {
   const [watchListStocks, setWatchListStocks] = useState([]);
   const [watchListLoading, setWatchListLoading] = useState(false);
   const { data, loading, error } = useFetch(`/nepse/live-trading`);
+  const {
+    data: marketOpenStatus,
+    loading: marketOpenStatusLoading,
+    error: marketOpenStatusError,
+  } = useFetch("/nepse/status");
 
   const getData = async () => {
     setWatchListLoading(true);
@@ -120,28 +126,34 @@ export default function WatchListScreen({ route }) {
         </View>
       </View>
 
-      <View style={styles.marketStatusContainer}>
-        <View style={styles.marketStatus}>
-          <AppText style={styles.marketStatusTitle}>Market Status</AppText>
-          <View style={styles.statusContainer}>
-            <View style={[styles.dot, styles.red]} />
-            <AppText style={styles.marketStatusValue}>Closed</AppText>
+      {marketOpenStatusLoading ? (
+        <Loader margin={10} />
+      ) : (
+        <View style={styles.marketStatusContainer}>
+          <View style={styles.marketStatus}>
+            <AppText style={styles.marketStatusTitle}>Market Status</AppText>
+            <View style={styles.statusContainer}>
+              <View
+                style={[
+                  styles.dot,
+                  marketOpenStatus?.data?.marketOpen
+                    ? styles.green
+                    : styles.red,
+                ]}
+              />
+              <AppText style={styles.marketStatusValue}>
+                {marketOpenStatus?.data?.marketOpen ? "Open  " : "Closed  "}
+                {marketOpenStatus?.data?.date.split(" ")[0]}
+              </AppText>
+            </View>
+          </View>
+          <View style={styles.marketStatusTime}>
+            <AppText style={styles.marketStatusTimeTitle}>
+              {marketOpenStatus?.data?.date.split(" ")[1]}
+            </AppText>
           </View>
         </View>
-        <View style={styles.marketStatusDate}>
-          <AppText style={styles.marketStatusDateTitle}>
-            {new Date().toLocaleDateString("en-US", {
-              weekday: "short",
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
-          </AppText>
-        </View>
-        <View style={styles.marketStatusTime}>
-          <AppText style={styles.marketStatusTimeTitle}>3:00PM</AppText>
-        </View>
-      </View>
+      )}
 
       {!searchInput.length && watchListStocks.length === 0 && (
         <View style={styles.noStocksContainer}>
@@ -166,7 +178,7 @@ export default function WatchListScreen({ route }) {
           size="small"
         />
       ) : (
-        watchListStocks && (
+        watchListStocks.length > 0 && (
           <DataTable
             style={{
               flex: 1,

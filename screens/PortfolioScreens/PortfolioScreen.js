@@ -58,7 +58,8 @@ export default function PortfolioScreen() {
           const totalInvestment = stocks.reduce((acc, curr) => {
             liveTrading?.data?.forEach((stock) => {
               if (stock.Symbol === curr.symbol) {
-                acc += curr.quantity * parseFloat(stock.LTP.replace(/,/g, ""));
+                acc +=
+                  curr.quantity * parseFloat(stock?.LTP?.replace(/,/g, ""));
               }
             });
             return acc;
@@ -372,7 +373,10 @@ export default function PortfolioScreen() {
                           Rs.{" "}
                           {item?.quantity *
                             parseFloat(
-                              fetchStockData(item?.symbol).LTP.replace(/,/g, "")
+                              fetchStockData(item?.symbol)?.LTP?.replace(
+                                /,/g,
+                                ""
+                              )
                             )}
                         </AppText>
                         <AppText
