@@ -38,7 +38,8 @@ export default function HomeScreen() {
     data: indices,
     loading: indicesLoading,
     error: indicesError,
-  } = useFetch("/nepse/indices");
+  } = useFetch("/nepse/live/new");
+
   const { data, loading, error } = useFetch("/nepse/top-gainer/new");
   const {
     data: topLoserData,
@@ -90,61 +91,61 @@ export default function HomeScreen() {
         <View style={styles.nepseIndexContainer}>
           {indicesLoading ? (
             <Loader />
-          ) : indices?.data?.data ? (
+          ) : indices?.data?.nepseIndex ? (
             <>
               <View style={styles.data}>
                 <AppText style={styles.dataTitle}>Nepse</AppText>
                 <AppText style={styles.dataValue}>
-                  {indices?.data?.data[0]?.Close}
+                  {indices?.data?.nepseIndex[1]?.currentValue}
                 </AppText>
                 <AppText
                   style={{
                     fontSize: totalSize(1.5),
                     color:
-                      indices?.data?.data[0]["Point Change"] > 0
+                      indices?.data?.nepseIndex[1]?.schange > 0
                         ? colors.dark.topGainerText
                         : colors.dark.topLoserText,
                   }}
                 >
-                  {indices?.data?.data[0]["Point Change"]} (
-                  {indices?.data?.data[0]["% Change"]}%)
+                  {indices?.data?.nepseIndex[1]?.schange} (
+                  {indices?.data?.nepseIndex[1]?.perChange}%)
                 </AppText>
               </View>
               <View style={styles.data}>
                 <AppText style={styles.dataTitle}>Sensitive</AppText>
                 <AppText style={styles.dataValue}>
-                  {indices?.data?.data[1]?.Close}
+                  {indices?.data?.nepseIndex[0]?.currentValue}
                 </AppText>
                 <AppText
                   style={{
                     fontSize: totalSize(1.5),
                     color:
-                      indices?.data?.data[1]["Point Change"] > 0
+                      indices?.data?.nepseIndex[0]?.schange > 0
                         ? colors.dark.topGainerText
                         : colors.dark.topLoserText,
                   }}
                 >
-                  {indices?.data?.data[1]["Point Change"]} (
-                  {indices?.data?.data[1]["% Change"]}%)
+                  {indices?.data?.nepseIndex[0]?.schange} (
+                  {indices?.data?.nepseIndex[0]?.perChange}%)
                 </AppText>
               </View>
               <View style={styles.data}>
                 <AppText style={styles.dataTitle}>Float</AppText>
                 <AppText style={styles.dataValue}>
-                  {indices?.data?.data[2]?.Close}
+                  {indices?.data?.nepseIndex[2]?.currentValue}
                 </AppText>
                 <AppText
                   style={{
                     fontSize: totalSize(1.5),
                     color:
-                      indices?.data?.data[2]["Point Change"] > 0
+                      indices?.data?.nepseIndex[2]?.schange > 0
                         ? colors.dark.topGainerText
                         : colors.dark.topLoserText,
                   }}
                 >
                   {" "}
-                  {indices?.data?.data[2]["Point Change"]} (
-                  {indices?.data?.data[2]["% Change"]}%)
+                  {indices?.data?.nepseIndex[2]?.schange} (
+                  {indices?.data?.nepseIndex[2]?.perChange}%)
                 </AppText>
               </View>
             </>
@@ -320,15 +321,15 @@ export default function HomeScreen() {
                       from: {
                         color:
                           Number(
-                            indices?.data?.data[
+                            indices?.data?.nepseIndex[
                               graphSelected === "NEPSE"
-                                ? 0
-                                : graphSelected === "SENSITIVE"
                                 ? 1
+                                : graphSelected === "SENSITIVE"
+                                ? 0
                                 : graphSelected === "FLOAT"
                                 ? 2
                                 : 3
-                            ]["Point Change"]
+                            ]["schange"]
                           ) > 0
                             ? colors.dark.topGainerText
                             : colors.dark.topLoserText,
@@ -337,15 +338,15 @@ export default function HomeScreen() {
                       to: {
                         color:
                           Number(
-                            indices?.data?.data[
+                            indices?.data?.nepseIndex[
                               graphSelected === "NEPSE"
-                                ? 0
-                                : graphSelected === "SENSITIVE"
                                 ? 1
+                                : graphSelected === "SENSITIVE"
+                                ? 0
                                 : graphSelected === "FLOAT"
                                 ? 2
                                 : 3
-                            ]["Point Change"]
+                            ]["schange"]
                           ) > 0
                             ? colors.dark.stockIncrease
                             : colors.dark.stockDecrease,
@@ -360,15 +361,15 @@ export default function HomeScreen() {
                     stroke: {
                       color:
                         Number(
-                          indices?.data?.data[
+                          indices?.data?.nepseIndex[
                             graphSelected === "NEPSE"
-                              ? 0
-                              : graphSelected === "SENSITIVE"
                               ? 1
+                              : graphSelected === "SENSITIVE"
+                              ? 0
                               : graphSelected === "FLOAT"
                               ? 2
                               : 3
-                          ]["Point Change"]
+                          ]["schange"]
                         ) > 0
                           ? colors.dark.button
                           : colors.dark.topLoserText,
@@ -426,7 +427,10 @@ export default function HomeScreen() {
                 <View style={styles.dataRow}>
                   <AppText style={styles.dataRowTitle}>Total Turnover</AppText>
                   <AppText style={styles.dataRowValue}>
-                    Rs. {marketSummary?.data["Total Turnovers (Rs.)"]}
+                    Rs.{" "}
+                    {Number(
+                      indices?.data?.marketSummary[0]?.ms_value
+                    ).toLocaleString()}
                   </AppText>
                 </View>
                 <View style={styles.dataRow}>
@@ -434,7 +438,9 @@ export default function HomeScreen() {
                     Total Traded Shares
                   </AppText>
                   <AppText style={styles.dataRowValue}>
-                    {marketSummary?.data["Total Traded Shares "]}
+                    {Number(
+                      indices?.data?.marketSummary[1]?.ms_value
+                    ).toLocaleString()}
                   </AppText>
                 </View>
                 <View style={styles.dataRow}>
@@ -442,7 +448,9 @@ export default function HomeScreen() {
                     Total Transaction
                   </AppText>
                   <AppText style={styles.dataRowValue}>
-                    {marketSummary?.data["Total Transaction "]}
+                    {Number(
+                      indices?.data?.marketSummary[2]?.ms_value
+                    ).toLocaleString()}
                   </AppText>
                 </View>
                 <View style={styles.dataRow}>
@@ -450,7 +458,9 @@ export default function HomeScreen() {
                     Total Scrips Traded
                   </AppText>
                   <AppText style={styles.dataRowValue}>
-                    {marketSummary?.data["Total Scrips Traded "]}
+                    {Number(
+                      indices?.data?.marketSummary[3]?.ms_value
+                    ).toLocaleString()}
                   </AppText>
                 </View>
                 <View style={styles.dataRow}>

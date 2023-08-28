@@ -51,7 +51,7 @@ export default function ForeignExchangeScreen() {
                   }}
                 >
                   <AppText style={styles.title} variant="Medium">
-                    {item.Currency}
+                    {item.Currency.toUpperCase()}
                   </AppText>
                 </DataTable.Cell>
                 <DataTable.Cell numeric>
