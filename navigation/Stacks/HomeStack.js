@@ -8,6 +8,8 @@ import AboutScreen from "../../screens/AboutScreen";
 
 import MyDrawer from "../Drawer/Drawer";
 import stackHeaderStyle from "../stackHeaderStyle";
+import PrivacyPolicyScreen from "../../screens/LegalScreens/PrivacyPolicyScreen";
+import TermsConditionScreen from "../../screens/LegalScreens/TermsConditionScreen";
 
 const HomeStack = createStackNavigator();
 
@@ -39,6 +41,16 @@ const HomeStackNavigator = () => (
       name="AboutScreen"
       component={AboutScreen}
       options={stackHeaderStyle("About NepStoX")}
+    />
+    <HomeStack.Screen
+      name="PrivacyPolicyScreen"
+      component={PrivacyPolicyScreen}
+      options={stackHeaderStyle("Privacy Policy")}
+    />
+    <HomeStack.Screen
+      name="TermsConditionScreen"
+      component={TermsConditionScreen}
+      options={stackHeaderStyle("Terms & Condition")}
     />
   </HomeStack.Navigator>
 );
