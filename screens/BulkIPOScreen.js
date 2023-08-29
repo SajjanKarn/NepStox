@@ -317,9 +317,11 @@ export default function BulkIPOScreen() {
               <View
                 style={{
                   ...styles.bulkStatus,
-                  backgroundColor: status.message.includes("Sorry")
-                    ? colors.dark.topLoserText
-                    : colors.dark.stockIncrease,
+                  backgroundColor:
+                    status.message.includes("Sorry") ||
+                    status.message.includes("Server Error")
+                      ? colors.dark.topLoserText
+                      : colors.dark.stockIncrease,
                 }}
                 key={index}
               >

@@ -19,6 +19,7 @@ import MoreStackNavigator from "./Stacks/MoreStack";
 import WatchListStackNavigator from "./Stacks/WatchListStack";
 
 import { supabase } from "../config/supabase";
+import useFetch from "../hooks/useFetch";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,6 +34,16 @@ Notifications.setNotificationHandler({
 export default function AuthNavigator() {
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
+  const {
+    data: nepseIndex,
+    loading: nepseLoading,
+    error: nepseError,
+  } = useFetch(`/nepse/indices`);
+  const {
+    data: marketSummary,
+    loading: marketSummaryLoading,
+    error: marketSummaryError,
+  } = useFetch(`/nepse/market-summary`);
   const notificationListener = useRef();
   const responseListener = useRef();
 
@@ -75,6 +86,45 @@ export default function AuthNavigator() {
       );
       Notifications.removeNotificationSubscription(responseListener.current);
     };
+  }, []);
+
+  useEffect(() => {
+    // Schedule the notification at 3 PM
+    async function scheduleNotification() {
+      const date = new Date();
+      date.setHours(15); // Set to 3 PM
+      date.setMinutes(0);
+
+      if (nepseLoading) return;
+
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: `Market Closed | Nepse Index`,
+          body: `${
+            nepseIndex?.data?.data[0]?.["Point Change"]?.includes("-")
+              ? `Down`
+              : `Up`
+          } by ${nepseIndex?.data?.data[0]?.["Point Change"]}(${
+            nepseIndex?.data?.data[0]?.["% Change"]
+          }%) | value: ${nepseIndex?.data?.data[0]?.Close}`,
+        },
+        trigger: {
+          date,
+        },
+      });
+
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: `Market Closed| Market Summary`,
+          body: `Turnover: ${marketSummary?.data?.["Total Turnovers (Rs.)"]} \nTraded Shares: ${marketSummary?.data?.["Total Traded Shares "]} \nTotal Transaction: ${marketSummary?.data?.["Total Transaction "]}\nTotal Scrips Traded: ${marketSummary?.data?.["Total Scrips Traded "]}`,
+        },
+        trigger: {
+          date,
+        },
+      });
+    }
+
+    scheduleNotification();
   }, []);
 
   return (
