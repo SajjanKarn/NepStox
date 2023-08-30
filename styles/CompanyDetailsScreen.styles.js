@@ -82,4 +82,25 @@ export default styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
+  // accordion
+  accordionContainer: {
+    backgroundColor: colors.dark.secondary,
+  },
+  accordionTitle: {
+    fontSize: totalSize(1.7),
+    color: colors.dark.button,
+    textTransform: "uppercase",
+    marginVertical: totalSize(1),
+  },
+  accordionList: {
+    backgroundColor: colors.dark.secondary,
+    paddingHorizontal: width(5),
+    color: colors.dark.placeholderText,
+  },
+  accordionListTitle: {
+    fontSize: totalSize(1.5),
+    color: colors.dark.textColor,
+    marginVertical: totalSize(1),
+  },
 });

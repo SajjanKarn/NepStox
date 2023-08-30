@@ -36,7 +36,7 @@ export default function AboutScreen() {
       title: "Facebook",
       icon: "facebook-square",
       value: "www.facebook.com/nepstox",
-      onPress: () => Linking.openURL("https://www.facebook.com/nepstox"),
+      onPress: () => Linking.openURL("https://www.facebook.com/nepstoxs"),
     },
   ];
   const developers = [

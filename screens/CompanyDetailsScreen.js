@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
+import { List } from "react-native-paper";
 
 import AppText from "../components/AppText";
 import Loader from "../components/Loader";
@@ -34,6 +35,7 @@ import colors from "../config/colors";
 
 export default function CompanyDetailsScreen() {
   const { symbol } = useRoute().params;
+  const [dividendExpaned, setDividendExpanded] = useState(false);
   const [graphInterval, setGraphInterval] = useState("1");
   const [scrollValue, setScrollValue] = useState({
     x: 0,
@@ -78,6 +80,8 @@ export default function CompanyDetailsScreen() {
     setGraphInterval(interval);
   };
 
+  const handleDividendExpand = () => setDividendExpanded(!dividendExpaned);
+
   return (
     <ScrollView
       style={styles.container}
@@ -107,9 +111,6 @@ export default function CompanyDetailsScreen() {
                 <AppText style={styles.cardBodyText} variant="Medium">
                   Sector: {data?.data?.["Sector"]}
                 </AppText>
-                {/* <AppText style={styles.cardBodyText} variant="Medium">
-                  Instrument Type: Equity
-                </AppText> */}
               </View>
             </View>
 
@@ -445,6 +446,10 @@ export default function CompanyDetailsScreen() {
               <AppText style={styles.headerTitle}>Performance Values</AppText>
 
               <RowCard
+                leftText="1 Year Yield"
+                rightText={`Rs. ${data?.data?.["1 Year Yield"]}`}
+              />
+              <RowCard
                 leftText="EPS"
                 rightText={`Rs. ${data?.data?.["EPS"]}`}
               />
@@ -456,6 +461,44 @@ export default function CompanyDetailsScreen() {
                 leftText="Book Value Per Share"
                 rightText={`${data?.data?.["Book Value"]}`}
               />
+              <RowCard leftText="PBV" rightText={`${data?.data?.["PBV"]}`} />
+            </View>
+
+            <View style={styles.todayDataContainer}>
+              <AppText style={styles.headerTitle}>General Information</AppText>
+
+              <RowCard
+                leftText="Market Capitalization"
+                rightText={`Rs. ${data?.data?.["Market Capitalization"]}`}
+              />
+              <RowCard
+                leftText="Total Listed Shares"
+                rightText={data?.data?.["Shares Outstanding"]}
+              />
+              <RowCard
+                leftText="52 Week High/Low"
+                rightText={`${data?.data?.["52 Weeks High - Low"]}`}
+              />
+
+              {data?.data?.Dividend?.length > 0 && (
+                <List.Accordion
+                  title="Dividend"
+                  expanded={dividendExpaned}
+                  onPress={handleDividendExpand}
+                  style={styles.accordionContainer}
+                  titleStyle={styles.accordionTitle}
+                  rippleColor={colors.dark.button + "30"}
+                >
+                  {data?.data?.Dividend?.map((dividend) => (
+                    <List.Item
+                      key={dividend.id}
+                      title={`${dividend.Value} ${dividend["Fiscal Year"]}`}
+                      titleStyle={styles.accordionListTitle}
+                      style={styles.accordionList}
+                    />
+                  ))}
+                </List.Accordion>
+              )}
             </View>
           </>
         ) : (
