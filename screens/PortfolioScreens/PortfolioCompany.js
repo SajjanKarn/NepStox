@@ -12,7 +12,11 @@ import Loader from "../../components/Loader";
 import colors from "../../config/colors";
 import useFetch from "../../hooks/useFetch";
 
-import { determineMarketClose, getTimeStampOfDate } from "../../utils/time";
+import {
+  determineMarketClose,
+  getDateFromTimeUnit,
+  getTimeStampOfDate,
+} from "../../utils/time";
 import {
   broker_commission,
   sebon_commission,
@@ -49,7 +53,17 @@ export default function PortfolioCompany() {
     error: graphError,
   } = useFetch(
     `/nepse/graph/company/${params?.symbol}/${getTimeStampOfDate(
-      `${marketOpenStatus?.data?.date}`,
+      `${
+        graphInterval === "1"
+          ? marketOpenStatus?.data?.date
+          : graphInterval === "1W"
+          ? getDateFromTimeUnit(7)
+          : graphInterval === "1M"
+          ? getDateFromTimeUnit(30)
+          : graphInterval === "1Y"
+          ? getDateFromTimeUnit(365)
+          : marketOpenStatus?.data?.date
+      }`,
       10
     )}/2114360100/${graphInterval}`
   );

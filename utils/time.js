@@ -52,6 +52,32 @@ function getTimeStampOfDate(date, hour) {
   return Math.floor(currentDate.getTime() / 1000);
 }
 
+function getDateFromTimeUnit(unit) {
+  const currentDate = new Date();
+
+  switch (unit) {
+    case 1: // today
+      break;
+    case 7: // 7 days ago
+      currentDate.setDate(currentDate.getDate() - unit);
+      break;
+    case 30: // 1 month ago
+      currentDate.setMonth(currentDate.getMonth() - unit);
+      break;
+    case 365: // 1 year ago
+      currentDate.setFullYear(currentDate.getFullYear() - unit);
+      break;
+    default:
+      throw new Error("Invalid time unit provided.");
+  }
+
+  const year = currentDate.getFullYear();
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+  const day = String(currentDate.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 function determineMarketClose() {
   const now = new Date();
   const currentHour = now.getHours();
@@ -74,4 +100,5 @@ export {
   parseTimestamp,
   getTimeStampOfDate,
   determineMarketClose,
+  getDateFromTimeUnit,
 };

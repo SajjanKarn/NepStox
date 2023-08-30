@@ -27,6 +27,7 @@ import {
 } from "react-native-responsive-linechart";
 import {
   determineMarketClose,
+  getDateFromTimeUnit,
   getTimeStamp,
   getTimeStampOfDate,
   parseTimestamp,
@@ -35,7 +36,11 @@ import colors from "../config/colors";
 
 export default function CompanyDetailsScreen() {
   const { symbol } = useRoute().params;
-  const [dividendExpaned, setDividendExpanded] = useState(false);
+  const [expaned, setExpanded] = useState({
+    dividend: false,
+    bonus: false,
+    rightShare: false,
+  });
   const [graphInterval, setGraphInterval] = useState("1");
   const [scrollValue, setScrollValue] = useState({
     x: 0,
@@ -71,7 +76,17 @@ export default function CompanyDetailsScreen() {
     error: chartError,
   } = useFetch(
     `/nepse/graph/company/${symbol.toUpperCase()}/${getTimeStampOfDate(
-      `${marketOpenStatus?.data?.date}`,
+      `${
+        graphInterval === "1"
+          ? marketOpenStatus?.data?.date
+          : graphInterval === "15"
+          ? getDateFromTimeUnit(7)
+          : graphInterval === "1M"
+          ? getDateFromTimeUnit(30)
+          : graphInterval === "1Y"
+          ? getDateFromTimeUnit(365)
+          : marketOpenStatus?.data?.date
+      }`,
       10
     )}/2114360100/${graphInterval}`
   );
@@ -80,7 +95,12 @@ export default function CompanyDetailsScreen() {
     setGraphInterval(interval);
   };
 
-  const handleDividendExpand = () => setDividendExpanded(!dividendExpaned);
+  const handleDividendExpand = (type) => {
+    setExpanded({
+      ...expaned,
+      [type]: !expaned[type],
+    });
+  };
 
   return (
     <ScrollView
@@ -483,13 +503,51 @@ export default function CompanyDetailsScreen() {
               {data?.data?.Dividend?.length > 0 && (
                 <List.Accordion
                   title="Dividend"
-                  expanded={dividendExpaned}
-                  onPress={handleDividendExpand}
+                  expanded={expaned.dividend}
+                  onPress={() => handleDividendExpand("dividend")}
                   style={styles.accordionContainer}
                   titleStyle={styles.accordionTitle}
                   rippleColor={colors.dark.button + "30"}
                 >
                   {data?.data?.Dividend?.map((dividend) => (
+                    <List.Item
+                      key={dividend.id}
+                      title={`${dividend.Value} ${dividend["Fiscal Year"]}`}
+                      titleStyle={styles.accordionListTitle}
+                      style={styles.accordionList}
+                    />
+                  ))}
+                </List.Accordion>
+              )}
+              {data?.data?.Bonus?.length > 0 && (
+                <List.Accordion
+                  title="Bonus"
+                  expanded={expaned.bonus}
+                  onPress={() => handleDividendExpand("bonus")}
+                  style={styles.accordionContainer}
+                  titleStyle={styles.accordionTitle}
+                  rippleColor={colors.dark.button + "30"}
+                >
+                  {data?.data?.Bonus?.map((dividend) => (
+                    <List.Item
+                      key={dividend.id}
+                      title={`${dividend.Value} ${dividend["Fiscal Year"]}`}
+                      titleStyle={styles.accordionListTitle}
+                      style={styles.accordionList}
+                    />
+                  ))}
+                </List.Accordion>
+              )}
+              {data?.data?.["Right Share"]?.length > 0 && (
+                <List.Accordion
+                  title="Right Share"
+                  expanded={expaned.rightShare}
+                  onPress={() => handleDividendExpand("rightShare")}
+                  style={styles.accordionContainer}
+                  titleStyle={styles.accordionTitle}
+                  rippleColor={colors.dark.button + "30"}
+                >
+                  {data?.data?.["Right Share"]?.map((dividend) => (
                     <List.Item
                       key={dividend.id}
                       title={`${dividend.Value} ${dividend["Fiscal Year"]}`}
