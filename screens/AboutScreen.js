@@ -1,14 +1,44 @@
-import { View, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Linking,
+  Image,
+} from "react-native";
 import { width, height, totalSize } from "react-native-dimension";
-import { Image } from "react-native";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 
 import AppText from "../components/AppText";
 import colors from "../config/colors";
-import { TouchableOpacity } from "react-native";
-import { Linking } from "react-native";
 
 export default function AboutScreen() {
+  const contacts = [
+    {
+      id: 1,
+      title: "Email",
+      icon: "mail",
+      value: "nepstoxs@gmail.com",
+      onPress: () =>
+        Linking.openURL(
+          "mailto:nepstoxs@gmail.com?subject=Mail from NepStox&body=Hi,"
+        ),
+    },
+    {
+      id: 2,
+      title: "Instagram",
+      icon: "instagram",
+      value: "@nepstoxs",
+      onPress: () => Linking.openURL("https://www.instagram.com/nepstoxs/"),
+    },
+    {
+      id: 3,
+      title: "Facebook",
+      icon: "facebook-square",
+      value: "www.facebook.com/nepstox",
+      onPress: () => Linking.openURL("https://www.facebook.com/nepstox"),
+    },
+  ];
   const developers = [
     {
       id: 1,
@@ -36,16 +66,6 @@ export default function AboutScreen() {
       link: "https://www.nepalstock.com.np/",
     },
     {
-      id: 2,
-      name: "Share Sansar",
-      link: "https://www.sharesansar.com/",
-    },
-    {
-      id: 3,
-      name: "Mero Lagani",
-      link: "https://www.merolagani.com/",
-    },
-    {
       id: 4,
       name: "Neplse Alpha",
       link: "https://nepsealpha.com/",
@@ -54,13 +74,7 @@ export default function AboutScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.productContainer}>
-        <Image
-          source={{
-            uri: "https://media.istockphoto.com/id/1140553971/vector/abstract-business-arrow-up-logo-icon-vector-design-template.jpg?s=612x612&w=0&k=20&c=N6bFWaKfmFokGSfTNJhEbYDnF1RplWomcNrOKI65cWU=",
-          }}
-          style={styles.logo}
-        />
-        <AppText style={styles.productName}>NepStoX</AppText>
+        <Image source={require("../assets/logo-app.png")} style={styles.logo} />
         <View style={styles.productDescription}>
           <AppText style={styles.productDescriptionText} variant="Medium">
             NepStox is a cutting-edge platform offering live trading data and
@@ -74,53 +88,55 @@ export default function AboutScreen() {
       </View>
 
       <View style={styles.infoContainer}>
-        <AppText style={styles.infoContainerText}>Contact Us</AppText>
-
-        <TouchableOpacity style={styles.info}>
+        <AppText style={styles.infoContainerText}>Owned By</AppText>
+        <TouchableOpacity
+          style={styles.info}
+          onPress={() =>
+            Linking.openURL(
+              "mailto:pradipbhusal126@gmail.com?subject=Mail from NepStox&body=Hi,"
+            )
+          }
+        >
           <View style={styles.logoRight}>
             <AntDesign
-              name="mail"
+              name="user"
               size={30}
               color={colors.dark.placeholderText}
             />
           </View>
           <View style={styles.left}>
-            <AppText style={styles.infoContainerText}>Email</AppText>
+            <AppText style={styles.infoContainerText}>Pradip Bhusal</AppText>
             <AppText style={styles.contactValue} variant="Medium">
-              karnaa787@gmail.com
+              pradipbhusal26@gmail.com
             </AppText>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.info}>
-          <View style={styles.logoRight}>
-            <Entypo
-              name="globe"
-              size={30}
-              color={colors.dark.placeholderText}
-            />
-          </View>
-          <View style={styles.left}>
-            <AppText style={styles.infoContainerText}>Facebook</AppText>
-            <AppText style={styles.contactValue} variant="Medium">
-              www.nepstox.com
-            </AppText>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.info}>
-          <View style={styles.logoRight}>
-            <Entypo
-              name="facebook"
-              size={30}
-              color={colors.dark.placeholderText}
-            />
-          </View>
-          <View style={styles.left}>
-            <AppText style={styles.infoContainerText}>Facebook</AppText>
-            <AppText style={styles.contactValue} variant="Medium">
-              www.facebook.com/nepstox
-            </AppText>
-          </View>
-        </TouchableOpacity>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <AppText style={styles.infoContainerText}>Contact Us</AppText>
+
+        {contacts.map((item) => (
+          <TouchableOpacity
+            style={styles.info}
+            key={item.id}
+            onPress={item.onPress}
+          >
+            <View style={styles.logoRight}>
+              <AntDesign
+                name={item.icon}
+                size={30}
+                color={colors.dark.placeholderText}
+              />
+            </View>
+            <View style={styles.left}>
+              <AppText style={styles.infoContainerText}>{item.title}</AppText>
+              <AppText style={styles.contactValue} variant="Medium">
+                {item.value}
+              </AppText>
+            </View>
+          </TouchableOpacity>
+        ))}
       </View>
 
       <View style={styles.infoContainer}>
@@ -198,9 +214,9 @@ const styles = StyleSheet.create({
     marginVertical: height(2),
   },
   productDescriptionText: {
-    fontSize: totalSize(1.8),
+    fontSize: totalSize(1.5),
     color: colors.dark.textColor,
-    textAlign: "justify",
+    lineHeight: 20,
   },
   infoContainer: {
     marginTop: height(2),

@@ -73,7 +73,7 @@ export default function CustomDrawer(props) {
             titleStyle={styles.titleStyle}
             onPress={() => props.navigation.navigate("TermsConditionScreen")}
           />
-          <List.Item title="Rate Us" titleStyle={styles.titleStyle} />
+          {/* <List.Item title="Rate Us" titleStyle={styles.titleStyle} /> */}
         </List.Accordion>
         {loading ? (
           <ActivityIndicator

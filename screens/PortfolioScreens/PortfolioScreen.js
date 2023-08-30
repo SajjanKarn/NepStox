@@ -261,6 +261,9 @@ export default function PortfolioScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.headerInvestmentContainer}>
+        <AppText style={styles.lastUpdatedOn} variant="Medium">
+          Last Updated {marketOpenStatus?.data?.date}
+        </AppText>
         <AppText style={styles.headerTitle} variant="Regular">
           Investing
         </AppText>

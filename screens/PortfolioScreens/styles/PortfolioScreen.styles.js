@@ -7,6 +7,10 @@ export default styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.dark.primary,
   },
+  lastUpdatedOn: {
+    color: colors.dark.placeholderText,
+    marginBottom: height(1),
+  },
   headerInvestmentContainer: {
     marginTop: height(1),
     paddingHorizontal: width(5),
